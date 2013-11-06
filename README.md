@@ -1,4 +1,4 @@
-jconverter
+JConverter
 ==========
 
-A Java library to convert between arbitrary Java Objects, in the style of Google's Gson.
+A Java framework to categorize and apply conversions between arbitrary objects.
