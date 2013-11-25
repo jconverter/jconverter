@@ -69,6 +69,24 @@
 	 		<optional>true</optional>
 		</dependency> 
 
+ 		<dependency>
+    		<groupId>com.google.guava</groupId>
+    		<artifactId>guava</artifactId>
+    		<version>15.0</version>
+		</dependency>
+
+ 		<dependency>
+			<groupId>com.github.jgum</groupId>
+			<artifactId>jgum</artifactId>
+			<version>0.0.1-alpha-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.minitoolbox</groupId>
+			<artifactId>minitoolbox</artifactId>
+			<version>0.0.1-alpha-SNAPSHOT</version>
+		</dependency>
+ 				
 	</dependencies>
 
 
