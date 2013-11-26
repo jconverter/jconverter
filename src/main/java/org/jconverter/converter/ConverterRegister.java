@@ -15,8 +15,6 @@ import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 
-import com.google.common.base.Function;
-
 public class ConverterRegister {
 
 	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
@@ -56,7 +54,7 @@ public class ConverterRegister {
 		
 		public ProcessedConverter(Converter converter) {
 			this.converter = converter;
-			TypeWrapper converterTypeWrapper = TypeWrapper.wrap(converter.getClass()).as(Function.class);
+			TypeWrapper converterTypeWrapper = TypeWrapper.wrap(converter.getClass()).as(Converter.class);
 			Type returnType = null;
 			if(converterTypeWrapper.hasActualTypeArguments())
 				returnType = converterTypeWrapper.getActualTypeArguments()[1];

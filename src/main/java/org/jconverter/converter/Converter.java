@@ -2,21 +2,19 @@ package org.jconverter.converter;
 
 import java.lang.reflect.Type;
 
+import org.jconverter.JConverter;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-import com.google.common.base.Function;
 import com.google.common.reflect.TypeToken;
 
 
-public interface Converter<T,V> extends Function<T,V> {
+public interface Converter<T,V> {
 
-	@Override
-	public V apply(T source);
+	public V apply(T source, JConverter context);
 
-	public V apply(T source, Type targetType);
+	public V apply(T source, Type targetType, JConverter context);
 
 	/**
-	 * TODO delete this class when default methods are available in Java8.
 	 * @author sergioc
 	 *
 	 * @param <T>
@@ -24,13 +22,16 @@ public interface Converter<T,V> extends Function<T,V> {
 	 */
 	public abstract class DefaultConverter<T,V> implements Converter<T,V> {
 		
-		@Override
-		public V apply(T source) {
-			TypeToken typeToken = new TypeToken<V>(){};
-			Type targetType = typeToken.getType();
-			return apply(source, (Type)TypeWrapper.wrap(targetType).getRawClass());
-		}
+		private final Type targetType;
 		
+		public DefaultConverter() {
+			targetType = new TypeToken<V>(getClass()){}.getType();
+		}
+
+		@Override
+		public final V apply(T source, JConverter context) {
+			return apply(source, (Type)TypeWrapper.wrap(targetType).getRawClass(), context);
+		}
 	}
 	
 }

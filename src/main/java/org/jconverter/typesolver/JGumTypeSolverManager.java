@@ -19,7 +19,7 @@ import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 
 import com.google.common.base.Optional;
 
-public class JGumTypeSolverManager implements TypeSolverManager {
+public class JGumTypeSolverManager extends TypeSolverManager {
 
 	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
 	private final JGum jgum;

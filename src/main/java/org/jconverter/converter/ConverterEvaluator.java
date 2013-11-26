@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jconverter.JConverter;
 import org.jgum.strategy.ChainOfResponsibility;
 
 import com.google.common.base.Function;
@@ -13,24 +14,26 @@ public class ConverterEvaluator<T,U> implements Function<Object, U> {
 
 	private final T sourceObject;
 	private final Type targetType;
+	private final JConverter context;
 	
-	public ConverterEvaluator(T sourceObject, Type targetType) {
+	public ConverterEvaluator(T sourceObject, Type targetType, JConverter context) {
 		this.sourceObject = sourceObject;
 		this.targetType = targetType;
+		this.context = context;
 	}
 	
 	@Override
 	public U apply(Object processingObject) {
 		if(processingObject instanceof Converter) {
 			return applyConverter((Converter)processingObject);
-		} else if(processingObject instanceof Function) {
+		} else if(processingObject instanceof ConverterRegister) {
 			return applyChain((ConverterRegister)processingObject);
 		} else
 			throw new RuntimeException("Wrong processing object.");
 	}
 
 	public U applyConverter(Converter<T,U> processingObject) {
-		return processingObject.apply(sourceObject);
+		return processingObject.apply(sourceObject, targetType, context);
 	}
 	
 	public U applyChain(ConverterRegister processingObject) {
@@ -44,8 +47,8 @@ public class ConverterEvaluator<T,U> implements Function<Object, U> {
 
 		private final Set<Converter<T, U>> visited;
 		
-		public NonRedundantConverterEvaluator(T sourceObject, Type targetType) {
-			super(sourceObject, targetType);
+		public NonRedundantConverterEvaluator(T sourceObject, Type targetType, JConverter context) {
+			super(sourceObject, targetType, context);
 			visited = new HashSet<>();
 		}
 		

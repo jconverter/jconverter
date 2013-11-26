@@ -6,7 +6,9 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.List;
 
+import org.jconverter.JConverter;
 import org.jconverter.converter.ConverterEvaluator.NonRedundantConverterEvaluator;
+import org.jconverter.converter.catalog.StringConverter;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
@@ -19,12 +21,18 @@ import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
-public class JGumConverterManager implements ConverterManager {
+public class JGumConverterManager extends ConverterManager {
 
 	private static Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
+	
+	public static JGumConverterManager getDefault(JGum jgum) {
+		JGumConverterManager converterManager = new JGumConverterManager(jgum);
+		converterManager.register(new StringConverter());
+		return converterManager;
+	}
+	
 	private final JGum jgum;
 	
 	public JGumConverterManager(JGum jgum) {
@@ -34,7 +42,7 @@ public class JGumConverterManager implements ConverterManager {
 	@Override
 	public void register(Object converterKey, final Converter converter) {
 		final Key key = new Key(converterKey);
-		Type converterType = TypeWrapper.wrap(converter.getClass()).asType(Function.class);
+		Type converterType = TypeWrapper.wrap(converter.getClass()).asType(Converter.class);
 		TypeWrapper converterTypeWrapper = TypeWrapper.wrap(converterType);
 		Type sourceType = null;
 		if(converterTypeWrapper.hasActualTypeArguments())
@@ -80,13 +88,13 @@ public class JGumConverterManager implements ConverterManager {
 	
 
 	@Override
-	public Type convert(Object converterKey, Object object, Type targetType) {
+	public <T> T convert(Object converterKey, Object object, Type targetType, JConverter context) {
 		final Key key = new Key(converterKey);
 		Category sourceTypeCategory = jgum.forClass(object.getClass());
 		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
 		ChainOfResponsibility chain = new ChainOfResponsibility(converterRegisters, ConversionException.class);
-		ConverterEvaluator evaluator = new NonRedundantConverterEvaluator(object, targetType);
-		return (Type) chain.apply(evaluator);
-	}
+		ConverterEvaluator evaluator = new NonRedundantConverterEvaluator(object, targetType, context);
+		return (T) chain.apply(evaluator);
+	}		
 	
 }

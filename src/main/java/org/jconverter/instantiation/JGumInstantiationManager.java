@@ -5,6 +5,11 @@ import static java.util.Arrays.asList;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,9 +29,20 @@ import com.google.common.base.Optional;
  * @author sergioc
  *
  */
-public class JGumInstantiationManager implements InstantiationManager {
+public class JGumInstantiationManager extends InstantiationManager {
 	
 	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
+	
+	public static JGumInstantiationManager getDefault(JGum jgum) {
+		JGumInstantiationManager converterManager = new JGumInstantiationManager(jgum);
+		converterManager.register(ArrayDeque.class);
+		converterManager.register(HashMap.class);
+		converterManager.register(HashSet.class);
+		converterManager.register(ArrayList.class);
+		converterManager.register(GregorianCalendar.class);
+		return converterManager;
+	}
+	
 	private final JGum jgum;
 	
 	public JGumInstantiationManager(JGum jgum) {
