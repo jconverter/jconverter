@@ -99,6 +99,5 @@ public class StringConverterTest {
 		assertEquals(123L, al.get());
 	}
 	
-	
 }
 

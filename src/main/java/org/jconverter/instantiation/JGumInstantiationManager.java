@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
-import org.jgum.category.Key;
 import org.jgum.category.type.TypeCategory;
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
@@ -34,13 +33,18 @@ public class JGumInstantiationManager extends InstantiationManager {
 	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
 	
 	public static JGumInstantiationManager getDefault(JGum jgum) {
-		JGumInstantiationManager converterManager = new JGumInstantiationManager(jgum);
-		converterManager.register(ArrayDeque.class);
-		converterManager.register(HashMap.class);
-		converterManager.register(HashSet.class);
-		converterManager.register(ArrayList.class);
-		converterManager.register(GregorianCalendar.class);
-		return converterManager;
+		JGumInstantiationManager instantiationManager = new JGumInstantiationManager(jgum);
+		instantiationManager.register(ArrayDeque.class);
+		instantiationManager.register(HashMap.class);
+		instantiationManager.register(HashSet.class);
+		instantiationManager.register(ArrayList.class);
+		instantiationManager.register(new InstanceCreator<Calendar>() {
+			@Override
+			public Calendar instantiate(Type type) {
+				return Calendar.getInstance(); //"Gets a calendar using the default time zone and locale. The Calendar returned is based on the current time in the default time zone with the default locale."
+			}
+		});
+		return instantiationManager;
 	}
 	
 	private final JGum jgum;
@@ -50,8 +54,7 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 
 	@Override
-	public void register(Object instantiationKey, Class clazz) {
-		final Key key = new Key(instantiationKey);
+	public void register(Object key, Class clazz) {
 		if(Modifier.isAbstract(clazz.getModifiers()))
 			throw new RuntimeException(clazz.getName() + " should not be abstract.");
 		List<TypeCategory<?>> abstractAncestors = jgum.forClass(clazz).getAbstractAncestors();
@@ -61,8 +64,7 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 
 	@Override
-	public void register(Object instantiationKey, final InstanceCreator instanceCreator) {
-		final Key key = new Key(instantiationKey);
+	public void register(final Object key, final InstanceCreator instanceCreator) {
 		Type instanceCreatorType = TypeWrapper.wrap(instanceCreator.getClass()).asType(InstanceCreator.class);
 		TypeWrapper instanceCreatorTypeWrapper = TypeWrapper.wrap(instanceCreatorType);
 		Type sourceType = null;
@@ -95,8 +97,7 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 
 	@Override
-	public <T> T instantiate(Object instantiationKey, Type targetType) {
-		final Key key = new Key(instantiationKey);
+	public <T> T instantiate(Object key, Type targetType) {
 		T instantiation = null;
 		Category sourceTypeCategory = jgum.forClass(TypeWrapper.wrap(targetType).getRawClass());
 		Optional<InstanceCreator<T>> instanceCreatorOpt = sourceTypeCategory.<InstanceCreator<T>>getLocalProperty(key);

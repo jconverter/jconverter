@@ -26,8 +26,16 @@ public class JConverter {
 		this.converterManager = converterManager;
 	}
 	
+	public <T> T convert(Object key, Object source, Type targetType) {
+		return (T)converterManager.convert(key, source, targetType, this);
+	}
+	
 	public <T> T convert(Object source, Type targetType) {
 		return (T)converterManager.convert(source, targetType, this);
+	}
+	
+	public <T> T instantiate(Type targetType) {
+		return instantiationManager.instantiate(targetType);
 	}
 	
 	public <T> T instantiate(Object key, Type targetType) {

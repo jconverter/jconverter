@@ -29,8 +29,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	}
 	
 	@Override
-	public void register(Object typeSolverKey, final TypeSolver typeSolver) {
-		final Key key = new Key(typeSolverKey);
+	public void register(final Object key, final TypeSolver typeSolver) {
 		Type typeSolverType = TypeWrapper.wrap(typeSolver.getClass()).asType(TypeSolver.class);
 		TypeWrapper typeSolverTypeWrapper = TypeWrapper.wrap(typeSolverType);
 		Type sourceType = null;
@@ -63,7 +62,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 		}
 	}
 
-	private TypeSolverChain getOrCreateChain(TypeCategory<?> typeCategory, Key key) {
+	private TypeSolverChain getOrCreateChain(TypeCategory<?> typeCategory, Object key) {
 		Optional<TypeSolverChain> chainOpt = typeCategory.getLocalProperty(key);
 		TypeSolverChain chain;
 		if(chainOpt.isPresent()) {
@@ -76,8 +75,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	}
 	
 	@Override
-	public Type getType(Object typeSolverKey, Object object) {
-		final Key key = new Key(typeSolverKey);
+	public Type getType(Object key, Object object) {
 		Category sourceTypeCategory = jgum.forClass(object.getClass());
 		List<TypeSolverChain> typeSolverChains = sourceTypeCategory.<TypeSolverChain>bottomUpProperties(key);
 		TypeSolverChain chain = new TypeSolverChain(typeSolverChains);
