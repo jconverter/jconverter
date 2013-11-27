@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.ConverterEvaluator.NonRedundantConverterEvaluator;
+import org.jconverter.converter.catalog.CalendarConverter;
 import org.jconverter.converter.catalog.NumberConverter;
 import org.jconverter.converter.catalog.ObjectConverter;
 import org.jconverter.converter.catalog.StringConverter;
@@ -30,6 +31,7 @@ public class JGumConverterManager extends ConverterManager {
 	
 	public static JGumConverterManager getDefault(JGum jgum) {
 		JGumConverterManager converterManager = new JGumConverterManager(jgum);
+		converterManager.register(new CalendarConverter());
 		converterManager.register(new StringConverter());
 		converterManager.register(new NumberConverter());
 		converterManager.register(new ObjectConverter());
