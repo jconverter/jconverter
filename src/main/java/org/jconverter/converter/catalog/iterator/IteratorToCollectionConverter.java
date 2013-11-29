@@ -5,16 +5,16 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class IteratorToCollectionConverter extends DefaultConverter<Iterator, Collection> {
+public class IteratorToCollectionConverter<T extends Collection> implements Converter<Iterator, T> {
 
 	@Override
-	public Collection apply(Iterator source, Type targetType, JConverter context) {
+	public T apply(Iterator source, Type targetType, JConverter context) {
 		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
 		Class targetClass = targetTypeWrapper.getRawClass();
-		TypeWrapper itTypeWrapper = targetTypeWrapper.as(Iterator.class);
+		TypeWrapper itTypeWrapper = targetTypeWrapper.as(Collection.class);
 		Type componentType = null;
 		if(itTypeWrapper.hasActualTypeArguments()) {
 			componentType = itTypeWrapper.getActualTypeArguments()[0];
@@ -25,10 +25,10 @@ public class IteratorToCollectionConverter extends DefaultConverter<Iterator, Co
 		collection = context.instantiate(targetType);
 		while(source.hasNext()) {
 			Object next = source.next();
-			Object converted = context.convert(source, componentType);
+			Object converted = context.convert(next, componentType);
 			collection.add(converted);
 		}
-		return collection;
+		return (T) collection;
 	}
 
 }

@@ -7,10 +7,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class NumberToNumberConverter<T extends Number> extends DefaultConverter<Number, T> {
+public class NumberToNumberConverter<T extends Number> implements Converter<Number, T> {
 
 	@Override
 	public T apply(Number source, Type targetType, JConverter context) {

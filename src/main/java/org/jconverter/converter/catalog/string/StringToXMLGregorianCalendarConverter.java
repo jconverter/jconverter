@@ -8,9 +8,9 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class StringToXMLGregorianCalendarConverter extends DefaultConverter<String, XMLGregorianCalendar> {
+public class StringToXMLGregorianCalendarConverter implements Converter<String, XMLGregorianCalendar> {
 
 	@Override
 	public XMLGregorianCalendar apply(String source, Type targetType, JConverter context) {

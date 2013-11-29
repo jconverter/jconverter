@@ -5,9 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class StringToCalendarConverter extends DefaultConverter<String, Calendar> {
+public class StringToCalendarConverter implements Converter<String, Calendar> {
 
 	@Override
 	public Calendar apply(String source, Type targetType, JConverter context) {

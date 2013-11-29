@@ -3,9 +3,9 @@ package org.jconverter.converter.catalog.number;
 import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class NumberToBooleanConverter extends DefaultConverter<Number, Boolean> {
+public class NumberToBooleanConverter implements Converter<Number, Boolean> {
 
 	@Override
 	public Boolean apply(Number source, Type targetType, JConverter context) {

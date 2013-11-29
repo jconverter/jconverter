@@ -6,9 +6,9 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class StringToDateConverter extends DefaultConverter<String, Date> {
+public class StringToDateConverter implements Converter<String, Date> {
 
 	@Override
 	public Date apply(String source, Type targetType, JConverter context) {

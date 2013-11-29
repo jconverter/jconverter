@@ -5,11 +5,11 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 import org.jconverter.converter.catalog.number.NumberToNumberConverter;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class StringToNumberConverter<T extends Number> extends DefaultConverter<String, T> {
+public class StringToNumberConverter<T extends Number> implements Converter<String, T> {
 
 	@Override
 	public T apply(String source, Type targetType, JConverter context) {

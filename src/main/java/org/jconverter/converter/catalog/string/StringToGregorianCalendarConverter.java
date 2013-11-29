@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class StringToGregorianCalendarConverter extends DefaultConverter<String, GregorianCalendar> {
+public class StringToGregorianCalendarConverter implements Converter<String, GregorianCalendar> {
 
 	@Override
 	public GregorianCalendar apply(String source, Type targetType, JConverter context) {

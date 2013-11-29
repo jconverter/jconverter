@@ -4,9 +4,9 @@ import java.lang.reflect.Type;
 import java.util.Calendar;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class NumberToCalendarConverter extends DefaultConverter<Number, Calendar> {
+public class NumberToCalendarConverter implements Converter<Number, Calendar> {
 
 	@Override
 	public Calendar apply(Number source, Type targetType, JConverter context) {

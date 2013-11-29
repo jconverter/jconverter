@@ -10,6 +10,11 @@ import org.jconverter.JConverter;
 import org.jconverter.converter.ConverterEvaluator.NonRedundantConverterEvaluator;
 import org.jconverter.converter.catalog.ObjectToStringConverter;
 import org.jconverter.converter.catalog.calendar.CalendarToNumberConverter;
+import org.jconverter.converter.catalog.iterator.IteratorToArrayConverter;
+import org.jconverter.converter.catalog.iterator.IteratorToCollectionConverter;
+import org.jconverter.converter.catalog.iterator.IteratorToEnumerationConverter;
+import org.jconverter.converter.catalog.iterator.IteratorToIterableConverter;
+import org.jconverter.converter.catalog.iterator.IteratorToIteratorConverter;
 import org.jconverter.converter.catalog.number.NumberToBooleanConverter;
 import org.jconverter.converter.catalog.number.NumberToCalendarConverter;
 import org.jconverter.converter.catalog.number.NumberToGregorianCalendarConverter;
@@ -56,6 +61,12 @@ public class JGumConverterManager implements ConverterManager {
 		converterManager.register(new StringToXMLGregorianCalendarConverter());
 		converterManager.register(new StringToGregorianCalendarConverter());
 		converterManager.register(new StringToCalendarConverter());
+		
+		converterManager.register(new IteratorToArrayConverter());
+		converterManager.register(new IteratorToCollectionConverter());
+		converterManager.register(new IteratorToEnumerationConverter());
+		converterManager.register(new IteratorToIterableConverter());
+		converterManager.register(new IteratorToIteratorConverter());
 		
 		converterManager.register(new ObjectToStringConverter());
 		return converterManager;
@@ -117,7 +128,6 @@ public class JGumConverterManager implements ConverterManager {
 		return chain;
 	}
 	
-
 	@Override
 	public <T> T convert(Object key, Object object, Type targetType, JConverter context) {
 		Category sourceTypeCategory = jgum.forClass(object.getClass());

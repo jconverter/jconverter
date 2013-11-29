@@ -4,9 +4,9 @@ import java.lang.reflect.Type;
 import java.util.GregorianCalendar;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class NumberToGregorianCalendarConverter extends DefaultConverter<Number, GregorianCalendar> {
+public class NumberToGregorianCalendarConverter implements Converter<Number, GregorianCalendar> {
 
 	@Override
 	public GregorianCalendar apply(Number source, Type targetType, JConverter context) {

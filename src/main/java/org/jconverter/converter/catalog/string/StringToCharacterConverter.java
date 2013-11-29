@@ -3,9 +3,9 @@ package org.jconverter.converter.catalog.string;
 import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.Converter.DefaultConverter;
+import org.jconverter.converter.Converter;
 
-public class StringToCharacterConverter extends DefaultConverter<String, Character> {
+public class StringToCharacterConverter implements Converter<String, Character> {
 
 	@Override
 	public Character apply(String source, Type targetType, JConverter context) {
