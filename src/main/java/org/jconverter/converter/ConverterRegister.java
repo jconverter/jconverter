@@ -27,16 +27,18 @@ public class ConverterRegister {
 		this.jgum = jgum;
 	}
 	
-	public void addFirst(Converter function) {
-		processedConverters.add(0, new ProcessedConverter(function));
+	public void addFirst(Converter converter) {
+		processedConverters.add(0, new ProcessedConverter(converter));
 	}
 	
 	public List<Converter> orderedConverters(Type targetType) {
-		TreeSet<ContextedConverter> contextedConverters = new TreeSet<>();
+		TreeSet<ContextedConverter> contextedConverters = new TreeSet<>(); //TreeSet will keep the natural ordering of its members.
 		for(int i = 0; i<processedConverters.size(); i++) {
 			ProcessedConverter processedConverter = processedConverters.get(i);
-			ContextedConverter contextedConverter = new ContextedConverter(processedConverter, i, jgum, targetType);
-			contextedConverters.add(contextedConverter);
+			if(processedConverter.isCompatible(targetType)) {
+				ContextedConverter contextedConverter = new ContextedConverter(processedConverter, i, jgum, targetType);
+				contextedConverters.add(contextedConverter);
+			}
 		}
 		List<Converter> converters = new ArrayList<>();
 		for(ContextedConverter contextedConverter : contextedConverters) {
@@ -50,7 +52,7 @@ public class ConverterRegister {
 		private final Converter converter;
 		private final Type returnType;
 		private final Class<?> returnClass;
-		private final List<Class<?>> upperBounds;
+		private final List<Class<?>> returnTypeUpperBounds;
 		
 		public ProcessedConverter(Converter converter) {
 			this.converter = converter;
@@ -67,20 +69,20 @@ public class ConverterRegister {
 			TypeWrapper targetTypeWrapper = TypeWrapper.wrap(returnType);
 			if(!(targetTypeWrapper instanceof VariableTypeWrapper)) {
 				returnClass = targetTypeWrapper.getRawClass();
-				upperBounds = null;
+				returnTypeUpperBounds = null;
 			} else { //the type argument is a TypeVariable with non-empty bounds.
 				VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) targetTypeWrapper;
-				upperBounds = TypeUtil.asRawClasses(asList(variableTypeWrapper.getUpperBounds()));
+				returnTypeUpperBounds = TypeUtil.asRawClasses(asList(variableTypeWrapper.getUpperBounds()));
 				returnClass = null;
 			}
 		}
 		
-		public boolean hasBoundTargetType() {
+		public boolean hasBoundReturnType() {
 			return returnClass == null;
 		}
 		
-		public List<Class<?>> getUpperBounds() {
-			return upperBounds;
+		public List<Class<?>> getReturnTypeUpperBounds() {
+			return returnTypeUpperBounds;
 		}
 
 		public Class<?> getReturnClass() {
@@ -113,7 +115,7 @@ public class ConverterRegister {
 		public ContextedConverter(ProcessedConverter processedConverter, int index, JGum jgum, Type targetType) {
 			this.targetType = targetType;
 			this.processedConverter = processedConverter;
-			if(processedConverter.hasBoundTargetType()) //the converter has different target types (quantified with upper bounds).
+			if(processedConverter.hasBoundReturnType()) //the converter has different target types (quantified with upper bounds).
 				distanceToTarget = 0; //assuming the target type is compatible with the processedConverter, the converter return type can be the current target type.
 			else {
 				Class targetClass = TypeWrapper.wrap(targetType).getRawClass();

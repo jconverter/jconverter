@@ -1,4 +1,4 @@
-package org.jconverter.converter.catalog;
+package org.jconverter.converter.catalog.string;
 
 import static org.junit.Assert.assertEquals;
 

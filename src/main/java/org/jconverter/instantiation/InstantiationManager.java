@@ -3,22 +3,17 @@ package org.jconverter.instantiation;
 import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
+import org.jgum.category.Key;
 
-public abstract class InstantiationManager {
-
-	public static final Object DEFAULT_KEY = new Object();
+public interface InstantiationManager {
 	
-	public void register(Class clazz) {
-		register(DEFAULT_KEY, clazz);
+	public static class InstantiationKey extends Key {
+		public InstantiationKey(Object key) {
+			super(JConverter.DEFAULT_JCONVERTER_KEY);
+		}
 	}
 	
-	public void register(InstanceCreator instanceCreator) {
-		register(DEFAULT_KEY, instanceCreator);
-	}
-
-	public <T> T instantiate(Type targetType) {
-		return instantiate(DEFAULT_KEY, targetType);
-	}
+	public static final Object DEFAULT_KEY = new InstantiationKey(JConverter.DEFAULT_JCONVERTER_KEY);
 	
 	public abstract void register(Object key, Class clazz);
 	

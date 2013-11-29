@@ -7,14 +7,12 @@ import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.Converter.DefaultConverter;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class ObjectConverter extends DefaultConverter<Object, Object> {
+public class ObjectToStringConverter extends DefaultConverter<Object, String> {
 
 	@Override
-	public Object apply(Object source, Type targetType, JConverter context) {
+	public String apply(Object source, Type targetType, JConverter context) {
 		Class targetClass = TypeWrapper.wrap(targetType).getRawClass();
-		if(targetClass.equals(Object.class)) {
-			return source;
-		} else if(targetClass.equals(String.class)) {
+		if(targetClass.equals(String.class)) {
 			return source.toString();
 		}
 		throw new ConversionException();

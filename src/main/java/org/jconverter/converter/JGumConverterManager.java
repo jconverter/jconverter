@@ -8,10 +8,20 @@ import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.ConverterEvaluator.NonRedundantConverterEvaluator;
-import org.jconverter.converter.catalog.CalendarConverter;
-import org.jconverter.converter.catalog.NumberConverter;
-import org.jconverter.converter.catalog.ObjectConverter;
-import org.jconverter.converter.catalog.StringConverter;
+import org.jconverter.converter.catalog.ObjectToStringConverter;
+import org.jconverter.converter.catalog.calendar.CalendarToNumberConverter;
+import org.jconverter.converter.catalog.number.NumberToBooleanConverter;
+import org.jconverter.converter.catalog.number.NumberToCalendarConverter;
+import org.jconverter.converter.catalog.number.NumberToGregorianCalendarConverter;
+import org.jconverter.converter.catalog.number.NumberToNumberConverter;
+import org.jconverter.converter.catalog.number.NumberToXMLGregorianCalendarConverter;
+import org.jconverter.converter.catalog.string.StringToBooleanConverter;
+import org.jconverter.converter.catalog.string.StringToCalendarConverter;
+import org.jconverter.converter.catalog.string.StringToCharacterConverter;
+import org.jconverter.converter.catalog.string.StringToDateConverter;
+import org.jconverter.converter.catalog.string.StringToGregorianCalendarConverter;
+import org.jconverter.converter.catalog.string.StringToNumberConverter;
+import org.jconverter.converter.catalog.string.StringToXMLGregorianCalendarConverter;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
@@ -25,16 +35,29 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
-public class JGumConverterManager extends ConverterManager {
+public class JGumConverterManager implements ConverterManager {
 
 	private static Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
 	
 	public static JGumConverterManager getDefault(JGum jgum) {
 		JGumConverterManager converterManager = new JGumConverterManager(jgum);
-		converterManager.register(new CalendarConverter());
-		converterManager.register(new StringConverter());
-		converterManager.register(new NumberConverter());
-		converterManager.register(new ObjectConverter());
+		converterManager.register(new CalendarToNumberConverter());
+		
+		converterManager.register(new NumberToNumberConverter());
+		converterManager.register(new NumberToBooleanConverter());
+		converterManager.register(new NumberToXMLGregorianCalendarConverter());
+		converterManager.register(new NumberToGregorianCalendarConverter());
+		converterManager.register(new NumberToCalendarConverter());
+		
+		converterManager.register(new StringToNumberConverter());
+		converterManager.register(new StringToBooleanConverter());
+		converterManager.register(new StringToCharacterConverter());
+		converterManager.register(new StringToDateConverter());
+		converterManager.register(new StringToXMLGregorianCalendarConverter());
+		converterManager.register(new StringToGregorianCalendarConverter());
+		converterManager.register(new StringToCalendarConverter());
+		
+		converterManager.register(new ObjectToStringConverter());
 		return converterManager;
 	}
 	
@@ -42,6 +65,10 @@ public class JGumConverterManager extends ConverterManager {
 	
 	public JGumConverterManager(JGum jgum) {
 		this.jgum = jgum;
+	}
+	
+	private void register(Converter converter) {
+		register(DEFAULT_KEY, converter);
 	}
 	
 	@Override

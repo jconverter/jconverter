@@ -1,7 +1,7 @@
 package org.jconverter.converter;
 
-import org.jconverter.converter.catalog.NumberConverterTest;
-import org.jconverter.converter.catalog.StringConverterTest;
+import org.jconverter.converter.catalog.number.NumberConverterTest;
+import org.jconverter.converter.catalog.string.StringConverterTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

@@ -5,6 +5,9 @@ import static java.util.Arrays.asList;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +31,7 @@ import com.google.common.base.Optional;
  * @author sergioc
  *
  */
-public class JGumInstantiationManager extends InstantiationManager {
+public class JGumInstantiationManager implements InstantiationManager {
 	
 	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
 	
@@ -44,6 +47,18 @@ public class JGumInstantiationManager extends InstantiationManager {
 				return Calendar.getInstance(); //"Gets a calendar using the default time zone and locale. The Calendar returned is based on the current time in the default time zone with the default locale."
 			}
 		});
+		instantiationManager.register(new InstanceCreator<DateFormat>() {
+			@Override
+			public DateFormat instantiate(Type type) {
+				return new SimpleDateFormat(); //"a SimpleDateFormat using the default pattern and date format symbols for the default locale."
+			}
+		});
+		instantiationManager.register(new InstanceCreator<NumberFormat>() {
+			@Override
+			public NumberFormat instantiate(Type type) {
+				return NumberFormat.getInstance(); //"a general-purpose number format for the current default locale."
+			}
+		});
 		return instantiationManager;
 	}
 	
@@ -53,6 +68,14 @@ public class JGumInstantiationManager extends InstantiationManager {
 		this.jgum = jgum;
 	}
 
+	private void register(Class clazz) {
+		register(DEFAULT_KEY, clazz);
+	}
+	
+	private void register(InstanceCreator instanceCreator) {
+		register(DEFAULT_KEY, instanceCreator);
+	}
+	
 	@Override
 	public void register(Object key, Class clazz) {
 		if(Modifier.isAbstract(clazz.getModifiers()))
@@ -104,7 +127,7 @@ public class JGumInstantiationManager extends InstantiationManager {
 		if(instanceCreatorOpt.isPresent())
 			instantiation = instanceCreatorOpt.get().instantiate(targetType);
 		else
-			throw new RuntimeException(new InstantiationException("Impossible to instantiate type: " + targetType));
+			throw new RuntimeException("Impossible to instantiate type: " + targetType);
 		return instantiation;
 	}
 
