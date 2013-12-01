@@ -7,11 +7,11 @@ import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.catalog.iterator.IteratorToCollectionConverter;
 
-public class IterableToCollectionConverter implements Converter<Iterable, Collection> {
+public class IterableToCollectionConverter<T extends Collection> implements Converter<Iterable, T> {
 
 	@Override
-	public Collection apply(Iterable source, Type targetType, JConverter context) {
-		return new IteratorToCollectionConverter().apply(source.iterator(), targetType, context);
+	public T apply(Iterable source, Type targetType, JConverter context) {
+		return (T) new IteratorToCollectionConverter().apply(source.iterator(), targetType, context);
 	}
 
 }

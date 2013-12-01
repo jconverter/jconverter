@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import com.google.common.reflect.TypeToken;
 
-public class IteratorTest {
+public class IteratorConverterTest {
 
 	private Iterator<Integer> getIterator() {
 		return asList(1,2,3).iterator();

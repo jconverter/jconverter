@@ -3,13 +3,28 @@ package org.jconverter.converter;
 import static java.util.Arrays.asList;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.ConverterEvaluator.NonRedundantConverterEvaluator;
 import org.jconverter.converter.catalog.ObjectToStringConverter;
+import org.jconverter.converter.catalog.array.ArrayToArrayConverter;
+import org.jconverter.converter.catalog.array.ArrayToCollectionConverter;
+import org.jconverter.converter.catalog.array.ArrayToEnumerationConverter;
+import org.jconverter.converter.catalog.array.ArrayToIterableConverter;
+import org.jconverter.converter.catalog.array.ArrayToIteratorConverter;
 import org.jconverter.converter.catalog.calendar.CalendarToNumberConverter;
+import org.jconverter.converter.catalog.enumeration.EnumerationToArrayConverter;
+import org.jconverter.converter.catalog.enumeration.EnumerationToCollectionConverter;
+import org.jconverter.converter.catalog.enumeration.EnumerationToEnumerationConverter;
+import org.jconverter.converter.catalog.enumeration.EnumerationToIterableConverter;
+import org.jconverter.converter.catalog.enumeration.EnumerationToIteratorConverter;
+import org.jconverter.converter.catalog.iterable.IterableToArrayConverter;
+import org.jconverter.converter.catalog.iterable.IterableToCollectionConverter;
+import org.jconverter.converter.catalog.iterable.IterableToEnumerationConverter;
+import org.jconverter.converter.catalog.iterable.IterableToIterableConverter;
+import org.jconverter.converter.catalog.iterable.IterableToIteratorConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToArrayConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToCollectionConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToEnumerationConverter;
@@ -32,7 +47,9 @@ import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
 import org.jgum.category.type.TypeCategory;
 import org.jgum.strategy.ChainOfResponsibility;
+import org.minitoolbox.collections.ArrayIterator;
 import org.minitoolbox.reflection.TypeUtil;
+import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 import org.slf4j.Logger;
@@ -68,6 +85,24 @@ public class JGumConverterManager implements ConverterManager {
 		converterManager.register(new IteratorToIterableConverter());
 		converterManager.register(new IteratorToIteratorConverter());
 		
+		converterManager.register(new IterableToArrayConverter());
+		converterManager.register(new IterableToCollectionConverter());
+		converterManager.register(new IterableToEnumerationConverter());
+		converterManager.register(new IterableToIterableConverter());
+		converterManager.register(new IterableToIteratorConverter());
+		
+		converterManager.register(new EnumerationToArrayConverter());
+		converterManager.register(new EnumerationToCollectionConverter());
+		converterManager.register(new EnumerationToEnumerationConverter());
+		converterManager.register(new EnumerationToIterableConverter());
+		converterManager.register(new EnumerationToIteratorConverter());
+		
+		converterManager.register(new ArrayToArrayConverter());
+		converterManager.register(new ArrayToCollectionConverter());
+		converterManager.register(new ArrayToEnumerationConverter());
+		converterManager.register(new ArrayToIterableConverter());
+		converterManager.register(new ArrayToIteratorConverter());
+		
 		converterManager.register(new ObjectToStringConverter());
 		return converterManager;
 	}
@@ -89,31 +124,48 @@ public class JGumConverterManager implements ConverterManager {
 		Type sourceType = null;
 		if(converterTypeWrapper.hasActualTypeArguments())
 			sourceType = converterTypeWrapper.getActualTypeArguments()[0];
-		if(sourceType == null || //there are no type arguments or ...
-				(sourceType instanceof TypeVariable && TypeVariable.class.cast(sourceType).getBounds().length == 0)) { // ... the type argument is a type variable with empty bounds.
+		else {
 			logger.warn("Converter does not specify a source type. It will be registered at the Object class.");
 			sourceType = Object.class;
 		}
-		TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
-		if(!(sourceTypeWrapper instanceof VariableTypeWrapper)) {
+
+		final TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
+		if(!sourceTypeWrapper.isVariable()) {
 			TypeCategory<?> sourceTypeCategory = jgum.forClass(sourceTypeWrapper.getRawClass());
 			getOrCreateConverterRegister(sourceTypeCategory, key).addFirst(converter);
-		} else { //the type argument is a TypeVariable with non-empty bounds.
-			VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) sourceTypeWrapper;
-			List<Type> upperBoundariesTypes = asList(variableTypeWrapper.getUpperBounds());
-			final List<Class<?>> upperBoundariesClasses = TypeUtil.asRawClasses(upperBoundariesTypes);
-			List<TypeCategory<?>> boundTypeCategories = jgum.getTypeCategorization().findBoundedTypes(upperBoundariesClasses);
-			for(TypeCategory<?> boundTypeCategory : boundTypeCategories) {
-				getOrCreateConverterRegister(boundTypeCategory, key).addFirst(converter); //set the type solver for all the known types that are in the boundaries.
+		} else { //the type argument is a variable type.
+			List<TypeCategory<?>> matchedCategories = getMatchingCategories(sourceTypeWrapper);
+			for(TypeCategory<?> matchedCategory : matchedCategories) {
+				getOrCreateConverterRegister(matchedCategory, key).addFirst(converter); //set the type solver for all the known types that are in the boundaries.
 			}
 			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
 				@Override
 				public void onCategorization(TypeCategory<?> category) {
-					if(category.isInBoundaries(upperBoundariesClasses))
+					//if(category.isInBoundaries(upperBoundariesClasses))
+					if(sourceTypeWrapper.isWeakAssignableFrom(category.getLabel()))
 						getOrCreateConverterRegister(category, key).addFirst(converter);
 				}
 			});
 		}
+	}
+	
+	private List<TypeCategory<?>> getMatchingCategories(TypeWrapper wrappedType) {
+		if(wrappedType instanceof VariableTypeWrapper) {
+			VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) wrappedType;
+			List<Type> upperBoundariesTypes = asList(variableTypeWrapper.getUpperBounds());
+			final List<Class<?>> upperBoundariesClasses = TypeUtil.asRawClasses(upperBoundariesTypes);
+			List<TypeCategory<?>> boundTypeCategories = jgum.getTypeCategorization().findBoundedTypes(upperBoundariesClasses);
+			return boundTypeCategories;
+		} else if(wrappedType instanceof ArrayTypeWrapper) {
+			List<TypeCategory<?>> compatibleCategories = new ArrayList<>();
+			List<TypeCategory<?>> objectChildren = jgum.forClass(Object.class).getChildren();
+			for(TypeCategory<?> objectChild : objectChildren) {
+				wrappedType.isWeakAssignableFrom(objectChild.getLabel());
+				compatibleCategories.add(objectChild);
+			}
+			return compatibleCategories;
+		} else
+			throw new RuntimeException(); //this should not happen
 	}
 	
 	private ConverterRegister getOrCreateConverterRegister(TypeCategory<?> typeCategory, Object key) {
@@ -129,12 +181,21 @@ public class JGumConverterManager implements ConverterManager {
 	}
 	
 	@Override
-	public <T> T convert(Object key, Object object, Type targetType, JConverter context) {
-		Category sourceTypeCategory = jgum.forClass(object.getClass());
+	public <T> T convert(Object key, Object source, Type targetType, JConverter context) {
+		Category sourceTypeCategory = jgum.forClass(source.getClass());
 		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
 		ChainOfResponsibility chain = new ChainOfResponsibility(converterRegisters, ConversionException.class);
-		ConverterEvaluator evaluator = new NonRedundantConverterEvaluator(object, targetType, context);
-		return (T) chain.apply(evaluator);
+		ConverterEvaluator evaluator = new NonRedundantConverterEvaluator(source, targetType, context);
+		try {
+			return (T) chain.apply(evaluator);
+		} catch(ConversionException e) {
+			TypeWrapper sourceWrappedType = TypeWrapper.wrap(source.getClass());
+			//if the source object is an array of primitives
+			if(sourceWrappedType instanceof ArrayTypeWrapper && sourceWrappedType.getBaseType() instanceof Class && ((Class)sourceWrappedType.getBaseType()).isPrimitive()) 
+				return convert(key, new ArrayIterator(source), targetType, context);
+			else
+				throw e;
+		}
 	}		
 	
 }

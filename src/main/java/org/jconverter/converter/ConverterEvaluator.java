@@ -33,7 +33,12 @@ public class ConverterEvaluator<T,U> implements Function<Object, U> {
 	}
 
 	public U applyConverter(Converter<T,U> processingObject) {
-		return processingObject.apply(sourceObject, targetType, context);
+		try {
+			return processingObject.apply(sourceObject, targetType, context);
+		} catch(ClassCastException e) {
+			throw e;
+		}
+		
 	}
 	
 	public U applyChain(ConverterRegister processingObject) {
