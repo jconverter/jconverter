@@ -2,7 +2,7 @@ package org.jconverter.converter;
 
 
 /**
- * This exception should be thrown when a problem occurs when transforming an arbitrary object to its Jpc term representation or vice-versa
+ * This exception is thrown when a problem occurs when converting an arbitrary object.
  * @author sergioc
  *
  */

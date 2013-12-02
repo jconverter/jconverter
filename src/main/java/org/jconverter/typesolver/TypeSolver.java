@@ -3,12 +3,17 @@ package org.jconverter.typesolver;
 import java.lang.reflect.Type;
 
 /**
- * Assigns the best conversion target type to a source object.
+ * Recommends the best conversion target type to a source object.
  * @author sergioc
  *
  */
 public interface TypeSolver<T> {
 	
+	/**
+	 * 
+	 * @param object the object which conversion target type to recommend.
+	 * @return the recommended type.
+	 */
 	public abstract Type getType(T object);
 	
 }
