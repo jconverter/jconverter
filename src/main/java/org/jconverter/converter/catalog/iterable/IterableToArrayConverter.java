@@ -10,7 +10,7 @@ public class IterableToArrayConverter<T> implements Converter<Iterable, T[]> {
 
 	@Override
 	public T[] apply(Iterable source, Type targetType, JConverter context) {
-		return (T[]) new IteratorToArrayConverter().apply(source.iterator(), targetType, context);
+		return new IteratorToArrayConverter<T>().apply(source.iterator(), targetType, context);
 	}
 
 }

@@ -13,7 +13,7 @@ public class ArrayToCollectionConverter<T,U extends Collection> implements Conve
 
 	@Override
 	public U apply(T[] source, Type targetType, JConverter context) {
-		return (U) new IteratorToCollectionConverter().apply(asList(source).iterator(), targetType, context);
+		return new IteratorToCollectionConverter<U>().apply(asList(source).iterator(), targetType, context);
 	}
 
 }

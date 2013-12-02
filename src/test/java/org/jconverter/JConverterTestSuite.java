@@ -7,6 +7,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({InstanceCreatorTest.class, TypeSolverTest.class, ConverterTest.class})
+@Suite.SuiteClasses({InstanceCreatorTest.class, TypeSolverTest.class, ConverterTest.class, JConverterTutorialTest.class})
 public class JConverterTestSuite {
 }

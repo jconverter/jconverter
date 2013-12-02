@@ -7,12 +7,10 @@ import java.lang.reflect.TypeVariable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jconverter.JConverter;
 import org.jconverter.typesolver.TypeSolverEvaluator.NonRedundantTypeSolverEvaluator;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
-import org.jgum.category.Key;
 import org.jgum.category.type.TypeCategory;
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
@@ -20,7 +18,7 @@ import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 
 import com.google.common.base.Optional;
 
-public class JGumTypeSolverManager implements TypeSolverManager {
+public class JGumTypeSolverManager extends TypeSolverManager {
 
 	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
 	

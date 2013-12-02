@@ -31,7 +31,7 @@ import com.google.common.base.Optional;
  * @author sergioc
  *
  */
-public class JGumInstantiationManager implements InstantiationManager {
+public class JGumInstantiationManager extends InstantiationManager {
 	
 	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
 	
@@ -66,14 +66,6 @@ public class JGumInstantiationManager implements InstantiationManager {
 	
 	public JGumInstantiationManager(JGum jgum) {
 		this.jgum = jgum;
-	}
-
-	private void register(Class clazz) {
-		register(DEFAULT_KEY, clazz);
-	}
-	
-	private void register(InstanceCreator instanceCreator) {
-		register(DEFAULT_KEY, instanceCreator);
 	}
 	
 	@Override

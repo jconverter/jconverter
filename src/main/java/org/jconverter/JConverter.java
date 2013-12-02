@@ -45,10 +45,15 @@ public class JConverter {
 	public <T> T convert(Object source, Type targetType) {
 		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
 		Class targetClass = targetTypeWrapper.getRawClass();
+		
 		if(targetClass.isInstance(source)) {
-			if(targetType.equals(targetClass) //the target type is a raw class (no type parameters).
-					|| TypeWrapper.wrap(source.getClass()).as(targetType).equals(targetType)) //there are type parameters, and they are the same than the source object.
+			if(!targetTypeWrapper.hasActualTypeArguments()) //the target type does not have actual type arguments.
 				return (T) source;
+			else {
+				Type asTargetType = TypeWrapper.wrap(source.getClass()).asType(targetClass);
+				if(asTargetType.equals(targetType)) //there are type parameters, and they are the same than the source object.
+					return (T) source;
+			}
 		}
 		return converterManager.convert(new ConverterKey(getDefaultKey()), source, targetType, this);
 	}
@@ -72,7 +77,7 @@ public class JConverter {
 	}
 
 	public <T> T instantiate(Object key, Type targetType) {
-		return new JConverterProxy(this, key).instantiate(key, targetType);
+		return new JConverterProxy(this, key).instantiate(targetType);
 	}
 	
 	public Type getType(Object object) {
@@ -80,7 +85,7 @@ public class JConverter {
 	}
 	
 	public Type getType(Object key, Object object) {
-		return new JConverterProxy(this, key).getType(key, object);
+		return new JConverterProxy(this, key).getType(object);
 	}
 	
 }

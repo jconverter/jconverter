@@ -14,7 +14,7 @@ public class EnumerationToCollectionConverter<T extends Collection> implements C
 
 	@Override
 	public T apply(Enumeration source, Type targetType, JConverter context) {
-		return (T) new IteratorToCollectionConverter().apply(Iterators.forEnumeration(source), targetType, context);
+		return new IteratorToCollectionConverter<T>().apply(Iterators.forEnumeration(source), targetType, context);
 	}
 
 }

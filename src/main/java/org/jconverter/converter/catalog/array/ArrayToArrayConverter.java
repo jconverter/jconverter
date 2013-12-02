@@ -12,7 +12,7 @@ public class ArrayToArrayConverter<T, U> implements Converter<T[], U[]> {
 
 	@Override
 	public U[] apply(T[] source, Type targetType, JConverter context) {
-		return (U[]) new IteratorToArrayConverter().apply(asList(source).iterator(), targetType, context);
+		return new IteratorToArrayConverter<U>().apply(asList(source).iterator(), targetType, context);
 	}
 
 }

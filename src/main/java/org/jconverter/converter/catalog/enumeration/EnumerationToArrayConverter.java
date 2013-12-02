@@ -13,7 +13,7 @@ public class EnumerationToArrayConverter<T> implements Converter<Enumeration, T[
 
 	@Override
 	public T[] apply(Enumeration source, Type targetType, JConverter context) {
-		return (T[]) new IteratorToArrayConverter().apply(Iterators.forEnumeration(source), targetType, context);
+		return new IteratorToArrayConverter<T>().apply(Iterators.forEnumeration(source), targetType, context);
 	}
 
 }

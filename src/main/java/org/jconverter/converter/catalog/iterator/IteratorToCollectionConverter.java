@@ -21,14 +21,14 @@ public class IteratorToCollectionConverter<T extends Collection> implements Conv
 		} else {
 			componentType = Object.class;
 		}
-		Collection collection = null;
+		T collection = null;
 		collection = context.instantiate(targetType);
 		while(source.hasNext()) {
 			Object next = source.next();
 			Object converted = context.convert(next, componentType);
 			collection.add(converted);
 		}
-		return (T) collection;
+		return collection;
 	}
 
 }

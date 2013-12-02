@@ -14,22 +14,32 @@ import org.jconverter.converter.catalog.array.ArrayToCollectionConverter;
 import org.jconverter.converter.catalog.array.ArrayToEnumerationConverter;
 import org.jconverter.converter.catalog.array.ArrayToIterableConverter;
 import org.jconverter.converter.catalog.array.ArrayToIteratorConverter;
+import org.jconverter.converter.catalog.array.ArrayToMapConverter;
 import org.jconverter.converter.catalog.calendar.CalendarToNumberConverter;
 import org.jconverter.converter.catalog.enumeration.EnumerationToArrayConverter;
 import org.jconverter.converter.catalog.enumeration.EnumerationToCollectionConverter;
 import org.jconverter.converter.catalog.enumeration.EnumerationToEnumerationConverter;
 import org.jconverter.converter.catalog.enumeration.EnumerationToIterableConverter;
 import org.jconverter.converter.catalog.enumeration.EnumerationToIteratorConverter;
+import org.jconverter.converter.catalog.enumeration.EnumerationToMapConverter;
 import org.jconverter.converter.catalog.iterable.IterableToArrayConverter;
 import org.jconverter.converter.catalog.iterable.IterableToCollectionConverter;
 import org.jconverter.converter.catalog.iterable.IterableToEnumerationConverter;
 import org.jconverter.converter.catalog.iterable.IterableToIterableConverter;
 import org.jconverter.converter.catalog.iterable.IterableToIteratorConverter;
+import org.jconverter.converter.catalog.iterable.IterableToMapConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToArrayConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToCollectionConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToEnumerationConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToIterableConverter;
 import org.jconverter.converter.catalog.iterator.IteratorToIteratorConverter;
+import org.jconverter.converter.catalog.iterator.IteratorToMapConverter;
+import org.jconverter.converter.catalog.map.MapToArrayConverter;
+import org.jconverter.converter.catalog.map.MapToCollectionConverter;
+import org.jconverter.converter.catalog.map.MapToEnumerationConverter;
+import org.jconverter.converter.catalog.map.MapToIterableConverter;
+import org.jconverter.converter.catalog.map.MapToIteratorConverter;
+import org.jconverter.converter.catalog.map.MapToMapConverter;
 import org.jconverter.converter.catalog.number.NumberToBooleanConverter;
 import org.jconverter.converter.catalog.number.NumberToCalendarConverter;
 import org.jconverter.converter.catalog.number.NumberToGregorianCalendarConverter;
@@ -57,7 +67,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
-public class JGumConverterManager implements ConverterManager {
+public class JGumConverterManager extends ConverterManager {
 
 	private static Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
 	
@@ -84,24 +94,35 @@ public class JGumConverterManager implements ConverterManager {
 		converterManager.register(new IteratorToEnumerationConverter());
 		converterManager.register(new IteratorToIterableConverter());
 		converterManager.register(new IteratorToIteratorConverter());
+		converterManager.register(new IteratorToMapConverter());
 		
 		converterManager.register(new IterableToArrayConverter());
 		converterManager.register(new IterableToCollectionConverter());
 		converterManager.register(new IterableToEnumerationConverter());
 		converterManager.register(new IterableToIterableConverter());
 		converterManager.register(new IterableToIteratorConverter());
+		converterManager.register(new IterableToMapConverter());
 		
 		converterManager.register(new EnumerationToArrayConverter());
 		converterManager.register(new EnumerationToCollectionConverter());
 		converterManager.register(new EnumerationToEnumerationConverter());
 		converterManager.register(new EnumerationToIterableConverter());
 		converterManager.register(new EnumerationToIteratorConverter());
+		converterManager.register(new EnumerationToMapConverter());
 		
 		converterManager.register(new ArrayToArrayConverter());
 		converterManager.register(new ArrayToCollectionConverter());
 		converterManager.register(new ArrayToEnumerationConverter());
 		converterManager.register(new ArrayToIterableConverter());
 		converterManager.register(new ArrayToIteratorConverter());
+		converterManager.register(new ArrayToMapConverter());
+		
+		converterManager.register(new MapToArrayConverter());
+		converterManager.register(new MapToCollectionConverter());
+		converterManager.register(new MapToEnumerationConverter());
+		converterManager.register(new MapToIterableConverter());
+		converterManager.register(new MapToIteratorConverter());
+		converterManager.register(new MapToMapConverter());
 		
 		converterManager.register(new ObjectToStringConverter());
 		return converterManager;
@@ -111,10 +132,6 @@ public class JGumConverterManager implements ConverterManager {
 	
 	public JGumConverterManager(JGum jgum) {
 		this.jgum = jgum;
-	}
-	
-	private void register(Converter converter) {
-		register(DEFAULT_KEY, converter);
 	}
 	
 	@Override
@@ -160,8 +177,8 @@ public class JGumConverterManager implements ConverterManager {
 			List<TypeCategory<?>> compatibleCategories = new ArrayList<>();
 			List<TypeCategory<?>> objectChildren = jgum.forClass(Object.class).getChildren();
 			for(TypeCategory<?> objectChild : objectChildren) {
-				wrappedType.isWeakAssignableFrom(objectChild.getLabel());
-				compatibleCategories.add(objectChild);
+				if(wrappedType.isWeakAssignableFrom(objectChild.getLabel()))
+					compatibleCategories.add(objectChild);
 			}
 			return compatibleCategories;
 		} else

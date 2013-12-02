@@ -21,6 +21,7 @@ public class IteratorConverterTest {
 	private Iterator<Integer> getIterator() {
 		return asList(1,2,3).iterator();
 	}
+	
 	@Test
 	public void testIteratorToCollection() {
 		JConverter jconverter = new JConverter();

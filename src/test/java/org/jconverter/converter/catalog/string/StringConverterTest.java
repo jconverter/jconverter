@@ -85,7 +85,7 @@ public class StringConverterTest {
 		assertEquals(new BigDecimal(123), jconverter.convert("123", BigDecimal.class));
 	}
 	
-	//@Test
+	@Test
 	public void testToAtomicInteger() {
 		JConverter jconverter = new JConverter();
 		AtomicInteger ai = jconverter.convert("123", AtomicInteger.class);

@@ -11,7 +11,7 @@ public class IterableToCollectionConverter<T extends Collection> implements Conv
 
 	@Override
 	public T apply(Iterable source, Type targetType, JConverter context) {
-		return (T) new IteratorToCollectionConverter().apply(source.iterator(), targetType, context);
+		return new IteratorToCollectionConverter<T>().apply(source.iterator(), targetType, context);
 	}
 
 }
