@@ -21,7 +21,8 @@ It seemed to me that Gson (and now my newly created library) made use of a gener
 Getting Started
 ===============
 
-
+Pre-Defined Converters
+----------------------
 
     JConverter context = new JConverter(); //a default JConverter context
     List source = asList(2,1,3); //a list of integers
@@ -40,7 +41,9 @@ Getting Started
     assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray(new String[]{})));
 		
 		
-		
+
+Custom Converters
+----------------------		
 		
     class Person {
     	String name;
@@ -101,5 +104,5 @@ In case you are using Maven, JConverter is available at the [Sonatype Spanshots 
 Contact
 =======
 
-Questions, constructive feedback and chriticism can be sent to \[uclouvain(dot)be (that-symbol-for-emails) sergio(dot)castro\] (inversing the order).
+Questions, constructive feedback and criticism can be sent to \[uclouvain(dot)be (that-symbol-for-emails) sergio(dot)castro\] (inversing the order).
 Or just drop me a line if you want to say hello :-)
