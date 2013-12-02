@@ -3,14 +3,15 @@ package org.jconverter.typesolver;
 import static java.util.Arrays.asList;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jconverter.JConverter;
 import org.jconverter.typesolver.TypeSolverEvaluator.NonRedundantTypeSolverEvaluator;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
+import org.jgum.category.Key;
 import org.jgum.category.type.TypeCategory;
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
@@ -22,6 +23,12 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 
 	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
 	
+	public static class TypeSolverKey extends Key {
+		public TypeSolverKey(Object key) {
+			super(JConverter.DEFAULT_JCONVERTER_KEY);
+		}
+	}
+	
 	private final JGum jgum;
 	
 	public JGumTypeSolverManager(JGum jgum) {
@@ -29,40 +36,41 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	}
 	
 	@Override
-	public void register(final Object key, final TypeSolver typeSolver) {
+	public void register(Object unwrappedKey, final TypeSolver typeSolver) {
+		final TypeSolverKey key = new TypeSolverKey(unwrappedKey);
 		Type typeSolverType = TypeWrapper.wrap(typeSolver.getClass()).asType(TypeSolver.class);
 		TypeWrapper typeSolverTypeWrapper = TypeWrapper.wrap(typeSolverType);
 		Type sourceType = null;
-		if(typeSolverTypeWrapper.hasActualTypeArguments())
+		if(typeSolverTypeWrapper.hasActualTypeArguments()) {
 			sourceType = typeSolverTypeWrapper.getActualTypeArguments()[0];
-		if(sourceType == null || //there are no type arguments or ...
-				(sourceType instanceof TypeVariable && TypeVariable.class.cast(sourceType).getBounds().length == 0)) { // ... the type argument is a type variable with empty bounds.
+		} else {
 			logger.warn("Type solver does not specify a source type. It will be registered at the Object class.");
 			sourceType = Object.class;
 		}
+
 		TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
 		if(!(sourceTypeWrapper instanceof VariableTypeWrapper)) {
 			TypeCategory<?> sourceTypeCategory = jgum.forClass(sourceTypeWrapper.getRawClass());
-			getOrCreateChain(sourceTypeCategory, key).addFirst(typeSolver);
+			getOrCreateChain(key, sourceTypeCategory).addFirst(typeSolver);
 		} else { //the type argument is a TypeVariable with non-empty bounds.
 			VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) sourceTypeWrapper;
 			List<Type> upperBoundariesTypes = asList(variableTypeWrapper.getUpperBounds());
 			final List<Class<?>> upperBoundariesClasses = TypeUtil.asRawClasses(upperBoundariesTypes);
 			List<TypeCategory<?>> boundTypeCategories = jgum.getTypeCategorization().findBoundedTypes(upperBoundariesClasses);
 			for(TypeCategory<?> boundTypeCategory : boundTypeCategories) {
-				getOrCreateChain(boundTypeCategory, key).addFirst(typeSolver); //set the type solver for all the known types that are in the boundaries.
+				getOrCreateChain(key, boundTypeCategory).addFirst(typeSolver); //set the type solver for all the known types that are in the boundaries.
 			}
 			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
 				@Override
 				public void onCategorization(TypeCategory<?> category) {
 					if(category.isInBoundaries(upperBoundariesClasses))
-						getOrCreateChain(category, key).addFirst(typeSolver);
+						getOrCreateChain(key, category).addFirst(typeSolver);
 				}
 			});
 		}
 	}
 
-	private TypeSolverChain getOrCreateChain(TypeCategory<?> typeCategory, Object key) {
+	private TypeSolverChain getOrCreateChain(TypeSolverKey key, TypeCategory<?> typeCategory) {
 		Optional<TypeSolverChain> chainOpt = typeCategory.getLocalProperty(key);
 		TypeSolverChain chain;
 		if(chainOpt.isPresent()) {
@@ -75,7 +83,8 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	}
 	
 	@Override
-	public Type getType(Object key, Object object) {
+	public Type getType(Object unwrappedKey, Object object) {
+		TypeSolverKey key = new TypeSolverKey(unwrappedKey);
 		Category sourceTypeCategory = jgum.forClass(object.getClass());
 		List<TypeSolverChain> typeSolverChains = sourceTypeCategory.<TypeSolverChain>bottomUpProperties(key);
 		TypeSolverChain chain = new TypeSolverChain(typeSolverChains);

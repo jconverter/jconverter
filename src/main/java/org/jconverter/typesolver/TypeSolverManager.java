@@ -4,31 +4,26 @@ import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
 import org.jgum.JGum;
-import org.jgum.category.Key;
 
 
 public abstract class TypeSolverManager {
 	
-	public static class TypeSolverKey extends Key {
-		public TypeSolverKey(Object key) {
-			super(JConverter.DEFAULT_JCONVERTER_KEY);
-		}
-	}
-	
-	public static final Object DEFAULT_KEY = new TypeSolverKey(JConverter.DEFAULT_JCONVERTER_KEY);
-	
+	/**
+	 * @param jgum a JGum categorization context.
+	 * @return the default type solver manager.
+	 */
 	public static TypeSolverManager getDefault(JGum jgum) {
 		return new JGumTypeSolverManager(jgum);
 	}
 	
 	public void register(TypeSolver typeSolver) {
-		register(DEFAULT_KEY, typeSolver);
+		register(JConverter.DEFAULT_JCONVERTER_KEY, typeSolver);
 	}
 	
 	public abstract void register(Object typeSolverKey, final TypeSolver typeSolver);
 	
 	public Type getType(Object object) {
-		return getType(DEFAULT_KEY, object);
+		return getType(JConverter.DEFAULT_JCONVERTER_KEY, object);
 	}
 	
 	public abstract Type getType(Object typeSolverKey, Object object);

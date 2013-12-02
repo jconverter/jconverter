@@ -48,19 +48,14 @@ import org.jconverter.converter.catalog.string.StringToGregorianCalendarConverte
 import org.jconverter.converter.catalog.string.StringToNumberConverter;
 import org.jconverter.converter.catalog.string.StringToXMLGregorianCalendarConverter;
 import org.jgum.JGum;
-import org.jgum.category.Key;
 
 
 public abstract class ConverterManager {
-
-	public static class ConverterKey extends Key {
-		public ConverterKey(Object key) {
-			super(JConverter.DEFAULT_JCONVERTER_KEY);
-		}
-	}
 	
-	public static final Object DEFAULT_KEY = new ConverterKey(JConverter.DEFAULT_JCONVERTER_KEY);
-	
+	/**
+	 * @param jgum a JGum categorization context.
+	 * @return the default converter manager.
+	 */
 	public static ConverterManager getDefault(JGum jgum) {
 		JGumConverterManager converterManager = new JGumConverterManager(jgum);
 		converterManager.register(new CalendarToNumberConverter());
@@ -119,13 +114,13 @@ public abstract class ConverterManager {
 	}
 	
 	public void register(Converter converter) {
-		register(DEFAULT_KEY, converter);
+		register(JConverter.DEFAULT_JCONVERTER_KEY, converter);
 	}
 	
 	public abstract void register(Object converterKey, Converter converter);
 
 	public <T> T convert(Object object, Type targetType, JConverter context) {
-		return convert(DEFAULT_KEY, object, targetType, context);
+		return convert(JConverter.DEFAULT_JCONVERTER_KEY, object, targetType, context);
 	}
 	
 	public abstract <T> T convert(Object converterKey, Object object, Type targetType, JConverter context);

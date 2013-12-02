@@ -3,11 +3,8 @@ package org.jconverter;
 import java.lang.reflect.Type;
 
 import org.jconverter.converter.ConverterManager;
-import org.jconverter.converter.ConverterManager.ConverterKey;
 import org.jconverter.instantiation.InstantiationManager;
-import org.jconverter.instantiation.InstantiationManager.InstantiationKey;
 import org.jconverter.typesolver.TypeSolverManager;
-import org.jconverter.typesolver.TypeSolverManager.TypeSolverKey;
 import org.jconverter.typesolver.UnrecognizedObjectException;
 import org.jgum.JGum;
 import org.minitoolbox.reflection.IncompatibleTypesException;
@@ -89,7 +86,7 @@ public class JConverter {
 				targetType = targetTypeWrapper.mostSpecificType(inferredType);
 			} catch(IncompatibleTypesException e) {}
 		}
-		return converterManager.convert(new ConverterKey(getDefaultKey()), source, targetType, this);
+		return converterManager.convert(getDefaultKey(), source, targetType, this);
 	}
 	
 	/**
@@ -110,7 +107,7 @@ public class JConverter {
 	 */
 	public <T> T instantiate(Type targetType) {
 		try {
-			return instantiationManager.instantiate(new InstantiationKey(getDefaultKey()), targetType);
+			return instantiationManager.instantiate(getDefaultKey(), targetType);
 		} catch(Exception e) {
 			TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
 			Class targetClass = targetTypeWrapper.getRawClass();
@@ -138,7 +135,7 @@ public class JConverter {
 	 * @return the recommended type.
 	 */
 	public Type getType(Object object) {
-		return typeSolverManager.getType(new TypeSolverKey(getDefaultKey()), object);
+		return typeSolverManager.getType(getDefaultKey(), object);
 	}
 	
 	/**

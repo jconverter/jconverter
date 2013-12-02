@@ -9,21 +9,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jgum.JGum;
-import org.jgum.category.Key;
 
 public abstract class InstantiationManager {
 	
-	public static class InstantiationKey extends Key {
-		public InstantiationKey(Object key) {
-			super(JConverter.DEFAULT_JCONVERTER_KEY);
-		}
-	}
-	
-	public static final Object DEFAULT_KEY = new InstantiationKey(JConverter.DEFAULT_JCONVERTER_KEY);
-	
+	/**
+	 * @param jgum a JGum categorization context.
+	 * @return the default instantiation manager.
+	 */
 	public static InstantiationManager getDefault(JGum jgum) {
 		JGumInstantiationManager instantiationManager = new JGumInstantiationManager(jgum);
 		instantiationManager.register(ArrayDeque.class);
@@ -51,14 +47,22 @@ public abstract class InstantiationManager {
 		return instantiationManager;
 	}
 	
+	
 	public void register(Class clazz) {
-		register(DEFAULT_KEY, clazz);
+		register(JConverter.DEFAULT_JCONVERTER_KEY, clazz);
 	}
 	
 	public abstract void register(Object key, Class clazz);
 	
+	public void register(List<Class> classes, InstanceCreator instanceCreator) {
+		register(JConverter.DEFAULT_JCONVERTER_KEY, classes, instanceCreator);
+	}
+	
+	public abstract void register(Object key, List<Class> classes, InstanceCreator instanceCreator);
+	
+	
 	public void register(InstanceCreator instanceCreator) {
-		register(DEFAULT_KEY, instanceCreator);
+		register(JConverter.DEFAULT_JCONVERTER_KEY, instanceCreator);
 	}
 	
 	public abstract void register(Object key, InstanceCreator instanceCreator);

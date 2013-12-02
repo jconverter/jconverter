@@ -4,21 +4,14 @@ import static java.util.Arrays.asList;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jconverter.JConverter;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
+import org.jgum.category.Key;
 import org.jgum.category.type.TypeCategory;
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
@@ -35,6 +28,12 @@ public class JGumInstantiationManager extends InstantiationManager {
 	
 	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
 	
+	public static class InstantiationKey extends Key {
+		public InstantiationKey(Object key) {
+			super(JConverter.DEFAULT_JCONVERTER_KEY);
+		}
+	}
+	
 	private final JGum jgum;
 	
 	public JGumInstantiationManager(JGum jgum) {
@@ -42,7 +41,8 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 	
 	@Override
-	public void register(Object key, Class clazz) {
+	public void register(Object unwrappedKey, Class clazz) {
+		InstantiationKey key = new InstantiationKey(unwrappedKey);
 		if(Modifier.isAbstract(clazz.getModifiers()))
 			throw new RuntimeException(clazz.getName() + " should not be abstract.");
 		List<TypeCategory<?>> abstractAncestors = jgum.forClass(clazz).getAbstractAncestors();
@@ -52,16 +52,26 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 
 	@Override
-	public void register(final Object key, final InstanceCreator instanceCreator) {
+	public void register(Object unwrappedKey, List<Class> classes, InstanceCreator instanceCreator) {
+		InstantiationKey key = new InstantiationKey(unwrappedKey);
+		for(Class clazz : classes) {
+			TypeCategory<?> typeCategory = jgum.forClass(clazz);
+			typeCategory.setProperty(key, instanceCreator);
+		}
+	}
+	
+	@Override
+	public void register(Object unwrappedKey, final InstanceCreator instanceCreator) {
+		final InstantiationKey key = new InstantiationKey(unwrappedKey);
 		Type instanceCreatorType = TypeWrapper.wrap(instanceCreator.getClass()).asType(InstanceCreator.class);
 		TypeWrapper instanceCreatorTypeWrapper = TypeWrapper.wrap(instanceCreatorType);
 		Type sourceType = null;
-		if(instanceCreatorTypeWrapper.hasActualTypeArguments())
+		if(instanceCreatorTypeWrapper.hasActualTypeArguments()) {
 			sourceType = instanceCreatorTypeWrapper.getActualTypeArguments()[0];
-		if(sourceType == null || //there are no type arguments or ...
-				(sourceType instanceof TypeVariable && TypeVariable.class.cast(sourceType).getBounds().length == 0)) { // ... the type argument is a type variable with empty bounds.
+		} else {
 			throw new RuntimeException("Instance creator does not specify a source type.");
 		}
+		
 		TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
 		if(!(sourceTypeWrapper instanceof VariableTypeWrapper)) {
 			TypeCategory<?> sourceTypeCategory = jgum.forClass(sourceTypeWrapper.getRawClass());
@@ -85,7 +95,8 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 
 	@Override
-	public <T> T instantiate(Object key, Type targetType) {
+	public <T> T instantiate(Object unwrappedKey, Type targetType) {
+		InstantiationKey key = new InstantiationKey(unwrappedKey);
 		T instantiation = null;
 		Category sourceTypeCategory = jgum.forClass(TypeWrapper.wrap(targetType).getRawClass());
 		Optional<InstanceCreator<T>> instanceCreatorOpt = sourceTypeCategory.<InstanceCreator<T>>getLocalProperty(key);

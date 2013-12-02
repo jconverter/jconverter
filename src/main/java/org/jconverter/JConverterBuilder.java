@@ -34,32 +34,63 @@ public class JConverterBuilder {
 		this.converterManager = JGumConverterManager.getDefault(jgum);
 	}
 	
+	/**
+	 * 
+	 * @return a new JConverter context according to the configured builder.
+	 */
 	public JConverter build() {
 		return new JConverter(converterManager, instantiationManager, typeSolverManager);
 	}
 	
+	/**
+	 * Registers a converter.
+	 * @param converter a converter to register.
+	 */
 	public void register(Converter converter) {
 		converterManager.register(converter);
 	}
 	
-	public void register(Object converterKey, Converter converter) {
-		converterManager.register(converterKey, converter);
+	/**
+	 * Registers a converter under a given key.
+	 * @param key the key under which the converter is registered.
+	 * @param converter the converter to register.
+	 */
+	public void register(Object key, Converter converter) {
+		converterManager.register(key, converter);
 	}
 
+	/**
+	 * Registers an instance creator.
+	 * @param instanceCreator the instance creator to register.
+	 */
 	public void register(InstanceCreator instanceCreator) {
 		instantiationManager.register(instanceCreator);
 	}
 	
-	public void register(Object converterKey, InstanceCreator instanceCreator) {
-		instantiationManager.register(converterKey, instanceCreator);
+	/**
+	 * Registers an instance creator under a given key.
+	 * @param key the key under which the instance creator is registered.
+	 * @param instanceCreator the instance creator to register.
+	 */
+	public void register(Object key, InstanceCreator instanceCreator) {
+		instantiationManager.register(key, instanceCreator);
 	}
 	
+	/**
+	 * Registers a type solver.
+	 * @param typeSolver the type solver to register.
+	 */
 	public void register(TypeSolver typeSolver) {
 		typeSolverManager.register(typeSolver);
 	}
 	
-	public void register(Object converterKey, TypeSolver typeSolver) {
-		typeSolverManager.register(converterKey, typeSolver);
+	/**
+	 * Registers a type solver under a given key. 
+	 * @param key the key under which the instance creator is registered.
+	 * @param typeSolver the type solver to register.
+	 */
+	public void register(Object key, TypeSolver typeSolver) {
+		typeSolverManager.register(key, typeSolver);
 	}
 	
 }
