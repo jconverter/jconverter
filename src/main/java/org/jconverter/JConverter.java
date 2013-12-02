@@ -4,11 +4,8 @@ import java.lang.reflect.Type;
 
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.ConverterManager.ConverterKey;
-import org.jconverter.converter.JGumConverterManager;
 import org.jconverter.instantiation.InstantiationManager;
 import org.jconverter.instantiation.InstantiationManager.InstantiationKey;
-import org.jconverter.instantiation.JGumInstantiationManager;
-import org.jconverter.typesolver.JGumTypeSolverManager;
 import org.jconverter.typesolver.TypeSolverManager;
 import org.jconverter.typesolver.TypeSolverManager.TypeSolverKey;
 import org.jconverter.typesolver.UnrecognizedObjectException;
@@ -36,9 +33,9 @@ public class JConverter {
 	
 	public JConverter() {
 		JGum jgum = new JGum();
-		this.instantiationManager = JGumInstantiationManager.getDefault(jgum);
-		this.typeSolverManager = new JGumTypeSolverManager(jgum);
-		this.converterManager = JGumConverterManager.getDefault(jgum);
+		this.instantiationManager = InstantiationManager.getDefault(jgum);
+		this.typeSolverManager = TypeSolverManager.getDefault(jgum);
+		this.converterManager = ConverterManager.getDefault(jgum);
 		defaultKey = DEFAULT_JCONVERTER_KEY;
 	}
 	

@@ -3,6 +3,7 @@ package org.jconverter.typesolver;
 import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
+import org.jgum.JGum;
 import org.jgum.category.Key;
 
 
@@ -15,6 +16,10 @@ public abstract class TypeSolverManager {
 	}
 	
 	public static final Object DEFAULT_KEY = new TypeSolverKey(JConverter.DEFAULT_JCONVERTER_KEY);
+	
+	public static TypeSolverManager getDefault(JGum jgum) {
+		return new JGumTypeSolverManager(jgum);
+	}
 	
 	public void register(TypeSolver typeSolver) {
 		register(DEFAULT_KEY, typeSolver);

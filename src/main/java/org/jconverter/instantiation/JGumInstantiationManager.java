@@ -35,33 +35,6 @@ public class JGumInstantiationManager extends InstantiationManager {
 	
 	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
 	
-	public static JGumInstantiationManager getDefault(JGum jgum) {
-		JGumInstantiationManager instantiationManager = new JGumInstantiationManager(jgum);
-		instantiationManager.register(ArrayDeque.class);
-		instantiationManager.register(HashMap.class);
-		instantiationManager.register(HashSet.class);
-		instantiationManager.register(ArrayList.class);
-		instantiationManager.register(new InstanceCreator<Calendar>() {
-			@Override
-			public Calendar instantiate(Type type) {
-				return Calendar.getInstance(); //"Gets a calendar using the default time zone and locale. The Calendar returned is based on the current time in the default time zone with the default locale."
-			}
-		});
-		instantiationManager.register(new InstanceCreator<DateFormat>() {
-			@Override
-			public DateFormat instantiate(Type type) {
-				return new SimpleDateFormat(); //"a SimpleDateFormat using the default pattern and date format symbols for the default locale."
-			}
-		});
-		instantiationManager.register(new InstanceCreator<NumberFormat>() {
-			@Override
-			public NumberFormat instantiate(Type type) {
-				return NumberFormat.getInstance(); //"a general-purpose number format for the current default locale."
-			}
-		});
-		return instantiationManager;
-	}
-	
 	private final JGum jgum;
 	
 	public JGumInstantiationManager(JGum jgum) {

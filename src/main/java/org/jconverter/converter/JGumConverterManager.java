@@ -71,63 +71,6 @@ public class JGumConverterManager extends ConverterManager {
 
 	private static Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
 	
-	public static JGumConverterManager getDefault(JGum jgum) {
-		JGumConverterManager converterManager = new JGumConverterManager(jgum);
-		converterManager.register(new CalendarToNumberConverter());
-		
-		converterManager.register(new NumberToNumberConverter());
-		converterManager.register(new NumberToBooleanConverter());
-		converterManager.register(new NumberToXMLGregorianCalendarConverter());
-		converterManager.register(new NumberToGregorianCalendarConverter());
-		converterManager.register(new NumberToCalendarConverter());
-		
-		converterManager.register(new StringToNumberConverter());
-		converterManager.register(new StringToBooleanConverter());
-		converterManager.register(new StringToCharacterConverter());
-		converterManager.register(new StringToDateConverter());
-		converterManager.register(new StringToXMLGregorianCalendarConverter());
-		converterManager.register(new StringToGregorianCalendarConverter());
-		converterManager.register(new StringToCalendarConverter());
-		
-		converterManager.register(new IteratorToArrayConverter());
-		converterManager.register(new IteratorToCollectionConverter());
-		converterManager.register(new IteratorToEnumerationConverter());
-		converterManager.register(new IteratorToIterableConverter());
-		converterManager.register(new IteratorToIteratorConverter());
-		converterManager.register(new IteratorToMapConverter());
-		
-		converterManager.register(new IterableToArrayConverter());
-		converterManager.register(new IterableToCollectionConverter());
-		converterManager.register(new IterableToEnumerationConverter());
-		converterManager.register(new IterableToIterableConverter());
-		converterManager.register(new IterableToIteratorConverter());
-		converterManager.register(new IterableToMapConverter());
-		
-		converterManager.register(new EnumerationToArrayConverter());
-		converterManager.register(new EnumerationToCollectionConverter());
-		converterManager.register(new EnumerationToEnumerationConverter());
-		converterManager.register(new EnumerationToIterableConverter());
-		converterManager.register(new EnumerationToIteratorConverter());
-		converterManager.register(new EnumerationToMapConverter());
-		
-		converterManager.register(new ArrayToArrayConverter());
-		converterManager.register(new ArrayToCollectionConverter());
-		converterManager.register(new ArrayToEnumerationConverter());
-		converterManager.register(new ArrayToIterableConverter());
-		converterManager.register(new ArrayToIteratorConverter());
-		converterManager.register(new ArrayToMapConverter());
-		
-		converterManager.register(new MapToArrayConverter());
-		converterManager.register(new MapToCollectionConverter());
-		converterManager.register(new MapToEnumerationConverter());
-		converterManager.register(new MapToIterableConverter());
-		converterManager.register(new MapToIteratorConverter());
-		converterManager.register(new MapToMapConverter());
-		
-		converterManager.register(new ObjectToStringConverter());
-		return converterManager;
-	}
-	
 	private final JGum jgum;
 	
 	public JGumConverterManager(JGum jgum) {
