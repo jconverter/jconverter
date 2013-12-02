@@ -11,9 +11,20 @@ import org.jconverter.instantiation.JGumInstantiationManager;
 import org.jconverter.typesolver.JGumTypeSolverManager;
 import org.jconverter.typesolver.TypeSolverManager;
 import org.jconverter.typesolver.TypeSolverManager.TypeSolverKey;
+import org.jconverter.typesolver.UnrecognizedObjectException;
 import org.jgum.JGum;
+import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
+/**
+ * A conversion context.
+ * Its main elements are:
+ *  - The converter manager.
+ *  - The instantiation manager.
+ *  - The type solver manager.
+ * @author sergioc
+ *
+ */
 public class JConverter {
 	
 	public static final Object DEFAULT_JCONVERTER_KEY = new Object();
@@ -54,6 +65,16 @@ public class JConverter {
 				if(asTargetType.equals(targetType)) //there are type parameters, and they are the same than the source object.
 					return (T) source;
 			}
+		}
+		
+		Type inferredType = null;
+		try {
+			inferredType = typeSolverManager.getType(source);
+		} catch(UnrecognizedObjectException e) {}
+		if(inferredType != null) {
+			try {
+				targetType = targetTypeWrapper.mostSpecificType(inferredType);
+			} catch(IncompatibleTypesException e) {}
 		}
 		return converterManager.convert(new ConverterKey(getDefaultKey()), source, targetType, this);
 	}
