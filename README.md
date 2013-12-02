@@ -9,17 +9,31 @@ Why JConverter ?
 Some months ago I needed a library that simplifies the task of bi-directional convertions between arbitrary Java objects and their JSON representation.
 After a bit of research I found Google's [Gson](https://code.google.com/p/google-gson/ "Google's Gson"), and I decided that it was pretty cool and intuitive to use.
 
-Some time after this finding, I needed a library for converting between Java objects and their arbitrary Prolog term representations. Unfortunately, nothing like that existed at the moment. However, I still had fresh in my mind the Gson library and its simple mechanism for applying Java-JSON conversions. So I re-implemented Gson (for the scenario of Java - Prolog term bi-directional conversions) and... it worked nicely! 
-I presented it in an [ECOOP co-lacated workshop](http://wasdett.org/2013/ "WASDeTT") and the feedback was positive in general.
+Some time after this finding, I needed this time a library for converting between arbitrary Java objects and their Prolog term representations. Unfortunately, nothing like that existed at the moment. However, I still had fresh in my mind the Gson library and its simple mechanism for applying Java-JSON conversions. So I re-implemented Gson (for the scenario of Java - Prolog terms bi-directional conversions) and... it worked nicely! 
+I presented it at an [ECOOP co-lacated workshop](http://wasdett.org/2013/ "WASDeTT") and the feedback I received was positive in general.
 
-However, I was not completely happy after my implementation. My library duplicated the work of other programmers, and although it targeted another domain, it still remained, from a functional point of view, quite similar.
-It seemed to me that Gson (and now my newly created library) made use of a general pattern for converting between distinct representation of certain objects. Therefore, JConverter is my effort on generalizing this conversion pattern in a simple and intuitive framework.
+Nevertheless, I was not completely satisfied after my implementation. My library duplicated the work of other programmers, and although it targeted another domain, it still remained, from a functional perspective, quite similar.
+It seemed to me that Gson (and now my newly created library) made use of a general pattern for converting between distinct representation of certain objects. The pattern seems to work fine in at least two different domains, but no library had generalized it until the moment.
+
+Therefore, JConverter is my effort on providing a generalization of this conversion pattern in a simple and intuitive framework.
 
 
 
 
 Getting Started
 ===============
+
+JConverter allows to register converters between different representations of Java objects.
+To facilitate its usage, many converters between common Java types are already pre-included in the library.
+Therefore, to execute simple conversions often the only steps required are:
+
+- Instantiate a JConverter context.
+- Obtain the object to convert.
+- Define the target type of the conversion.
+- Accomplish the conversion.
+
+
+An intuitive example is presented in the code extract below:
 
 Pre-Defined Converters
 ----------------------
@@ -32,13 +46,13 @@ Pre-Defined Converters
     //Conversion:
     Set<String> orderedSet = context.convert(source, targetType); //converting source object to target type
     //TESTING RESULT:
-    assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray(new String[]{})));
+    assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray()));
     
     //Or if you prefer:
     Convertable convertable = new Convertable(source, context);
     orderedSet = convertable.as(targetType);
     //TESTING RESULT:
-    assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray(new String[]{})));
+    assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray()));
 		
 		
 
