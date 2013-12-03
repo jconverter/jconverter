@@ -59,7 +59,7 @@ Pre-Defined Converters
 Custom Converters
 ----------------------		
 
-Often the custom converters pre-efined by JConverter are not enough. Consider the following class:
+Often the custom converters pre-defined by JConverter are not enough. Consider the following class:
 	
     class Person {
     	String name;
@@ -68,7 +68,7 @@ Often the custom converters pre-efined by JConverter are not enough. Consider th
     	}
     }
 
-The following code snippet shows how to register, in a JConverter context, a converter between a String and an instance of the Person class:
+The following code snippet shows how to register, in a JConverter context, a simple custom converter between a String and an instance of the Person class:
 		
     JConverterBuilder builder = JConverterBuilder.create();
     builder.register(new Converter<String, Person>() {
@@ -79,7 +79,7 @@ The following code snippet shows how to register, in a JConverter context, a con
     });
     JConverter context = builder.build(); //a custom JConverter context
 
-Let's define our source object (i.e., the object to convert) as a map. The key of this map are a person identifier (e.g., a passport number) the values are the person names, like in the snippet below:
+Let's define our source object (i.e., the object to convert) as a map. The keys of this map are person identifiers (e.g., passport numbers) and the values are person names, as in the snippet below:
     
     
     Map<String, String> map = new HashMap<String, String>() {{
