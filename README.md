@@ -106,7 +106,7 @@ Behind the Courtains
 ====================
 
 JConverter creates and manages a categorization of converters by means of the [JGum](https://github.com/jgum/jgum "JGum library") library.
-Relying on the [type categorization mechanisms](http://jgum.github.com/tutorial/ "JGum tutorial") provided by JGum, the best converters for a given conversion operation are found and applied, forming an implicit chain of responsibility (this procedure will be documented in more detail on a future version of this guide).
+Relying on the [type categorization mechanisms](http://jgum.github.com/tutorial/index.html "JGum tutorial") provided by JGum, the best converters for a given conversion operation are found and applied, forming an implicit chain of responsibility (this procedure will be documented in more detail on a future version of this guide).
 
 
 
