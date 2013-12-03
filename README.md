@@ -23,6 +23,9 @@ Therefore, JConverter is my effort on providing a generalization of this convers
 Getting Started
 ===============
 
+Pre-Defined Converters
+----------------------
+
 JConverter allows to register converters between different representations of Java objects.
 To facilitate its usage, many converters between common Java types are, by default, pre-included in the library.
 Therefore, to execute simple conversions the only steps required are:
@@ -35,8 +38,6 @@ Therefore, to execute simple conversions the only steps required are:
 
 An intuitive example is presented in the code extract below:
 
-Pre-Defined Converters
-----------------------
 
     JConverter context = new JConverter(); //a default JConverter context
     List source = asList(2,1,3); //a list of integers
