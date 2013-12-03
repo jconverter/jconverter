@@ -60,7 +60,7 @@ An intuitive example is presented in the code extract below:
 Custom Converters
 ----------------------		
 
-Often the custom converters pre-defined by JConverter are not enough. Consider the following class:
+Often the default converters pre-defined by JConverter are not enough. Consider the following class:
 	
     class Person {
     	String name;
