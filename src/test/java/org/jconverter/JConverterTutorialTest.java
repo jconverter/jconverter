@@ -33,13 +33,13 @@ public class JConverterTutorialTest {
 		//Conversion:
 		Set<String> orderedSet = context.convert(source, targetType); //converting source object to target type
 		//TESTING RESULT:
-		assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray(new String[]{})));
+		assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray()));
 		
 		//Or if you prefer:
 		Convertable convertable = new Convertable(source, context);
 		orderedSet = convertable.as(targetType);
 		//TESTING RESULT:
-		assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray(new String[]{})));
+		assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray()));
 	}
 	
 	@Test
