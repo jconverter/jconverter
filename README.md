@@ -6,14 +6,14 @@ A Java framework to categorize and apply conversions between arbitrary objects.
 Why JConverter ?
 ================
 
-Some months ago I needed a library that simplifies the task of bi-directional convertions between arbitrary Java objects and their JSON representation.
-After a bit of research I found Google's [Gson](https://code.google.com/p/google-gson/ "Google's Gson"), and I decided that it was pretty cool and intuitive to use.
+Some months ago I was in need of a library that simplifies the task of bi-directional convertions between arbitrary Java objects and their JSON representation.
+After a bit of research I found [Google's Gson](https://code.google.com/p/google-gson/ "Google's Gson") and decided that it was pretty cool and intuitive to use.
 
 Some time after this finding, I needed this time a library for converting between arbitrary Java objects and their Prolog term representations. Unfortunately, nothing like that existed at the moment. However, I still had fresh in my mind the Gson library and its simple mechanism for applying Java-JSON conversions. So I re-implemented Gson (for the scenario of Java - Prolog terms bi-directional conversions) and... it worked nicely! 
-I presented it at an [ECOOP co-lacated workshop](http://wasdett.org/2013/ "WASDeTT") and the feedback I received was positive in general.
+I presented it at an [ECOOP co-located workshop](http://wasdett.org/2013/ "WASDeTT") and the feedback I received was reasonably positive.
 
-Nevertheless, I was not completely satisfied after my implementation. My library duplicated the work of other programmers, and although it targeted another domain, it still remained, from a functional perspective, quite similar.
-It seemed to me that Gson (and now my newly created library) made use of a general pattern for converting between distinct representation of certain objects. The pattern seems to work fine in at least two different domains, but no library had generalized it until the moment.
+Nevertheless, I was not completely satisfied after my implementation. My library duplicated the work of other programmers and, although it targeted another domain, it still remained, from a functional perspective, quite similar.
+It seemed to me that Gson (and now my newly created library) made use of an architectural pattern for converting between distinct representation of certain objects. The pattern seems to work fine for at least two different domains, but no one had generalized it until the moment.
 
 Therefore, JConverter is my effort on providing a generalization of this conversion pattern in a simple and intuitive framework.
 
@@ -24,8 +24,8 @@ Getting Started
 ===============
 
 JConverter allows to register converters between different representations of Java objects.
-To facilitate its usage, many converters between common Java types are already pre-included in the library.
-Therefore, to execute simple conversions often the only steps required are:
+To facilitate its usage, many converters between common Java types are, by default, pre-included in the library.
+Therefore, to execute simple conversions the only steps required are:
 
 - Instantiate a JConverter context.
 - Obtain the object to convert.
@@ -58,13 +58,17 @@ Pre-Defined Converters
 
 Custom Converters
 ----------------------		
-		
+
+Often the custom converters pre-efined by JConverter are not enough. Consider the following class:
+	
     class Person {
     	String name;
     	public Person(String name) {
     		this.name = name;
     	}
     }
+
+The following code snippet shows how to register, in a JConverter context, a converter between a String and an instance of the Person class:
 		
     JConverterBuilder builder = JConverterBuilder.create();
     builder.register(new Converter<String, Person>() {
@@ -74,12 +78,18 @@ Custom Converters
     	}
     });
     JConverter context = builder.build(); //a custom JConverter context
+
+Let's define our source object (i.e., the object to convert) as a map. The key of this map are a person identifier (e.g., a passport number) the values are the person names, like in the snippet below:
+    
+    
     Map<String, String> map = new HashMap<String, String>() {{
     	put("1", "Sarah");
     	put("2", "Abraham");
     	put("3", "Isaac");
     }};
-		
+    
+The following code converts this map to a new map having integers as its keys and instances of Person as its values:
+
     Type targetType = new TypeToken<Map<Integer,Person>>(){}.getType(); //target type is Map<Integer,Person>
 		
     Convertable convertable = new Convertable(map, context);
@@ -89,6 +99,14 @@ Custom Converters
     assertEquals("Sarah", convertedMap.get(1).name);
     assertEquals("Abraham", convertedMap.get(2).name);
     assertEquals("Isaac", convertedMap.get(3).name);
+
+
+Behind the Courtains
+====================
+
+JConverter creates and manages a categorization of converters by means of the [JGum](https://github.com/jgum/jgum "JGum library") library.
+Relying on the [type categorization mechanisms](http://jgum.github.com/tutorial/ "JGum tutorial") provided by JGum, the best converters for a given conversion operation are found and applied, forming an implicit chain of responsibility (this procedure will be documented in more detail on a future version of this guide).
+
 
 
 License
