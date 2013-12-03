@@ -13,9 +13,9 @@ Some time after this finding, I needed this time a library for converting betwee
 I presented it at an [ECOOP co-located workshop](http://wasdett.org/2013/ "WASDeTT") and the feedback I received was reasonably positive.
 
 Nevertheless, I was not completely satisfied with my implementation. My library somehow duplicated the work of other programmers and, although it targeted another domain, it still remained, from a functional perspective, quite similar.
-It seemed to me that Gson (and now my newly created library) made use of a new architectural pattern for converting between distinct representation of certain objects. The pattern seems to work fine for at least two different domains, but no one had generalized it until the moment.
+It seemed to me that Gson (and now my newly created library) made use of a new architectural pattern for converting between distinct representation of certain objects. The pattern seemed to work fine for at least two different domains, but no one had generalized it until the moment.
 
-Therefore, JConverter is my effort on providing a generalization of this conversion pattern in a simple and intuitive framework.
+Therefore, JConverter is an effort on providing a generalization of this conversion pattern in a simple and intuitive framework.
 
 
 
