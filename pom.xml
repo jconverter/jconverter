@@ -10,7 +10,7 @@
     
 	<groupId>com.github.jconverter</groupId>
 	<artifactId>jconverter</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-alpha-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>jconverter</name>
 	<description>A Java framework to categorize and apply conversions between arbitrary objects</description>
