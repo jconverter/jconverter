@@ -10,6 +10,7 @@ import org.jgum.JGum;
 import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
+//This class is inspired by the Gson class from Google's Gson library (http://code.google.com/p/google-gson/)
 /**
  * A conversion context.
  * Its main components are:
