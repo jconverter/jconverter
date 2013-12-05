@@ -1,131 +1,75 @@
 package org.jconverter.converter;
 
-import static java.util.Arrays.asList;
-
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
-import org.jconverter.typesolver.JGumTypeSolverManager;
 import org.jgum.JGum;
-import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
-import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 
 public class ConverterRegister {
 
-	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
+	private final static Logger logger = Logger.getLogger(ConverterRegister.class);
 	
-	private final List<ProcessedConverter> processedConverters;
+	private final List<TypedConverter<?,?>> typedConverters;
 	private final JGum jgum;
 	
 	public ConverterRegister(JGum jgum) {
-		processedConverters = new ArrayList<>();
+		typedConverters = new ArrayList<>();
 		this.jgum = jgum;
 	}
 	
-	public void addFirst(Converter converter) {
-		processedConverters.add(0, new ProcessedConverter(converter));
+	public void addFirst(TypedConverter<?,?> converter) {
+		typedConverters.add(0, converter);
 	}
 	
-	public List<Converter> orderedConverters(Type targetType) {
+	public List<Converter<?,?>> orderedConverters(Type targetType) {
 		TreeSet<ContextedConverter> contextedConverters = new TreeSet<>(); //TreeSet will keep the natural ordering of its members.
-		for(int i = 0; i<processedConverters.size(); i++) {
-			ProcessedConverter processedConverter = processedConverters.get(i);
-			if(processedConverter.isCompatible(targetType)) {
-				ContextedConverter contextedConverter = new ContextedConverter(processedConverter, i, jgum, targetType);
+		for(int i = 0; i<typedConverters.size(); i++) {
+			TypedConverter typedConverter = typedConverters.get(i);
+			if(typedConverter.isReturnTypeCompatible(targetType)) {
+				ContextedConverter contextedConverter = new ContextedConverter(typedConverter, i, jgum, targetType);
 				contextedConverters.add(contextedConverter);
 			}
 		}
-		List<Converter> converters = new ArrayList<>();
+		List<Converter<?,?>> converters = new ArrayList<>();
 		for(ContextedConverter contextedConverter : contextedConverters) {
 			converters.add(contextedConverter.getConverter());
 		}
 		return converters;
 	}
 	
-	
-	private class ProcessedConverter {
-		private final Converter converter;
-		private final Type returnType;
-		private final Class<?> returnClass;
-		private final List<Class<?>> returnTypeUpperBounds;
-		
-		public ProcessedConverter(Converter converter) {
-			this.converter = converter;
-			TypeWrapper converterTypeWrapper = TypeWrapper.wrap(converter.getClass()).as(Converter.class);
-			Type returnType = null;
-			if(converterTypeWrapper.hasActualTypeArguments())
-				returnType = converterTypeWrapper.getActualTypeArguments()[1];
-			if(returnType == null || //there are no type arguments or ...
-					(returnType instanceof TypeVariable && TypeVariable.class.cast(returnType).getBounds().length == 0)) { // ... the type argument is a type variable with empty bounds.
-				logger.warn("Converter does not specify a targer type. Target will be assumed the Object class.");
-				returnType = Object.class;
-			}
-			this.returnType = returnType;
-			TypeWrapper targetTypeWrapper = TypeWrapper.wrap(returnType);
-			if(!(targetTypeWrapper instanceof VariableTypeWrapper)) {
-				returnClass = targetTypeWrapper.getRawClass();
-				returnTypeUpperBounds = null;
-			} else { //the type argument is a TypeVariable with non-empty bounds.
-				VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) targetTypeWrapper;
-				returnTypeUpperBounds = TypeUtil.asRawClasses(asList(variableTypeWrapper.getUpperBounds()));
-				returnClass = null;
-			}
-		}
-		
-		public boolean hasBoundReturnType() {
-			return returnClass == null;
-		}
-		
-		public List<Class<?>> getReturnTypeUpperBounds() {
-			return returnTypeUpperBounds;
-		}
-
-		public Class<?> getReturnClass() {
-			return returnClass;
-		}
-		
-		public boolean isCompatible(Type type) {
-			return TypeWrapper.wrap(type).isWeakAssignableFrom(returnType);
-		}
-		
-		public Converter getConverter() {
-			return converter;
-		}
-	}
 
 	
 	private class ContextedConverter implements Comparable<ContextedConverter> {
 
 		private final Type targetType;
-		private final ProcessedConverter processedConverter;
+		private final TypedConverter typedConverter;
 		private final int distanceToTarget;
 		private final int index;
 		
 		/**
 		 * The constructor assumes that the processed converter is compatible with the target type. No further verifications are accomplished.
 		 * @param targetType the target conversion type.
-		 * @param processedConverter a processed coverter.
+		 * @param typedConverter a processed coverter.
 		 * @param jgum a jgum context.
 		 */
-		public ContextedConverter(ProcessedConverter processedConverter, int index, JGum jgum, Type targetType) {
+		public ContextedConverter(TypedConverter typedConverter, int index, JGum jgum, Type targetType) {
 			this.targetType = targetType;
-			this.processedConverter = processedConverter;
-			if(processedConverter.hasBoundReturnType()) //the converter has different target types (quantified with upper bounds).
-				distanceToTarget = 0; //assuming the target type is compatible with the processedConverter, the converter return type can be the current target type.
+			this.typedConverter = typedConverter;
+			if(typedConverter.hasVariableReturnType()) //the converter has different target types (quantified with upper bounds).
+				distanceToTarget = 0; //assuming the target type is compatible with the typedConverter, the converter return type can be the current target type.
 			else {
 				Class targetClass = TypeWrapper.wrap(targetType).getRawClass();
-				distanceToTarget = jgum.forClass(processedConverter.getReturnClass()).distance(targetClass);
+				distanceToTarget = jgum.forClass(typedConverter.getReturnClass()).distance(targetClass);
 			}
 			this.index = index;
 		}
 
 		public Converter getConverter() {
-			return processedConverter.getConverter();
+			return typedConverter;
 		}
 		
 		@Override

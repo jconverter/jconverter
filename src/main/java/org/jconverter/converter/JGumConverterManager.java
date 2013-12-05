@@ -45,31 +45,29 @@ public class JGumConverterManager extends ConverterManager {
 	
 	@Override
 	public void register(final Object key, final Converter converter) {
-		Type converterType = TypeWrapper.wrap(converter.getClass()).asType(Converter.class);
-		TypeWrapper converterTypeWrapper = TypeWrapper.wrap(converterType);
-		Type sourceType = null;
-		if(converterTypeWrapper.hasActualTypeArguments()) {
-			sourceType = converterTypeWrapper.getActualTypeArguments()[0];
+		final TypedConverter typedConverter;
+		if(converter instanceof TypedConverter) {
+			typedConverter = (TypedConverter) converter;
 		} else {
-			logger.warn("Converter does not specify a source type. It will be registered at the Object class.");
-			sourceType = Object.class;
+			typedConverter = TypedConverterProxy.forConverter(converter);
 		}
 
+		Type sourceType = typedConverter.getSourceType();
 		final TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
 		if(!sourceTypeWrapper.isVariable()) {
 			TypeCategory<?> sourceTypeCategory = jgum.forClass(sourceTypeWrapper.getRawClass());
-			getOrCreateConverterRegister(key, sourceTypeCategory).addFirst(converter);
+			getOrCreateConverterRegister(key, sourceTypeCategory).addFirst(typedConverter);
 		} else { //the type argument is a variable type.
 			List<TypeCategory<?>> matchedCategories = getMatchingCategories(sourceTypeWrapper);
 			for(TypeCategory<?> matchedCategory : matchedCategories) {
-				getOrCreateConverterRegister(key, matchedCategory).addFirst(converter); //set the type solver for all the known types that are in the boundaries.
+				getOrCreateConverterRegister(key, matchedCategory).addFirst(typedConverter); //set the type solver for all the known types that are in the boundaries.
 			}
 			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
 				@Override
 				public void onCategorization(TypeCategory<?> category) {
 					//if(category.isInBoundaries(upperBoundariesClasses))
 					if(sourceTypeWrapper.isWeakAssignableFrom(category.getLabel()))
-						getOrCreateConverterRegister(key, category).addFirst(converter);
+						getOrCreateConverterRegister(key, category).addFirst(typedConverter);
 				}
 			});
 		}
