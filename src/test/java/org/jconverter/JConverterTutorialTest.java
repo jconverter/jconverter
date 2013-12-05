@@ -27,7 +27,7 @@ public class JConverterTutorialTest {
 	@Test
 	public void testDefaultConverts() {
 		JConverter context = new JConverter(); //a default JConverter context
-		List source = asList(2,1,3); //a list of integers
+		List<Integer> source = asList(2,1,3); //a list of integers
 		Type targetType = new TypeToken<TreeSet<String>>(){}.getType(); //target type is TreeSet<String> (set ordered according to the natural ordering of its members)
 		
 		//Conversion:
