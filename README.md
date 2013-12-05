@@ -3,10 +3,10 @@ JConverter
 
 A Java framework to categorize and apply conversions between arbitrary objects.
 
-Why JConverter ?
-================
+Why JConverter?
+==============
 
-Some months ago I was in need of a library that simplifies the task of bi-directional convertions between arbitrary Java objects and their JSON representation.
+Some months ago I was in need of a library that simplifies the task of bi-directional conversions between arbitrary Java objects and their JSON representation.
 After a bit of research I found [Google's Gson](https://code.google.com/p/google-gson/ "Google's Gson") and decided that it was pretty cool and intuitive to use.
 
 Some time after this finding, I needed this time a library for converting between arbitrary Java objects and their Prolog term representations. Unfortunately, nothing like that existed at the moment. However, I still had fresh in my mind the Gson library and its simple mechanism for applying Java-JSON conversions. So I re-implemented Gson for my scenario (Java - Prolog terms bi-directional conversions) and... it worked nicely! 
@@ -30,9 +30,9 @@ JConverter allows to register converters between different representations of Ja
 To facilitate its usage, many converters between common Java types are, by default, pre-included in the library.
 Therefore, to execute simple conversions the only steps required are:
 
-- Instantiate a JConverter context.
-- Obtain the object to convert.
-- Define the target type of the conversion.
+- Instantiate a JConverter context,
+- Obtain the object to convert,
+- Define the target type of the conversion,
 - Accomplish the conversion.
 
 
@@ -60,7 +60,7 @@ An intuitive example is presented in the code extract below:
 Custom Converters
 ----------------------		
 
-Often the default converters pre-defined by JConverter are not enough. Consider the following class:
+Often the default converters pre-defined by JConverter are not sufficient. Consider the following class:
 	
     class Person {
     	String name;
@@ -102,11 +102,11 @@ The following code converts this map to a new map having integers as its keys an
     assertEquals("Isaac", convertedMap.get(3).name);
 
 
-Behind the Courtains
+Behind the Curtains
 ====================
 
 JConverter creates and manages a categorization of converters by means of the [JGum](https://github.com/jgum/jgum "JGum library") library.
-Relying on the [type categorization mechanisms](http://jgum.github.com/tutorial/index.html "JGum tutorial") provided by JGum, the best converters for a given conversion operation are found and applied, forming an implicit chain of responsibility (this procedure will be documented in more detail on a future version of this guide).
+Relying on the [type categorization mechanisms](http://jgum.github.com/tutorial/index.html "JGum tutorial") provided by JGum, the best converters for a given conversion operation are found and applied, forming an implicit chain of responsibility (this procedure will be documented in more detail in a future version of this guide).
 
 
 
@@ -115,10 +115,10 @@ License
 JConverter is open source, distributed under the terms of this [license](LICENSE.txt).
 
 
-Try it !
+Try it!
 =============
 
-If you found JConverter interesting, you may want to take a look to the [API](http://jconverter.github.com/apidocs/ "API documentation ") documentation.
+If you found JConverter interesting, you may want to take a look at the [API](http://jconverter.github.com/apidocs/ "API documentation ") documentation.
 
 In case you are using Maven, JConverter is available at the [Sonatype Spanshots repository](https://oss.sonatype.org/index.html#nexus-search;quick~jconverter "Sonatype Spanshots repository"). Just add this dependency to your POM to include it into your project.
 
