@@ -29,9 +29,9 @@ public class JConverterBuilder {
 	
 	private JConverterBuilder() {
 		JGum jgum = new JGum();
-		this.instantiationManager = JGumInstantiationManager.getDefault(jgum);
-		this.typeSolverManager = new JGumTypeSolverManager(jgum);
-		this.converterManager = JGumConverterManager.getDefault(jgum);
+		this.converterManager = JGumConverterManager.createDefault(jgum);
+		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
+		this.typeSolverManager = JGumTypeSolverManager.createDefault(jgum);
 	}
 	
 	/**

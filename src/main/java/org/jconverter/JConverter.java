@@ -3,7 +3,10 @@ package org.jconverter;
 import java.lang.reflect.Type;
 
 import org.jconverter.converter.ConverterManager;
+import org.jconverter.converter.JGumConverterManager;
 import org.jconverter.instantiation.InstantiationManager;
+import org.jconverter.instantiation.JGumInstantiationManager;
+import org.jconverter.typesolver.JGumTypeSolverManager;
 import org.jconverter.typesolver.TypeSolverManager;
 import org.jconverter.typesolver.UnrecognizedObjectException;
 import org.jgum.JGum;
@@ -28,9 +31,9 @@ public class JConverter {
 	
 	public JConverter() {
 		JGum jgum = new JGum();
-		this.instantiationManager = InstantiationManager.getDefault(jgum);
-		this.typeSolverManager = TypeSolverManager.getDefault(jgum);
-		this.converterManager = ConverterManager.getDefault(jgum);
+		this.converterManager = JGumConverterManager.createDefault(jgum);
+		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
+		this.typeSolverManager = JGumTypeSolverManager.createDefault(jgum);
 	}
 	
 	/**

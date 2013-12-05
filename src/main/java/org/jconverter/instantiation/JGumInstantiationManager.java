@@ -26,6 +26,16 @@ public class JGumInstantiationManager extends InstantiationManager {
 	
 	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
 	
+	/**
+	 * @param jgum a JGum categorization context.
+	 * @return an instance of JGumInstantiationManager configured with default instance creators.
+	 */
+	public static InstantiationManager createDefault(JGum jgum) {
+		JGumInstantiationManager instantiationManager = new JGumInstantiationManager(jgum);
+		registerDefaults(instantiationManager);
+		return instantiationManager;
+	}
+	
 	private final JGum jgum;
 	
 	public JGumInstantiationManager(JGum jgum) {

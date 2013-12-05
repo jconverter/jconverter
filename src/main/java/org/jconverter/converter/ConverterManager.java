@@ -47,7 +47,6 @@ import org.jconverter.converter.catalog.string.StringToDateConverter;
 import org.jconverter.converter.catalog.string.StringToGregorianCalendarConverter;
 import org.jconverter.converter.catalog.string.StringToNumberConverter;
 import org.jconverter.converter.catalog.string.StringToXMLGregorianCalendarConverter;
-import org.jgum.JGum;
 
 
 public abstract class ConverterManager {
@@ -55,11 +54,10 @@ public abstract class ConverterManager {
 	public static final Object DEFAULT_KEY = new Object();
 	
 	/**
-	 * @param jgum a JGum categorization context.
-	 * @return the default converter manager.
+	 * Registers default converters in the given converter manager.
+	 * @param converterManager a converter manager.
 	 */
-	public static ConverterManager getDefault(JGum jgum) {
-		JGumConverterManager converterManager = new JGumConverterManager(jgum);
+	public static void registerDefaults(ConverterManager converterManager) {
 		converterManager.register(new CalendarToNumberConverter());
 		
 		converterManager.register(new NumberToNumberConverter());
@@ -112,7 +110,6 @@ public abstract class ConverterManager {
 		converterManager.register(new MapToMapConverter());
 		
 		converterManager.register(new ObjectToStringConverter());
-		return converterManager;
 	}
 	
 	public void register(Converter converter) {

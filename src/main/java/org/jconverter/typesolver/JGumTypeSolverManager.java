@@ -21,6 +21,14 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 
 	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
 	
+	/**
+	 * @param jgum a JGum categorization context.
+	 * @return an instance of TypeSolverManager configured with default type solvers.
+	 */
+	public static TypeSolverManager createDefault(JGum jgum) {
+		return new JGumTypeSolverManager(jgum); //no default type solvers in the current version.
+	}
+	
 	private final JGum jgum;
 	
 	public JGumTypeSolverManager(JGum jgum) {

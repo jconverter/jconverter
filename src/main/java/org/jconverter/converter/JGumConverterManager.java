@@ -27,6 +27,16 @@ public class JGumConverterManager extends ConverterManager {
 
 	private static Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
 	
+	/**
+	 * @param jgum a JGum categorization context.
+	 * @return an instance of JGumConverterManager converter manager configured with default converters.
+	 */
+	public static ConverterManager createDefault(JGum jgum) {
+		JGumConverterManager converterManager = new JGumConverterManager(jgum);
+		registerDefaults(converterManager);
+		return converterManager;
+	}
+	
 	private final JGum jgum;
 	
 	public JGumConverterManager(JGum jgum) {

@@ -11,19 +11,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.jconverter.JConverter;
-import org.jgum.JGum;
-
 public abstract class InstantiationManager {
 	
 	public static final Object DEFAULT_KEY = new Object();
 	
 	/**
-	 * @param jgum a JGum categorization context.
-	 * @return the default instantiation manager.
+	 * Registers default instance creators in the given instantiation manager.
+	 * @param instantiationManager an instantiation manager.
 	 */
-	public static InstantiationManager getDefault(JGum jgum) {
-		JGumInstantiationManager instantiationManager = new JGumInstantiationManager(jgum);
+	public static void registerDefaults(InstantiationManager instantiationManager) {
 		instantiationManager.register(ArrayDeque.class);
 		instantiationManager.register(HashMap.class);
 		instantiationManager.register(HashSet.class);
@@ -46,7 +42,6 @@ public abstract class InstantiationManager {
 				return NumberFormat.getInstance(); //"a general-purpose number format for the current default locale."
 			}
 		});
-		return instantiationManager;
 	}
 	
 	
