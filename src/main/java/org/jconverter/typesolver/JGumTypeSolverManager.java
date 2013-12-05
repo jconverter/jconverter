@@ -6,12 +6,10 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jconverter.JConverter;
 import org.jconverter.typesolver.TypeSolverEvaluator.NonRedundantTypeSolverEvaluator;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
-import org.jgum.category.Key;
 import org.jgum.category.type.TypeCategory;
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
@@ -23,12 +21,6 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 
 	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
 	
-	public static class TypeSolverKey extends Key {
-		public TypeSolverKey(Object key) {
-			super(JConverter.DEFAULT_JCONVERTER_KEY);
-		}
-	}
-	
 	private final JGum jgum;
 	
 	public JGumTypeSolverManager(JGum jgum) {
@@ -36,8 +28,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	}
 	
 	@Override
-	public void register(Object unwrappedKey, final TypeSolver typeSolver) {
-		final TypeSolverKey key = new TypeSolverKey(unwrappedKey);
+	public void register(final Object key, final TypeSolver typeSolver) {
 		Type typeSolverType = TypeWrapper.wrap(typeSolver.getClass()).asType(TypeSolver.class);
 		TypeWrapper typeSolverTypeWrapper = TypeWrapper.wrap(typeSolverType);
 		Type sourceType = null;
@@ -70,7 +61,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 		}
 	}
 
-	private TypeSolverChain getOrCreateChain(TypeSolverKey key, TypeCategory<?> typeCategory) {
+	private TypeSolverChain getOrCreateChain(Object key, TypeCategory<?> typeCategory) {
 		Optional<TypeSolverChain> chainOpt = typeCategory.getLocalProperty(key);
 		TypeSolverChain chain;
 		if(chainOpt.isPresent()) {
@@ -83,8 +74,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	}
 	
 	@Override
-	public Type getType(Object unwrappedKey, Object object) {
-		TypeSolverKey key = new TypeSolverKey(unwrappedKey);
+	public Type getType(Object key, Object object) {
 		Category sourceTypeCategory = jgum.forClass(object.getClass());
 		List<TypeSolverChain> typeSolverChains = sourceTypeCategory.<TypeSolverChain>bottomUpProperties(key);
 		TypeSolverChain chain = new TypeSolverChain(typeSolverChains);

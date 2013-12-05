@@ -52,6 +52,8 @@ import org.jgum.JGum;
 
 public abstract class ConverterManager {
 	
+	public static final Object DEFAULT_KEY = new Object();
+	
 	/**
 	 * @param jgum a JGum categorization context.
 	 * @return the default converter manager.
@@ -114,13 +116,13 @@ public abstract class ConverterManager {
 	}
 	
 	public void register(Converter converter) {
-		register(JConverter.DEFAULT_JCONVERTER_KEY, converter);
+		register(DEFAULT_KEY, converter);
 	}
 	
 	public abstract void register(Object converterKey, Converter converter);
 
 	public <T> T convert(Object object, Type targetType, JConverter context) {
-		return convert(JConverter.DEFAULT_JCONVERTER_KEY, object, targetType, context);
+		return convert(DEFAULT_KEY, object, targetType, context);
 	}
 	
 	public abstract <T> T convert(Object converterKey, Object object, Type targetType, JConverter context);

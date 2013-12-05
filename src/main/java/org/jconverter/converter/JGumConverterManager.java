@@ -11,7 +11,6 @@ import org.jconverter.converter.ConverterEvaluator.NonRedundantConverterEvaluato
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
-import org.jgum.category.Key;
 import org.jgum.category.type.TypeCategory;
 import org.jgum.strategy.ChainOfResponsibility;
 import org.minitoolbox.collections.ArrayIterator;
@@ -28,12 +27,6 @@ public class JGumConverterManager extends ConverterManager {
 
 	private static Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
 	
-	public static class ConverterKey extends Key {
-		public ConverterKey(Object key) {
-			super(JConverter.DEFAULT_JCONVERTER_KEY);
-		}
-	}
-	
 	private final JGum jgum;
 	
 	public JGumConverterManager(JGum jgum) {
@@ -41,8 +34,7 @@ public class JGumConverterManager extends ConverterManager {
 	}
 	
 	@Override
-	public void register(Object unwrappedKey, final Converter converter) {
-		final ConverterKey key = new ConverterKey(unwrappedKey);
+	public void register(final Object key, final Converter converter) {
 		Type converterType = TypeWrapper.wrap(converter.getClass()).asType(Converter.class);
 		TypeWrapper converterTypeWrapper = TypeWrapper.wrap(converterType);
 		Type sourceType = null;
@@ -92,7 +84,7 @@ public class JGumConverterManager extends ConverterManager {
 			throw new RuntimeException(); //this should not happen
 	}
 	
-	private ConverterRegister getOrCreateConverterRegister(ConverterKey key, TypeCategory<?> typeCategory) {
+	private ConverterRegister getOrCreateConverterRegister(Object key, TypeCategory<?> typeCategory) {
 		Optional<ConverterRegister> chainOpt = typeCategory.getLocalProperty(key);
 		ConverterRegister chain;
 		if(chainOpt.isPresent()) {
@@ -105,8 +97,7 @@ public class JGumConverterManager extends ConverterManager {
 	}
 	
 	@Override
-	public <T> T convert(Object unwrappedKey, Object source, Type targetType, JConverter context) {
-		ConverterKey key = new ConverterKey(unwrappedKey);
+	public <T> T convert(Object key, Object source, Type targetType, JConverter context) {
 		Category sourceTypeCategory = jgum.forClass(source.getClass());
 		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
 		ChainOfResponsibility chain = new ChainOfResponsibility(converterRegisters, ConversionException.class);

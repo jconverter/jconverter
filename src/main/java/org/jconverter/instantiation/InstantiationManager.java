@@ -16,6 +16,8 @@ import org.jgum.JGum;
 
 public abstract class InstantiationManager {
 	
+	public static final Object DEFAULT_KEY = new Object();
+	
 	/**
 	 * @param jgum a JGum categorization context.
 	 * @return the default instantiation manager.
@@ -49,20 +51,20 @@ public abstract class InstantiationManager {
 	
 	
 	public void register(Class clazz) {
-		register(JConverter.DEFAULT_JCONVERTER_KEY, clazz);
+		register(DEFAULT_KEY, clazz);
 	}
 	
 	public abstract void register(Object key, Class clazz);
 	
 	public void register(List<Class> classes, InstanceCreator instanceCreator) {
-		register(JConverter.DEFAULT_JCONVERTER_KEY, classes, instanceCreator);
+		register(DEFAULT_KEY, classes, instanceCreator);
 	}
 	
 	public abstract void register(Object key, List<Class> classes, InstanceCreator instanceCreator);
 	
 	
 	public void register(InstanceCreator instanceCreator) {
-		register(JConverter.DEFAULT_JCONVERTER_KEY, instanceCreator);
+		register(DEFAULT_KEY, instanceCreator);
 	}
 	
 	public abstract void register(Object key, InstanceCreator instanceCreator);

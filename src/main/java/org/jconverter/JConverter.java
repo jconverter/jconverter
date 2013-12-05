@@ -22,19 +22,15 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
  */
 public class JConverter {
 	
-	public static final Object DEFAULT_JCONVERTER_KEY = new Object(); 
-	
 	private final ConverterManager converterManager; //responsible of converting objects.
 	private final InstantiationManager instantiationManager; //responsible of instantiating objects.
 	private final TypeSolverManager typeSolverManager; //responsible of recommending types for the result of a conversion.
-	protected Object defaultKey; //default key for looking-up converters, instance creators and type solvers.
 	
 	public JConverter() {
 		JGum jgum = new JGum();
 		this.instantiationManager = InstantiationManager.getDefault(jgum);
 		this.typeSolverManager = TypeSolverManager.getDefault(jgum);
 		this.converterManager = ConverterManager.getDefault(jgum);
-		defaultKey = DEFAULT_JCONVERTER_KEY;
 	}
 	
 	/**
@@ -47,15 +43,6 @@ public class JConverter {
 		this.converterManager = converterManager;
 		this.instantiationManager = instantiationManager;
 		this.typeSolverManager = typeSolverManager;
-		defaultKey = DEFAULT_JCONVERTER_KEY;
-	}
-	
-	/**
-	 * 
-	 * @return the default key of this context.
-	 */
-	public Object getDefaultKey() {
-		return defaultKey;
 	}
 	
 	/**
@@ -65,6 +52,17 @@ public class JConverter {
 	 * @return the conversion of the source object to the desired target type.
 	 */
 	public <T> T convert(Object source, Type targetType) {
+		return convert(ConverterManager.DEFAULT_KEY, source, targetType);
+	}
+	
+	/**
+	 * 
+	 * @param key constrains the registered converters, instance creators, and type solvers that will be looked up in this operation.
+	 * @param source the object to convert.
+	 * @param targetType the desired type.
+	 * @return the conversion of the source object to the desired target type.
+	 */
+	public <T> T convert(Object key, Object source, Type targetType) {
 		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
 		Class targetClass = targetTypeWrapper.getRawClass();
 		
@@ -87,18 +85,7 @@ public class JConverter {
 				targetType = targetTypeWrapper.mostSpecificType(inferredType);
 			} catch(IncompatibleTypesException e) {}
 		}
-		return converterManager.convert(getDefaultKey(), source, targetType, this);
-	}
-	
-	/**
-	 * 
-	 * @param key constrains the registered converters, instance creators, and type solvers that will be looked up in this operation.
-	 * @param source the object to convert.
-	 * @param targetType the desired type.
-	 * @return the conversion of the source object to the desired target type.
-	 */
-	public <T> T convert(Object key, Object source, Type targetType) {
-		return new JConverterProxy(this, key).convert(source, targetType);
+		return converterManager.convert(key, source, targetType, this);
 	}
 	
 	/**
@@ -107,8 +94,18 @@ public class JConverter {
 	 * @return an instance of the desired type.
 	 */
 	public <T> T instantiate(Type targetType) {
+		return instantiate(InstantiationManager.DEFAULT_KEY, targetType);
+	}
+
+	/**
+	 * 
+	 * @param key constrains the instance creators that will be looked up in this operation.
+	 * @param targetType the type to instantiate.
+	 * @return
+	 */
+	public <T> T instantiate(Object key, Type targetType) {
 		try {
-			return instantiationManager.instantiate(getDefaultKey(), targetType);
+			return instantiationManager.instantiate(key, targetType);
 		} catch(Exception e) {
 			TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
 			Class targetClass = targetTypeWrapper.getRawClass();
@@ -119,16 +116,6 @@ public class JConverter {
 			}
 		}
 	}
-
-	/**
-	 * 
-	 * @param key constrains the instance creators that will be looked up in this operation.
-	 * @param targetType the type to instantiate.
-	 * @return
-	 */
-	public <T> T instantiate(Object key, Type targetType) {
-		return new JConverterProxy(this, key).instantiate(targetType);
-	}
 	
 	/**
 	 * 
@@ -136,7 +123,7 @@ public class JConverter {
 	 * @return the recommended type.
 	 */
 	public Type getType(Object object) {
-		return typeSolverManager.getType(getDefaultKey(), object);
+		return getType(TypeSolverManager.DEFAULT_KEY, object);
 	}
 	
 	/**
@@ -146,7 +133,7 @@ public class JConverter {
 	 * @return the recommended type.
 	 */
 	public Type getType(Object key, Object object) {
-		return new JConverterProxy(this, key).getType(object);
+		return typeSolverManager.getType(TypeSolverManager.DEFAULT_KEY, object);
 	}
 	
 }
