@@ -40,7 +40,7 @@ An intuitive example is presented in the code extract below:
 
 
     JConverter context = new JConverter(); //a default JConverter context
-    List source = asList(2,1,3); //a list of integers
+    List<Integer> source = asList(2,1,3); //a list of integers
     //target type is TreeSet<String> (set ordered according to the natural ordering of its members)
     Type targetType = new TypeToken<TreeSet<String>>(){}.getType(); 
     
