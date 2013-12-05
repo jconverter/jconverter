@@ -91,7 +91,8 @@ Let's define our source object (i.e., the object to convert) as a map. The keys 
     
 The following code converts this map to a new map having integers as its keys and instances of Person as its values:
 
-    Type targetType = new TypeToken<Map<Integer,Person>>(){}.getType(); //target type is Map<Integer,Person>
+    //target type is Map<Integer,Person>
+    Type targetType = new TypeToken<Map<Integer,Person>>(){}.getType(); 
 		
     Convertable convertable = new Convertable(map, context);
     Map<Integer, Person> convertedMap = convertable.as(targetType);
