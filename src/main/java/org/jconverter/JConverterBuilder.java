@@ -19,15 +19,15 @@ import org.jgum.JGum;
  */
 public class JConverterBuilder {
 
-	private final ConverterManager converterManager;
-	private final InstantiationManager instantiationManager;
-	private final TypeSolverManager typeSolverManager;
+	protected final ConverterManager converterManager;
+	protected final InstantiationManager instantiationManager;
+	protected final TypeSolverManager typeSolverManager;
 	
 	public static JConverterBuilder create() {
 		return new JConverterBuilder();
 	}
 	
-	private JConverterBuilder() {
+	protected JConverterBuilder() {
 		JGum jgum = new JGum();
 		this.converterManager = JGumConverterManager.createDefault(jgum);
 		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
