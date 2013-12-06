@@ -65,7 +65,7 @@ public abstract class InstantiationManager {
 	public abstract void register(Object key, InstanceCreator instanceCreator);
 
 	public <T> T instantiate(Type targetType) {
-		return instantiate(targetType, targetType);
+		return instantiate(DEFAULT_KEY, targetType);
 	}
 	
 	public abstract <T> T instantiate(Object key, Type targetType);

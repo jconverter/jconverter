@@ -1,13 +1,19 @@
 package org.jconverter.instantiation;
 
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.jconverter.JConverter;
 import org.jgum.JGum;
 import org.junit.Test;
 
@@ -30,12 +36,7 @@ public class InstanceCreatorTest {
 	class BoundedCollectionInstanceCreator<T extends Collection> implements InstanceCreator<T> {
 		@Override
 		public T instantiate(Type type) {
-			return (T) new ArrayList(); //this is not really correct, but just for the sake of testing ...
-//			try {
-//				return (T) TypeWrapper.wrap(type).getRawClass().newInstance();
-//			} catch (InstantiationException | IllegalAccessException e) {
-//				throw new RuntimeException(e);
-//			}
+			return (T) new ArrayList(); //this is not really correct (the type is not considered), but just for the sake of testing ...
 		}
 	}
 	
@@ -89,5 +90,16 @@ public class InstanceCreatorTest {
 		} catch(Exception e) {}
 	}
 	
+	@Test
+	public void testDefaultInstantiations() {
+		JConverter jconverter = new JConverter();
+		assertNotNull(jconverter.instantiate(List.class));
+		assertNotNull(jconverter.instantiate(Iterable.class));
+		assertNotNull(jconverter.instantiate(ArrayList.class));
+		assertNotNull(jconverter.instantiate(Set.class));
+		assertNotNull(jconverter.instantiate(Map.class));
+		assertNotNull(jconverter.instantiate(Deque.class));
+		assertNotNull(jconverter.instantiate(Calendar.class));
+	}
 	
 }
