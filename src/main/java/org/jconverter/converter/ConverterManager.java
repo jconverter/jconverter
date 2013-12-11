@@ -1,6 +1,8 @@
 package org.jconverter.converter;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.catalog.ObjectToStringConverter;
@@ -47,11 +49,21 @@ import org.jconverter.converter.catalog.string.StringToDateConverter;
 import org.jconverter.converter.catalog.string.StringToGregorianCalendarConverter;
 import org.jconverter.converter.catalog.string.StringToNumberConverter;
 import org.jconverter.converter.catalog.string.StringToXMLGregorianCalendarConverter;
+import org.jgum.strategy.ChainOfResponsibility;
 
 
 public abstract class ConverterManager {
 	
 	public static final Object DEFAULT_KEY = new Object();
+	
+	//TODO move to the Converter interface when Java8 is out
+	public static <T,V> ChainOfResponsibility<Converter<T,V>, V> chainConverters(List<Converter<T,V>> converters) {
+		List<Converter<T,V>> typedConverters = new ArrayList<>();
+		for(Converter<T,V> converter : converters)
+			typedConverters.add(TypedConverter.forConverter(converter));
+		ChainOfResponsibility<Converter<T,V>,V> chain = new ChainOfResponsibility<>(typedConverters);
+		return chain;
+	}
 	
 	/**
 	 * Registers default converters in the given converter manager.
