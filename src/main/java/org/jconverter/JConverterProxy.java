@@ -38,15 +38,5 @@ public class JConverterProxy extends JConverter {
 	public <T> T instantiate(Object key, Type targetType) {
 		return proxiedJConverter.instantiate(key, targetType);
 	}
-	
-	@Override
-	public Type getType(Object object) {
-		return proxiedJConverter.getType(object);
-	}
-	
-	@Override
-	public Type getType(Object key, Object object) {
-		return proxiedJConverter.getType(key, object);
-	}
 
 }

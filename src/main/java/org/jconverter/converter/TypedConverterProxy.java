@@ -10,7 +10,7 @@ public class TypedConverterProxy<T,U> extends TypedConverter<T,U> {
 	
 	private final static Logger logger = Logger.getLogger(TypedConverterProxy.class);
 	
-	public static TypedConverterProxy<?,?> forConverter(Converter<?,?> converter) {
+	public static <T,U> TypedConverterProxy<T,U> forConverter(Converter<T,U> converter) {
 		Type sourceType;
 		Type returnType;
 		TypeWrapper converterTypeWrapper = TypeWrapper.wrap(converter.getClass()).as(Converter.class);
@@ -22,7 +22,7 @@ public class TypedConverterProxy<T,U> extends TypedConverter<T,U> {
 			sourceType = Object.class;
 			returnType = Object.class;
 		}
-		return new TypedConverterProxy(converter, sourceType, returnType);
+		return new TypedConverterProxy<>(converter, sourceType, returnType);
 	}
 	
 	

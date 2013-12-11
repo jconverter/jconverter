@@ -30,13 +30,13 @@ public class ConverterRegister {
 		for(int i = 0; i<typedConverters.size(); i++) {
 			TypedConverter typedConverter = typedConverters.get(i);
 			if(typedConverter.isReturnTypeCompatible(targetType)) {
-				ContextedConverter contextedConverter = new ContextedConverter(typedConverter, i, jgum, targetType);
+				ContextedConverter contextedConverter = new ContextedConverter(typedConverter, i, targetType);
 				contextedConverters.add(contextedConverter);
 			}
 		}
 		List<Converter<?,?>> converters = new ArrayList<>();
 		for(ContextedConverter contextedConverter : contextedConverters) {
-			converters.add(contextedConverter.getConverter());
+			converters.add(contextedConverter.typedConverter);
 		}
 		return converters;
 	}
@@ -45,31 +45,29 @@ public class ConverterRegister {
 	
 	private class ContextedConverter implements Comparable<ContextedConverter> {
 
-		private final Type targetType;
 		private final TypedConverter typedConverter;
-		private final int distanceToTarget;
 		private final int index;
+		private final Type targetType;
+		private final int distanceToTarget;
+		
 		
 		/**
 		 * The constructor assumes that the processed converter is compatible with the target type. No further verifications are accomplished.
+		 * @param typedConverter a processed converter.
+		 * @param index the index of the converter in the converter register.
 		 * @param targetType the target conversion type.
-		 * @param typedConverter a processed coverter.
-		 * @param jgum a jgum context.
+
 		 */
-		public ContextedConverter(TypedConverter typedConverter, int index, JGum jgum, Type targetType) {
-			this.targetType = targetType;
+		public ContextedConverter(TypedConverter typedConverter, int index, Type targetType) {
 			this.typedConverter = typedConverter;
+			this.index = index;
+			this.targetType = targetType;
 			if(typedConverter.hasVariableReturnType()) //the converter has different target types (quantified with upper bounds).
 				distanceToTarget = 0; //assuming the target type is compatible with the typedConverter, the converter return type can be the current target type.
 			else {
 				Class targetClass = TypeWrapper.wrap(targetType).getRawClass();
 				distanceToTarget = jgum.forClass(typedConverter.getReturnClass()).distance(targetClass);
 			}
-			this.index = index;
-		}
-
-		public Converter getConverter() {
-			return typedConverter;
 		}
 		
 		@Override

@@ -6,11 +6,7 @@ import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.JGumConverterManager;
 import org.jconverter.instantiation.InstantiationManager;
 import org.jconverter.instantiation.JGumInstantiationManager;
-import org.jconverter.typesolver.JGumTypeSolverManager;
-import org.jconverter.typesolver.TypeSolverManager;
-import org.jconverter.typesolver.UnrecognizedObjectException;
 import org.jgum.JGum;
-import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 //This class is inspired by the Gson class from Google's Gson library (http://code.google.com/p/google-gson/)
@@ -27,25 +23,26 @@ public class JConverter {
 	
 	private final ConverterManager converterManager; //responsible of converting objects.
 	private final InstantiationManager instantiationManager; //responsible of instantiating objects.
-	private final TypeSolverManager typeSolverManager; //responsible of recommending types for the result of a conversion.
 	
 	public JConverter() {
-		JGum jgum = new JGum();
-		this.converterManager = JGumConverterManager.createDefault(jgum);
-		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
-		this.typeSolverManager = JGumTypeSolverManager.createDefault(jgum);
+		this(new JGum());
 	}
 	
 	/**
-	 * 
+	 * @param jgum a categorization context.
+	 */
+	protected JConverter(JGum jgum) {
+		this.converterManager = JGumConverterManager.createDefault(jgum);
+		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
+	}
+	
+	/**
 	 * @param converterManager a converter manager responsible of converting objects.
 	 * @param instantiationManager an instance creator manager responsible of instantiating objects.
-	 * @param typeSolverManager a type solver manager responsible of recommending types for the result of a conversion.
 	 */
-	public JConverter(ConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager) {
+	public JConverter(ConverterManager converterManager, InstantiationManager instantiationManager) {
 		this.converterManager = converterManager;
 		this.instantiationManager = instantiationManager;
-		this.typeSolverManager = typeSolverManager;
 	}
 	
 	/**
@@ -67,8 +64,13 @@ public class JConverter {
 	 */
 	public <T> T convert(Object key, Object source, Type targetType) {
 		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
-		Class targetClass = targetTypeWrapper.getRawClass();
 		
+		//Implementation note: this does not work correctly if the target type has type parameters but the source type does not.
+		//In that scenario, the problem is that the source type does not provide type data about its components.
+//		if(targetTypeWrapper.isWeakAssignableFrom(source.getClass())) 
+//			return (T) source;
+		
+		Class targetClass = targetTypeWrapper.getRawClass();
 		if(targetClass.isInstance(source)) {
 			if(!targetTypeWrapper.hasActualTypeArguments()) //the target type does not have actual type arguments.
 				return (T) source;
@@ -79,15 +81,16 @@ public class JConverter {
 			}
 		}
 		
-		Type inferredType = null;
-		try {
-			inferredType = typeSolverManager.getType(source);
-		} catch(UnrecognizedObjectException e) {}
-		if(inferredType != null) {
-			try {
-				targetType = targetTypeWrapper.mostSpecificType(inferredType);
-			} catch(IncompatibleTypesException e) {}
-		}
+//		Type inferredType = null;
+//		try {
+//			inferredType = typeSolverManager.getType(source);
+//		} catch(UnrecognizedObjectException e) {}
+//		if(inferredType != null) {
+//			try {
+//				targetType = targetTypeWrapper.mostSpecificType(inferredType);
+//			} catch(IncompatibleTypesException e) {}
+//		}
+		
 		return converterManager.convert(key, source, targetType, this);
 	}
 	
@@ -118,25 +121,6 @@ public class JConverter {
 				throw new RuntimeException(e1);
 			}
 		}
-	}
-	
-	/**
-	 * 
-	 * @param object the object which conversion target type to recommend.
-	 * @return the recommended type.
-	 */
-	public Type getType(Object object) {
-		return getType(TypeSolverManager.DEFAULT_KEY, object);
-	}
-	
-	/**
-	 * 
-	 * @param key constrains the type solvers that will be looked up in this operation.
-	 * @param object the object which conversion target type to recommend.
-	 * @return the recommended type.
-	 */
-	public Type getType(Object key, Object object) {
-		return typeSolverManager.getType(TypeSolverManager.DEFAULT_KEY, object);
 	}
 	
 }

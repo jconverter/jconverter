@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.ConverterEvaluator.NonRedundantConverterEvaluator;
+import org.jconverter.converter.ConverterRegisterEvaluator.NonRedundantConverterEvaluator;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
@@ -45,12 +45,7 @@ public class JGumConverterManager extends ConverterManager {
 	
 	@Override
 	public void register(final Object key, final Converter converter) {
-		final TypedConverter typedConverter;
-		if(converter instanceof TypedConverter) {
-			typedConverter = (TypedConverter) converter;
-		} else {
-			typedConverter = TypedConverterProxy.forConverter(converter);
-		}
+		final TypedConverter typedConverter = TypedConverter.forConverter(converter);
 
 		Type sourceType = typedConverter.getSourceType();
 		final TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
@@ -109,7 +104,8 @@ public class JGumConverterManager extends ConverterManager {
 		Category sourceTypeCategory = jgum.forClass(source.getClass());
 		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
 		ChainOfResponsibility chain = new ChainOfResponsibility(converterRegisters, ConversionException.class);
-		ConverterEvaluator evaluator = new NonRedundantConverterEvaluator(source, targetType, context);
+		ConverterEvaluator converterEvaluator = new ConverterEvaluator(source, targetType, context);
+		ConverterRegisterEvaluator evaluator = new ConverterRegisterEvaluator(new NonRedundantConverterEvaluator(converterEvaluator), targetType);
 		try {
 			return (T) chain.apply(evaluator);
 		} catch(ConversionException e) {

@@ -1,20 +1,18 @@
 package org.jconverter.converter;
 
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.jconverter.JConverter;
-import org.jgum.strategy.ChainOfResponsibility;
+import org.minitoolbox.reflection.IncompatibleTypesException;
+import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 import com.google.common.base.Function;
 
-public class ConverterEvaluator<T,U> implements Function<Object, U> {
+public class ConverterEvaluator<T,U> implements Function<Converter<T,U>,U> {
 
-	private final T sourceObject;
-	private final Type targetType;
-	private final JConverter context;
+	protected final T sourceObject;
+	protected final Type targetType;
+	protected final JConverter context;
 	
 	public ConverterEvaluator(T sourceObject, Type targetType, JConverter context) {
 		this.sourceObject = sourceObject;
@@ -23,49 +21,17 @@ public class ConverterEvaluator<T,U> implements Function<Object, U> {
 	}
 	
 	@Override
-	public U apply(Object processingObject) {
-		if(processingObject instanceof Converter) {
-			return applyConverter((Converter)processingObject);
-		} else if(processingObject instanceof ConverterRegister) {
-			return applyChain((ConverterRegister)processingObject);
-		} else
-			throw new RuntimeException("Wrong processing object.");
-	}
-
-	public U applyConverter(Converter<T,U> processingObject) {
+	public U apply(Converter<T, U> converter) {
+		TypedConverter<T,U> typedConverter = TypedConverter.forConverter(converter);
+		Type bestTypeForConverter;
 		try {
-			return processingObject.apply(sourceObject, targetType, context);
-		} catch(ClassCastException e) {
-			throw e;
+			bestTypeForConverter = TypeWrapper.wrap(targetType).mostSpecificType(typedConverter.getReturnType()); //will throw an exception if the types are not compatible
+		} catch(IncompatibleTypesException e) {
+			throw new ConversionException();
 		}
+		return typedConverter.apply(sourceObject, bestTypeForConverter, context);
 		
-	}
-	
-	public U applyChain(ConverterRegister processingObject) {
-		List<Converter<T,U>> converters = (List)processingObject.orderedConverters(targetType);
-		ChainOfResponsibility<Converter<T,U>,U> chain = new ChainOfResponsibility<>(converters, ConversionException.class);
-		return chain.apply((Function)this);
+		//return typedConverter.apply(sourceObject, targetType, context);
 	}
 
-	
-	static class NonRedundantConverterEvaluator<T,U> extends ConverterEvaluator<T,U> {
-
-		private final Set<Converter<T, U>> visited;
-		
-		public NonRedundantConverterEvaluator(T sourceObject, Type targetType, JConverter context) {
-			super(sourceObject, targetType, context);
-			visited = new HashSet<>();
-		}
-		
-		@Override
-		public U applyConverter(Converter<T,U> processingObject) {
-			if(visited.contains(processingObject))
-				throw new ConversionException();
-			else {
-				visited.add(processingObject);
-				return super.applyConverter(processingObject);
-			}
-		}
-		
-	}
 }
