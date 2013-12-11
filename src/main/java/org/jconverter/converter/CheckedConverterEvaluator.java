@@ -4,9 +4,9 @@ import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
 
-public class CheckConverterEvaluator<T, U> extends ConverterEvaluator<T, U> {
+public class CheckedConverterEvaluator<T, U> extends ConverterEvaluator<T, U> {
 
-	public CheckConverterEvaluator(T sourceObject, Type targetType, JConverter context) {
+	public CheckedConverterEvaluator(T sourceObject, Type targetType, JConverter context) {
 		super(sourceObject, targetType, context);
 	}
 
