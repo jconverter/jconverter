@@ -25,7 +25,10 @@ public class JConverterBuilder {
 	}
 	
 	protected JConverterBuilder() {
-		JGum jgum = new JGum();
+		this(new JGum());
+	}
+	
+	protected JConverterBuilder(JGum jgum) {
 		this.converterManager = JGumConverterManager.createDefault(jgum);
 		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
 	}
