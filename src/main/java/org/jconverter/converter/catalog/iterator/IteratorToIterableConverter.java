@@ -22,9 +22,7 @@ public class IteratorToIterableConverter implements Converter<Iterator, Iterable
 			componentType = Object.class;
 		
 		Type listType = new ParameterizedTypeImpl(new Type[]{componentType}, null, List.class);
-		
-		List list = (List) new IteratorToCollectionConverter().apply(source, listType, context);
-		return list;
+		return (List) new IteratorToCollectionConverter().apply(source, listType, context);
 	}
 
 }
