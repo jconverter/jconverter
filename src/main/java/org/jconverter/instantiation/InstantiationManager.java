@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 public abstract class InstantiationManager {
 	
 	public static final Object DEFAULT_KEY = new Object();
@@ -28,6 +32,16 @@ public abstract class InstantiationManager {
 			@Override
 			public Calendar instantiate(Type type) {
 				return Calendar.getInstance(); //"Gets a calendar using the default time zone and locale. The Calendar returned is based on the current time in the default time zone with the default locale."
+			}
+		});
+		instantiationManager.register(new InstanceCreator<XMLGregorianCalendar>() {
+			@Override
+			public XMLGregorianCalendar instantiate(Type type) {
+				try {
+					return DatatypeFactory.newInstance().newXMLGregorianCalendar(); //All date/time datatype fields set to DatatypeConstants.FIELD_UNDEFINED or null.
+				} catch (DatatypeConfigurationException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		});
 		instantiationManager.register(new InstanceCreator<DateFormat>() {
