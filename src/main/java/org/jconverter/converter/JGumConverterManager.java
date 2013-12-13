@@ -31,13 +31,13 @@ public class JGumConverterManager extends ConverterManager {
 	 * @param jgum a JGum categorization context.
 	 * @return an instance of JGumConverterManager converter manager configured with default converters.
 	 */
-	public static ConverterManager createDefault(JGum jgum) {
+	public static JGumConverterManager createDefault(JGum jgum) {
 		JGumConverterManager converterManager = new JGumConverterManager(jgum);
 		registerDefaults(converterManager);
 		return converterManager;
 	}
 	
-	private final JGum jgum;
+	protected final JGum jgum;
 	
 	public JGumConverterManager(JGum jgum) {
 		this.jgum = jgum;
@@ -101,13 +101,9 @@ public class JGumConverterManager extends ConverterManager {
 	
 	@Override
 	public <T> T convert(Object key, Object source, Type targetType, JConverter context) {
-		Category sourceTypeCategory = jgum.forClass(source.getClass());
-		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
-		ChainOfResponsibility chain = new ChainOfResponsibility(converterRegisters, ConversionException.class);
-		ConverterEvaluator converterEvaluator = new ConverterEvaluator(source, targetType, context);
-		ConverterRegisterEvaluator evaluator = new ConverterRegisterEvaluator(new NonRedundantConverterEvaluator(converterEvaluator), targetType);
+		List<ConverterRegister> converterRegisters = getConverters(key, source.getClass());
 		try {
-			return (T) chain.apply(evaluator);
+			return evalConverters(converterRegisters, source, targetType, context);
 		} catch(ConversionException e) {
 			TypeWrapper sourceWrappedType = TypeWrapper.wrap(source.getClass());
 			//if the source object is an array of primitives
@@ -118,4 +114,16 @@ public class JGumConverterManager extends ConverterManager {
 		}
 	}		
 	
+	protected <T> T evalConverters(List<ConverterRegister> converterRegisters, Object source, Type targetType, JConverter context) {
+		ChainOfResponsibility chain = new ChainOfResponsibility(converterRegisters, ConversionException.class);
+		ConverterEvaluator converterEvaluator = new ConverterEvaluator(source, targetType, context);
+		ConverterRegisterEvaluator evaluator = new ConverterRegisterEvaluator(new NonRedundantConverterEvaluator(converterEvaluator), targetType);
+		return (T) chain.apply(evaluator);
+	}
+	
+	private List<ConverterRegister> getConverters(Object key, Class<?> clazz) {
+		Category sourceTypeCategory = jgum.forClass(clazz);
+		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
+		return converterRegisters;
+	}
 }

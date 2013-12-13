@@ -21,8 +21,8 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
  */
 public class JConverter {
 	
-	private final ConverterManager converterManager; //responsible of converting objects.
-	private final InstantiationManager instantiationManager; //responsible of instantiating objects.
+	protected final ConverterManager converterManager; //responsible of converting objects.
+	protected final InstantiationManager instantiationManager; //responsible of instantiating objects.
 	
 	public JConverter() {
 		this(new JGum());
@@ -44,7 +44,15 @@ public class JConverter {
 		this.converterManager = converterManager;
 		this.instantiationManager = instantiationManager;
 	}
-	
+
+	protected ConverterManager getConverterManager() {
+		return converterManager;
+	}
+
+	protected InstantiationManager getInstantiationManager() {
+		return instantiationManager;
+	}
+
 	/**
 	 * 
 	 * @param source the object to convert.
@@ -80,16 +88,6 @@ public class JConverter {
 					return (T) source;
 			}
 		}
-		
-//		Type inferredType = null;
-//		try {
-//			inferredType = typeSolverManager.getType(source);
-//		} catch(UnrecognizedObjectException e) {}
-//		if(inferredType != null) {
-//			try {
-//				targetType = targetTypeWrapper.mostSpecificType(inferredType);
-//			} catch(IncompatibleTypesException e) {}
-//		}
 		
 		return converterManager.convert(key, source, targetType, this);
 	}

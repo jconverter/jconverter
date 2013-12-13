@@ -30,7 +30,7 @@ public class JGumInstantiationManager extends InstantiationManager {
 	 * @param jgum a JGum categorization context.
 	 * @return an instance of JGumInstantiationManager configured with default instance creators.
 	 */
-	public static InstantiationManager createDefault(JGum jgum) {
+	public static JGumInstantiationManager createDefault(JGum jgum) {
 		JGumInstantiationManager instantiationManager = new JGumInstantiationManager(jgum);
 		registerDefaults(instantiationManager);
 		return instantiationManager;

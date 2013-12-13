@@ -29,8 +29,12 @@ public class JConverterBuilder {
 	}
 	
 	protected JConverterBuilder(JGum jgum) {
-		this.converterManager = JGumConverterManager.createDefault(jgum);
-		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
+		this(JGumConverterManager.createDefault(jgum), JGumInstantiationManager.createDefault(jgum));
+	}
+	
+	protected JConverterBuilder(ConverterManager converterManager, InstantiationManager instantiationManager) {
+		this.converterManager = converterManager;
+		this.instantiationManager = instantiationManager;
 	}
 	
 	/**
