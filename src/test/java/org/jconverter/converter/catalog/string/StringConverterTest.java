@@ -1,6 +1,7 @@
 package org.jconverter.converter.catalog.string;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -8,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jconverter.JConverter;
+import org.jconverter.converter.ConversionException;
 import org.junit.Test;
 
 public class StringConverterTest {
@@ -27,7 +29,12 @@ public class StringConverterTest {
 	@Test
 	public void testToCharacter() {
 		JConverter jconverter = new JConverter();
-		assertEquals('h', jconverter.convert("hello", Character.class));
+		assertEquals('h', jconverter.convert("h", Character.class));
+		try {
+			assertEquals('h', jconverter.convert("hello", Character.class));
+			fail();
+		} catch(ConversionException e) {}
+		
 	}
 	
 	@Test
