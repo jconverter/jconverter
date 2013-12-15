@@ -1,5 +1,7 @@
 package org.jconverter.converter;
 
+import java.lang.reflect.Type;
+
 
 /**
  * This exception is thrown when a problem occurs when converting an arbitrary object.
@@ -8,11 +10,13 @@ package org.jconverter.converter;
  */
 public class ConversionException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	public ConversionException() {
 	}
 	
-	public ConversionException(Class<?> from, Class<?> to) {
-		this(from.getName(), to.getName());
+	public ConversionException(Type from, Type to) {
+		this(from.toString(), to.toString());
 	}
 	
 	public ConversionException(String from, String to) {
@@ -26,7 +30,6 @@ public class ConversionException extends RuntimeException {
 	public ConversionException(String from, String to, Exception ex) {
 		super(formatMessage(from, to), ex);
 	}
-	
 	
 	
 	private static String formatMessage(String from, String to) {

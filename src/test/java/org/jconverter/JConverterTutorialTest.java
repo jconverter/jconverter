@@ -42,6 +42,7 @@ public class JConverterTutorialTest {
 		assertTrue(Arrays.equals(new String[]{"1","2","3"}, orderedSet.<String>toArray()));
 	}
 	
+	
 	@Test
 	public void testCustomConverters() {
 		
@@ -77,4 +78,6 @@ public class JConverterTutorialTest {
 		assertEquals("Isaac", convertedMap.get(3).name);
 	}
 	
+
+
 }
