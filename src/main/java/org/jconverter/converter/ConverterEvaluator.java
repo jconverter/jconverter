@@ -34,7 +34,7 @@ public class ConverterEvaluator<T,U> implements Function<Converter<T,U>,U> {
 			throw new ConversionException();
 		}
 		TypeWrapper wrappedBestType = TypeWrapper.wrap(bestTypeForConverter);
-		//Tthe best conversion target type is a variable type. This means that the target type is not assignable to the converter return type (but the contrary is true).
+		//The best conversion target type is a variable type. This means that the target type is not assignable to the converter return type (but the contrary is true).
 		if(wrappedBestType instanceof VariableTypeWrapper) { 
 			Type upperBounds[] = ((VariableTypeWrapper) wrappedBestType).getUpperBounds();
 			if(upperBounds.length == 1)
