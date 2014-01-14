@@ -15,6 +15,14 @@ public class Convertable {
 	/**
 	 * 
 	 * @param source the object to convert.
+	 */
+	public Convertable(Object source) {
+		this(source, new JConverter());
+	}
+	
+	/**
+	 * 
+	 * @param source the object to convert.
 	 * @param context the conversion context.
 	 */
 	public Convertable(Object source, JConverter context) {
