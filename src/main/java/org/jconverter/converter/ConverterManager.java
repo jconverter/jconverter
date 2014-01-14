@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.catalog.ObjectToStringConverter;
 import org.jconverter.converter.catalog.array.ArrayToArrayConverter;
 import org.jconverter.converter.catalog.array.ArrayToCollectionConverter;
 import org.jconverter.converter.catalog.array.ArrayToEnumerationConverter;
@@ -42,6 +41,7 @@ import org.jconverter.converter.catalog.number.NumberToCalendarConverter;
 import org.jconverter.converter.catalog.number.NumberToGregorianCalendarConverter;
 import org.jconverter.converter.catalog.number.NumberToNumberConverter;
 import org.jconverter.converter.catalog.number.NumberToXMLGregorianCalendarConverter;
+import org.jconverter.converter.catalog.object.ObjectToStringConverter;
 import org.jconverter.converter.catalog.string.StringToBooleanConverter;
 import org.jconverter.converter.catalog.string.StringToCalendarConverter;
 import org.jconverter.converter.catalog.string.StringToCharacterConverter;
@@ -124,11 +124,11 @@ public abstract class ConverterManager {
 		converterManager.register(new ObjectToStringConverter());
 	}
 	
-	public void register(Converter converter) {
+	public void register(Converter<?,?> converter) {
 		register(DEFAULT_KEY, converter);
 	}
 	
-	public abstract void register(Object converterKey, Converter converter);
+	public abstract void register(Object converterKey, Converter<?,?> converter);
 
 	public <T> T convert(Object object, Type targetType, JConverter context) {
 		return convert(DEFAULT_KEY, object, targetType, context);

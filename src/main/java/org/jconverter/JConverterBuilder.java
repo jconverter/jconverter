@@ -49,7 +49,7 @@ public class JConverterBuilder {
 	 * Registers a converter.
 	 * @param converter a converter to register.
 	 */
-	public void register(Converter converter) {
+	public void register(Converter<?,?> converter) {
 		converterManager.register(converter);
 	}
 	
@@ -58,7 +58,7 @@ public class JConverterBuilder {
 	 * @param key the key under which the converter is registered.
 	 * @param converter the converter to register.
 	 */
-	public void register(Object key, Converter converter) {
+	public void register(Object key, Converter<?,?> converter) {
 		converterManager.register(key, converter);
 	}
 
@@ -66,7 +66,7 @@ public class JConverterBuilder {
 	 * Registers an instance creator.
 	 * @param instanceCreator the instance creator to register.
 	 */
-	public void register(InstanceCreator instanceCreator) {
+	public void register(InstanceCreator<?> instanceCreator) {
 		instantiationManager.register(instanceCreator);
 	}
 	
@@ -75,7 +75,7 @@ public class JConverterBuilder {
 	 * @param key the key under which the instance creator is registered.
 	 * @param instanceCreator the instance creator to register.
 	 */
-	public void register(Object key, InstanceCreator instanceCreator) {
+	public void register(Object key, InstanceCreator<?> instanceCreator) {
 		instantiationManager.register(key, instanceCreator);
 	}
 

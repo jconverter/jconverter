@@ -59,24 +59,24 @@ public abstract class InstantiationManager {
 	}
 	
 	
-	public void register(Class clazz) {
+	public void register(Class<?> clazz) {
 		register(DEFAULT_KEY, clazz);
 	}
 	
-	public abstract void register(Object key, Class clazz);
+	public abstract void register(Object key, Class<?> clazz);
 	
-	public void register(List<Class> classes, InstanceCreator instanceCreator) {
+	public void register(List<Class<?>> classes, InstanceCreator<?> instanceCreator) {
 		register(DEFAULT_KEY, classes, instanceCreator);
 	}
 	
-	public abstract void register(Object key, List<Class> classes, InstanceCreator instanceCreator);
+	public abstract void register(Object key, List<Class<?>> classes, InstanceCreator<?> instanceCreator);
 	
 	
-	public void register(InstanceCreator instanceCreator) {
+	public void register(InstanceCreator<?> instanceCreator) {
 		register(DEFAULT_KEY, instanceCreator);
 	}
 	
-	public abstract void register(Object key, InstanceCreator instanceCreator);
+	public abstract void register(Object key, InstanceCreator<?> instanceCreator);
 
 	public <T> T instantiate(Type targetType) {
 		return instantiate(DEFAULT_KEY, targetType);

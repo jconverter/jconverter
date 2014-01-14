@@ -43,25 +43,25 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 	
 	@Override
-	public void register(Object key, Class clazz) {
+	public void register(Object key, Class<?> clazz) {
 		if(Modifier.isAbstract(clazz.getModifiers()))
 			throw new RuntimeException(clazz.getName() + " should not be abstract.");
-		List<TypeCategory<?>> abstractAncestors = jgum.forClass(clazz).getAbstractAncestors();
+		List<TypeCategory<?>> abstractAncestors = (List)jgum.forClass(clazz).getAbstractAncestors();
 		for(TypeCategory<?> abstractAncestor : abstractAncestors) {
 			abstractAncestor.setProperty(key, new SimpleInstanceCreator(clazz));
 		}
 	}
 
 	@Override
-	public void register(Object key, List<Class> classes, InstanceCreator instanceCreator) {
-		for(Class clazz : classes) {
+	public void register(Object key, List<Class<?>> classes, InstanceCreator<?> instanceCreator) {
+		for(Class<?> clazz : classes) {
 			TypeCategory<?> typeCategory = jgum.forClass(clazz);
 			typeCategory.setProperty(key, instanceCreator);
 		}
 	}
 	
 	@Override
-	public void register(final Object key, final InstanceCreator instanceCreator) {
+	public void register(final Object key, final InstanceCreator<?> instanceCreator) {
 		Type instanceCreatorType = TypeWrapper.wrap(instanceCreator.getClass()).asType(InstanceCreator.class);
 		TypeWrapper instanceCreatorTypeWrapper = TypeWrapper.wrap(instanceCreatorType);
 		Type sourceType = null;

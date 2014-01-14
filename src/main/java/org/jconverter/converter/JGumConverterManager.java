@@ -44,8 +44,8 @@ public class JGumConverterManager extends ConverterManager {
 	}
 	
 	@Override
-	public void register(final Object key, final Converter converter) {
-		final TypedConverter typedConverter = TypedConverter.forConverter(converter);
+	public void register(final Object key, final Converter<?,?> converter) {
+		final TypedConverter<?,?> typedConverter = TypedConverter.forConverter(converter);
 
 		Type sourceType = typedConverter.getSourceType();
 		final TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
@@ -72,7 +72,7 @@ public class JGumConverterManager extends ConverterManager {
 		if(wrappedType instanceof VariableTypeWrapper) {
 			VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) wrappedType;
 			List<Type> upperBoundariesTypes = asList(variableTypeWrapper.getUpperBounds());
-			final List<Class<?>> upperBoundariesClasses = TypeUtil.asRawClasses(upperBoundariesTypes);
+			List<Class<?>> upperBoundariesClasses = TypeUtil.asRawClasses(upperBoundariesTypes);
 			List<TypeCategory<?>> boundTypeCategories = jgum.getTypeCategorization().findBoundedTypes(upperBoundariesClasses);
 			return boundTypeCategories;
 		} else if(wrappedType instanceof ArrayTypeWrapper) {

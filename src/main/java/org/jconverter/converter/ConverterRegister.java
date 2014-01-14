@@ -28,7 +28,7 @@ public class ConverterRegister {
 	public List<Converter<?,?>> orderedConverters(Type targetType) {
 		TreeSet<ContextedConverter> contextedConverters = new TreeSet<>(); //TreeSet will keep the natural ordering of its members.
 		for(int i = 0; i<typedConverters.size(); i++) {
-			TypedConverter typedConverter = typedConverters.get(i);
+			TypedConverter<?,?> typedConverter = typedConverters.get(i);
 			if(typedConverter.isReturnTypeCompatible(targetType)) {
 				ContextedConverter contextedConverter = new ContextedConverter(typedConverter, i, targetType);
 				contextedConverters.add(contextedConverter);
@@ -45,7 +45,7 @@ public class ConverterRegister {
 	
 	private class ContextedConverter implements Comparable<ContextedConverter> {
 
-		private final TypedConverter typedConverter;
+		private final TypedConverter<?,?> typedConverter;
 		private final int index;
 		private final Type targetType;
 		private final int distanceToTarget;
@@ -58,14 +58,14 @@ public class ConverterRegister {
 		 * @param targetType the target conversion type.
 
 		 */
-		public ContextedConverter(TypedConverter typedConverter, int index, Type targetType) {
+		public ContextedConverter(TypedConverter<?,?> typedConverter, int index, Type targetType) {
 			this.typedConverter = typedConverter;
 			this.index = index;
 			this.targetType = targetType;
 			if(typedConverter.hasVariableReturnType()) //the converter has different target types (quantified with upper bounds).
 				distanceToTarget = 0; //assuming the target type is compatible with the typedConverter, the converter return type can be the current target type.
 			else {
-				Class targetClass = TypeWrapper.wrap(targetType).getRawClass();
+				Class<?> targetClass = TypeWrapper.wrap(targetType).getRawClass();
 				distanceToTarget = jgum.forClass(typedConverter.getReturnClass()).distance(targetClass);
 			}
 		}
