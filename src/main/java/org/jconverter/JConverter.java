@@ -6,6 +6,7 @@ import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.JGumConverterManager;
 import org.jconverter.instantiation.InstantiationManager;
 import org.jconverter.instantiation.JGumInstantiationManager;
+import org.jconverter.instantiation.SingletonInstanceCreator;
 import org.jgum.JGum;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
@@ -65,31 +66,17 @@ public class JConverter {
 	
 	/**
 	 * 
-	 * @param key constrains the registered converters, instance creators, and type solvers that will be looked up in this operation.
+	 * @param key constrains the registered converters and factories that will be looked up in this operation.
 	 * @param source the object to convert.
 	 * @param targetType the desired type.
 	 * @return the conversion of the source object to the desired target type.
 	 */
 	public <T> T convert(Object key, Object source, Type targetType) {
-		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
-		
-		//Implementation note: this does not work correctly if the target type has type parameters but the source type does not.
-		//In that scenario, the problem is that the source type does not provide type data about its components.
-//		if(targetTypeWrapper.isWeakAssignableFrom(source.getClass())) 
-//			return (T) source;
-		
-		Class targetClass = targetTypeWrapper.getRawClass();
-		if(targetClass.isInstance(source)) {
-			if(!targetTypeWrapper.hasActualTypeArguments()) //the target type does not have actual type arguments.
-				return (T) source;
-			else {
-				Type asTargetType = TypeWrapper.wrap(source.getClass()).asType(targetClass);
-				if(asTargetType.equals(targetType)) //there are type parameters, and they are the same than the source object.
-					return (T) source;
-			}
+		try {
+			return new SingletonInstanceCreator<T>((T) source).instantiate(targetType); //will launch an exception if the object source is not compatible with the target type.
+		} catch(RuntimeException e) {
+			return converterManager.convert(key, source, targetType, this);
 		}
-		
-		return converterManager.convert(key, source, targetType, this);
 	}
 	
 	/**
@@ -110,7 +97,7 @@ public class JConverter {
 	public <T> T instantiate(Object key, Type targetType) {
 		try {
 			return instantiationManager.instantiate(key, targetType);
-		} catch(Exception e) {
+		} catch(RuntimeException e) {
 			TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
 			Class targetClass = targetTypeWrapper.getRawClass();
 			try {
