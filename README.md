@@ -1,7 +1,7 @@
 JConverter
 ==========
 
-A Java framework to categorize and apply conversions between arbitrary objects.
+A Java framework to modularize, categorize and apply conversions between arbitrary objects.
 
 Why JConverter?
 ==============
