@@ -23,6 +23,7 @@ public class NumberConverterTest {
 	public void testIntToLong() {
 		JConverter jconverter = new JConverter();
 		assertEquals(123L, jconverter.convert(123, Long.class));
+		assertEquals(123L, jconverter.convert(123, long.class));
 	}
 
 }

@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
+import com.google.common.primitives.Primitives;
 
 public class JGumConverterManager extends ConverterManager {
 
@@ -101,29 +102,31 @@ public class JGumConverterManager extends ConverterManager {
 	
 	@Override
 	public <T> T convert(Object key, Object source, Type targetType, JConverter context) {
-		List<ConverterRegister> converterRegisters = getConverters(key, source.getClass());
-		try {
-			return evalConverters(converterRegisters, source, targetType, context);
-		} catch(ConversionException e) {
-			TypeWrapper sourceWrappedType = TypeWrapper.wrap(source.getClass());
-			//if the source object is an array of primitives
-			if(sourceWrappedType instanceof ArrayTypeWrapper && sourceWrappedType.getBaseType() instanceof Class && ((Class)sourceWrappedType.getBaseType()).isPrimitive()) 
-				return convert(key, new ArrayIterator(source), targetType, context);
-			else
-				throw e;
-		}
+		JGumConverter jGumConverter = new JGumConverter(jgum, key);
+		return convert(jGumConverter, source, targetType, context);
 	}		
 	
-	protected <T> T evalConverters(List<ConverterRegister> converterRegisters, Object source, Type targetType, JConverter context) {
-		ChainOfResponsibility chain = new ChainOfResponsibility(converterRegisters, ConversionException.class);
-		ConverterEvaluator converterEvaluator = new ConverterEvaluator(source, targetType, context);
-		ConverterRegisterEvaluator evaluator = new ConverterRegisterEvaluator(new NonRedundantConverterEvaluator(converterEvaluator), targetType);
-		return (T) chain.apply(evaluator);
+	protected <T> T convert(JGumConverter jGumConverter, Object source, Type targetType, JConverter context) {
+		try {
+			return (T) jGumConverter.apply(source, targetType, context);
+		} catch(ConversionException e) {
+			TypeWrapper targetWrappedType = TypeWrapper.wrap(targetType);
+			
+			if(targetWrappedType.isPrimitive()) {
+				return convert(jGumConverter, source, Primitives.wrap(targetWrappedType.getRawClass()), context); //inboxing of the target type
+			}
+				
+			TypeWrapper sourceWrappedType = TypeWrapper.wrap(source.getClass());
+			//if the source object is an array of primitives
+			if(sourceWrappedType instanceof ArrayTypeWrapper && sourceWrappedType.getBaseType() instanceof Class && ((Class)sourceWrappedType.getBaseType()).isPrimitive()) {
+				return convert(jGumConverter, new ArrayIterator(source), targetType, context);
+			}
+			throw e;
+		}
 	}
 	
-	private List<ConverterRegister> getConverters(Object key, Class<?> clazz) {
-		Category sourceTypeCategory = jgum.forClass(clazz);
-		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
-		return converterRegisters;
-	}
+
+	
+
+	
 }
