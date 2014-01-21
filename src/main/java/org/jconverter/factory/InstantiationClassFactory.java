@@ -1,15 +1,15 @@
-package org.jconverter.instantiation;
+package org.jconverter.factory;
 
 import java.lang.reflect.Type;
 
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 
-public class SimpleInstanceCreator<T> implements InstanceCreator<T> {
+public class InstantiationClassFactory<T> implements Factory<T> {
 	
 	private final Class<? extends T> instantiationClass;
 	
-	public SimpleInstanceCreator(Class<? extends T> instantiationClass) {
+	public InstantiationClassFactory(Class<? extends T> instantiationClass) {
 		this.instantiationClass = instantiationClass;
 	}
 	

@@ -1,4 +1,4 @@
-package org.jconverter.instantiation;
+package org.jconverter.factory;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -15,26 +15,26 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-public abstract class InstantiationManager {
+public abstract class FactoryManager {
 	
 	public static final Object DEFAULT_KEY = new Object();
 	
 	/**
 	 * Registers default instance creators in the given instantiation manager.
-	 * @param instantiationManager an instantiation manager.
+	 * @param factoryManager an instantiation manager.
 	 */
-	public static void registerDefaults(InstantiationManager instantiationManager) {
-		instantiationManager.register(ArrayDeque.class);
-		instantiationManager.register(HashMap.class);
-		instantiationManager.register(HashSet.class);
-		instantiationManager.register(ArrayList.class);
-		instantiationManager.register(new InstanceCreator<Calendar>() {
+	public static void registerDefaults(FactoryManager factoryManager) {
+		factoryManager.register(ArrayDeque.class);
+		factoryManager.register(HashMap.class);
+		factoryManager.register(HashSet.class);
+		factoryManager.register(ArrayList.class);
+		factoryManager.register(new Factory<Calendar>() {
 			@Override
 			public Calendar instantiate(Type type) {
 				return Calendar.getInstance(); //"Gets a calendar using the default time zone and locale. The Calendar returned is based on the current time in the default time zone with the default locale."
 			}
 		});
-		instantiationManager.register(new InstanceCreator<XMLGregorianCalendar>() {
+		factoryManager.register(new Factory<XMLGregorianCalendar>() {
 			@Override
 			public XMLGregorianCalendar instantiate(Type type) {
 				try {
@@ -44,13 +44,13 @@ public abstract class InstantiationManager {
 				}
 			}
 		});
-		instantiationManager.register(new InstanceCreator<DateFormat>() {
+		factoryManager.register(new Factory<DateFormat>() {
 			@Override
 			public DateFormat instantiate(Type type) {
 				return new SimpleDateFormat(); //"a SimpleDateFormat using the default pattern and date format symbols for the default locale."
 			}
 		});
-		instantiationManager.register(new InstanceCreator<NumberFormat>() {
+		factoryManager.register(new Factory<NumberFormat>() {
 			@Override
 			public NumberFormat instantiate(Type type) {
 				return NumberFormat.getInstance(); //"a general-purpose number format for the current default locale."
@@ -65,18 +65,18 @@ public abstract class InstantiationManager {
 	
 	public abstract void register(Object key, Class<?> clazz);
 	
-	public void register(List<Class<?>> classes, InstanceCreator<?> instanceCreator) {
+	public void register(List<Class<?>> classes, Factory<?> instanceCreator) {
 		register(DEFAULT_KEY, classes, instanceCreator);
 	}
 	
-	public abstract void register(Object key, List<Class<?>> classes, InstanceCreator<?> instanceCreator);
+	public abstract void register(Object key, List<Class<?>> classes, Factory<?> instanceCreator);
 	
 	
-	public void register(InstanceCreator<?> instanceCreator) {
+	public void register(Factory<?> instanceCreator) {
 		register(DEFAULT_KEY, instanceCreator);
 	}
 	
-	public abstract void register(Object key, InstanceCreator<?> instanceCreator);
+	public abstract void register(Object key, Factory<?> instanceCreator);
 
 	public <T> T instantiate(Type targetType) {
 		return instantiate(DEFAULT_KEY, targetType);

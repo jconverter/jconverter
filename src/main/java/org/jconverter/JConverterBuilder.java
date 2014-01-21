@@ -3,9 +3,9 @@ package org.jconverter;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.JGumConverterManager;
-import org.jconverter.instantiation.InstanceCreator;
-import org.jconverter.instantiation.InstantiationManager;
-import org.jconverter.instantiation.JGumInstantiationManager;
+import org.jconverter.factory.Factory;
+import org.jconverter.factory.FactoryManager;
+import org.jconverter.factory.JGumFactoryManager;
 import org.jgum.JGum;
 
 
@@ -17,7 +17,7 @@ import org.jgum.JGum;
 public class JConverterBuilder {
 
 	protected final ConverterManager converterManager;
-	protected final InstantiationManager instantiationManager;
+	protected final FactoryManager factoryManager;
 	
 	
 	public static JConverterBuilder create() {
@@ -29,12 +29,12 @@ public class JConverterBuilder {
 	}
 	
 	protected JConverterBuilder(JGum jgum) {
-		this(JGumConverterManager.createDefault(jgum), JGumInstantiationManager.createDefault(jgum));
+		this(JGumConverterManager.createDefault(jgum), JGumFactoryManager.createDefault(jgum));
 	}
 	
-	protected JConverterBuilder(ConverterManager converterManager, InstantiationManager instantiationManager) {
+	protected JConverterBuilder(ConverterManager converterManager, FactoryManager factoryManager) {
 		this.converterManager = converterManager;
-		this.instantiationManager = instantiationManager;
+		this.factoryManager = factoryManager;
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class JConverterBuilder {
 	 * @return a new JConverter context according to the configured builder.
 	 */
 	public JConverter build() {
-		return new JConverter(converterManager, instantiationManager);
+		return new JConverter(converterManager, factoryManager);
 	}
 	
 	/**
@@ -66,8 +66,8 @@ public class JConverterBuilder {
 	 * Registers an instance creator.
 	 * @param instanceCreator the instance creator to register.
 	 */
-	public void register(InstanceCreator<?> instanceCreator) {
-		instantiationManager.register(instanceCreator);
+	public void register(Factory<?> instanceCreator) {
+		factoryManager.register(instanceCreator);
 	}
 	
 	/**
@@ -75,8 +75,8 @@ public class JConverterBuilder {
 	 * @param key the key under which the instance creator is registered.
 	 * @param instanceCreator the instance creator to register.
 	 */
-	public void register(Object key, InstanceCreator<?> instanceCreator) {
-		instantiationManager.register(key, instanceCreator);
+	public void register(Object key, Factory<?> instanceCreator) {
+		factoryManager.register(key, instanceCreator);
 	}
 
 	

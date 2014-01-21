@@ -1,4 +1,4 @@
-package org.jconverter.instantiation;
+package org.jconverter.factory;
 
 import static java.util.Arrays.asList;
 
@@ -22,23 +22,23 @@ import com.google.common.base.Optional;
  * @author sergioc
  *
  */
-public class JGumInstantiationManager extends InstantiationManager {
+public class JGumFactoryManager extends FactoryManager {
 	
-	private final static Logger logger = Logger.getLogger(JGumInstantiationManager.class);
+	private final static Logger logger = Logger.getLogger(JGumFactoryManager.class);
 	
 	/**
 	 * @param jgum a JGum categorization context.
-	 * @return an instance of JGumInstantiationManager configured with default instance creators.
+	 * @return an instance of JGumFactoryManager configured with default instance creators.
 	 */
-	public static JGumInstantiationManager createDefault(JGum jgum) {
-		JGumInstantiationManager instantiationManager = new JGumInstantiationManager(jgum);
+	public static JGumFactoryManager createDefault(JGum jgum) {
+		JGumFactoryManager instantiationManager = new JGumFactoryManager(jgum);
 		registerDefaults(instantiationManager);
 		return instantiationManager;
 	}
 	
 	private final JGum jgum;
 	
-	public JGumInstantiationManager(JGum jgum) {
+	public JGumFactoryManager(JGum jgum) {
 		this.jgum = jgum;
 	}
 	
@@ -48,12 +48,12 @@ public class JGumInstantiationManager extends InstantiationManager {
 			throw new RuntimeException(clazz.getName() + " should not be abstract.");
 		List<TypeCategory<?>> abstractAncestors = (List)jgum.forClass(clazz).getAbstractAncestors();
 		for(TypeCategory<?> abstractAncestor : abstractAncestors) {
-			abstractAncestor.setProperty(key, new SimpleInstanceCreator(clazz));
+			abstractAncestor.setProperty(key, new InstantiationClassFactory(clazz));
 		}
 	}
 
 	@Override
-	public void register(Object key, List<Class<?>> classes, InstanceCreator<?> instanceCreator) {
+	public void register(Object key, List<Class<?>> classes, Factory<?> instanceCreator) {
 		for(Class<?> clazz : classes) {
 			TypeCategory<?> typeCategory = jgum.forClass(clazz);
 			typeCategory.setProperty(key, instanceCreator);
@@ -61,8 +61,8 @@ public class JGumInstantiationManager extends InstantiationManager {
 	}
 	
 	@Override
-	public void register(final Object key, final InstanceCreator<?> instanceCreator) {
-		Type instanceCreatorType = TypeWrapper.wrap(instanceCreator.getClass()).asType(InstanceCreator.class);
+	public void register(final Object key, final Factory<?> instanceCreator) {
+		Type instanceCreatorType = TypeWrapper.wrap(instanceCreator.getClass()).asType(Factory.class);
 		TypeWrapper instanceCreatorTypeWrapper = TypeWrapper.wrap(instanceCreatorType);
 		Type sourceType = null;
 		if(instanceCreatorTypeWrapper.hasActualTypeArguments()) {
@@ -97,7 +97,7 @@ public class JGumInstantiationManager extends InstantiationManager {
 	public <T> T instantiate(Object key, Type targetType) {
 		T instantiation = null;
 		Category sourceTypeCategory = jgum.forClass(TypeWrapper.wrap(targetType).getRawClass());
-		Optional<InstanceCreator<T>> instanceCreatorOpt = sourceTypeCategory.<InstanceCreator<T>>getLocalProperty(key);
+		Optional<Factory<T>> instanceCreatorOpt = sourceTypeCategory.<Factory<T>>getLocalProperty(key);
 		if(instanceCreatorOpt.isPresent())
 			instantiation = instanceCreatorOpt.get().instantiate(targetType);
 		else

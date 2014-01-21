@@ -1,4 +1,4 @@
-package org.jconverter.instantiation;
+package org.jconverter.factory;
 
 import java.lang.reflect.Type;
 
@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
  * @param <T> the type this converter instantiates.
  */
 //Disclaimer: This class receives its name (instead of just "Factory") to follow the same naming used in Google's Gson library.
-public interface InstanceCreator<T> {
+public interface Factory<T> {
 
 	/**
 	 * 

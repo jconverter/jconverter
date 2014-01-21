@@ -4,9 +4,9 @@ import java.lang.reflect.Type;
 
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.JGumConverterManager;
-import org.jconverter.instantiation.InstantiationManager;
-import org.jconverter.instantiation.JGumInstantiationManager;
-import org.jconverter.instantiation.SingletonInstanceCreator;
+import org.jconverter.factory.FactoryManager;
+import org.jconverter.factory.JGumFactoryManager;
+import org.jconverter.factory.SingletonFactory;
 import org.jgum.JGum;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
@@ -23,7 +23,7 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 public class JConverter {
 	
 	protected final ConverterManager converterManager; //responsible of converting objects.
-	protected final InstantiationManager instantiationManager; //responsible of instantiating objects.
+	protected final FactoryManager factoryManager; //responsible of instantiating objects.
 	
 	public JConverter() {
 		this(new JGum());
@@ -34,24 +34,24 @@ public class JConverter {
 	 */
 	protected JConverter(JGum jgum) {
 		this.converterManager = JGumConverterManager.createDefault(jgum);
-		this.instantiationManager = JGumInstantiationManager.createDefault(jgum);
+		this.factoryManager = JGumFactoryManager.createDefault(jgum);
 	}
 	
 	/**
 	 * @param converterManager a converter manager responsible of converting objects.
-	 * @param instantiationManager an instance creator manager responsible of instantiating objects.
+	 * @param factoryManager an instance creator manager responsible of instantiating objects.
 	 */
-	public JConverter(ConverterManager converterManager, InstantiationManager instantiationManager) {
+	public JConverter(ConverterManager converterManager, FactoryManager factoryManager) {
 		this.converterManager = converterManager;
-		this.instantiationManager = instantiationManager;
+		this.factoryManager = factoryManager;
 	}
 
 	protected ConverterManager getConverterManager() {
 		return converterManager;
 	}
 
-	protected InstantiationManager getInstantiationManager() {
-		return instantiationManager;
+	protected FactoryManager getInstantiationManager() {
+		return factoryManager;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class JConverter {
 	 */
 	public <T> T convert(Object key, Object source, Type targetType) {
 		try {
-			return new SingletonInstanceCreator<T>((T) source).instantiate(targetType); //will launch an exception if the object source is not compatible with the target type.
+			return new SingletonFactory<T>((T) source).instantiate(targetType); //will launch an exception if the object source is not compatible with the target type.
 		} catch(RuntimeException e) {
 			return converterManager.convert(key, source, targetType, this);
 		}
@@ -85,7 +85,7 @@ public class JConverter {
 	 * @return an instance of the desired type.
 	 */
 	public <T> T instantiate(Type targetType) {
-		return instantiate(InstantiationManager.DEFAULT_KEY, targetType);
+		return instantiate(FactoryManager.DEFAULT_KEY, targetType);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class JConverter {
 	 */
 	public <T> T instantiate(Object key, Type targetType) {
 		try {
-			return instantiationManager.instantiate(key, targetType);
+			return factoryManager.instantiate(key, targetType);
 		} catch(RuntimeException e) {
 			TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
 			Class targetClass = targetTypeWrapper.getRawClass();

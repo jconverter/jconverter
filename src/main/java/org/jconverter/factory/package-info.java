@@ -3,4 +3,4 @@
  * @author sergioc
  *
  */
-package org.jconverter.instantiation;
+package org.jconverter.factory;

@@ -1,4 +1,4 @@
-package org.jconverter.instantiation;
+package org.jconverter.factory;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -14,26 +14,29 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jconverter.JConverter;
+import org.jconverter.factory.Factory;
+import org.jconverter.factory.FactoryManager;
+import org.jconverter.factory.JGumFactoryManager;
 import org.jgum.JGum;
 import org.junit.Test;
 
-public class InstanceCreatorTest {
+public class FactoryTest {
 
-	class NonGenericInstanceCreator implements InstanceCreator {
+	class NonGenericInstanceCreator implements Factory {
 		@Override
 		public Object instantiate(Type type) {
 			return new ArrayList();
 		}
 	}
 	
-	class GenericCollectionInstanceCreator implements InstanceCreator<Collection> {
+	class GenericCollectionInstanceCreator implements Factory<Collection> {
 		@Override
 		public Collection instantiate(Type type) {
 			return new ArrayList();
 		}
 	}
 	
-	class BoundedCollectionInstanceCreator<T extends Collection> implements InstanceCreator<T> {
+	class BoundedCollectionInstanceCreator<T extends Collection> implements Factory<T> {
 		@Override
 		public T instantiate(Type type) {
 			return (T) new ArrayList(); //this is not really correct (the type is not considered), but just for the sake of testing ...
@@ -42,50 +45,50 @@ public class InstanceCreatorTest {
 	
 	@Test
 	public void testNoInstanceCreator() {
-		InstantiationManager instantiationManager = new JGumInstantiationManager(new JGum());
+		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
 		try {
-			instantiationManager.instantiate(key, Collection.class);
+			factoryManager.instantiate(key, Collection.class);
 			fail();
 		} catch(Exception e) {}
 	}
 	
 	@Test
 	public void testNoGenericInstanceCreator() {
-		InstantiationManager instantiationManager = new JGumInstantiationManager(new JGum());
+		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
 		try {
-			instantiationManager.register(key, new NonGenericInstanceCreator());
+			factoryManager.register(key, new NonGenericInstanceCreator());
 			fail();
 		} catch(Exception e) {}
 	}
 	
 	@Test
 	public void testGenericCollectionInstanceCreator() {
-		InstantiationManager instantiationManager = new JGumInstantiationManager(new JGum());
+		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
-		instantiationManager.register(key, new GenericCollectionInstanceCreator());
-		assertEquals(ArrayList.class, instantiationManager.instantiate(key, Collection.class).getClass());
+		factoryManager.register(key, new GenericCollectionInstanceCreator());
+		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());
 		try {
-			instantiationManager.instantiate(key, List.class);
+			factoryManager.instantiate(key, List.class);
 			fail();
 		} catch(Exception e) {}
 		try {
-			instantiationManager.instantiate(key, ArrayList.class);
+			factoryManager.instantiate(key, ArrayList.class);
 			fail();
 		} catch(Exception e) {}
 	}
 	
 	@Test
 	public void testBoundedCollectionInstanceCreator() {
-		InstantiationManager instantiationManager = new JGumInstantiationManager(new JGum());
+		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
-		instantiationManager.register(key, new BoundedCollectionInstanceCreator());
-		assertEquals(ArrayList.class, instantiationManager.instantiate(key, Collection.class).getClass());
-		assertEquals(ArrayList.class, instantiationManager.instantiate(key, List.class).getClass());
-		assertEquals(ArrayList.class, instantiationManager.instantiate(key, ArrayList.class).getClass());
+		factoryManager.register(key, new BoundedCollectionInstanceCreator());
+		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());
+		assertEquals(ArrayList.class, factoryManager.instantiate(key, List.class).getClass());
+		assertEquals(ArrayList.class, factoryManager.instantiate(key, ArrayList.class).getClass());
 		try {
-			instantiationManager.instantiate(key, Iterable.class);
+			factoryManager.instantiate(key, Iterable.class);
 			fail();
 		} catch(Exception e) {}
 	}

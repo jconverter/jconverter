@@ -1,14 +1,14 @@
-package org.jconverter.instantiation;
+package org.jconverter.factory;
 
 import java.lang.reflect.Type;
 
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class SingletonInstanceCreator<T> implements InstanceCreator<T> {
+public class SingletonFactory<T> implements Factory<T> {
 
 	private T singleton;
 	
-	public SingletonInstanceCreator(T singleton) {
+	public SingletonFactory(T singleton) {
 		this.singleton = singleton;
 	}
 	
