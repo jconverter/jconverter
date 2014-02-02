@@ -13,7 +13,7 @@ public class StringToNumberConverter<T extends Number> implements Converter<Stri
 
 	@Override
 	public T apply(String source, Type targetType, JConverter context) {
-		Class numberClass = TypeWrapper.wrap(targetType).getRawClass();
+		Class<?> numberClass = TypeWrapper.wrap(targetType).getRawClass();
 		Number number;
 		try {
 			NumberFormat nf = context.instantiate(NumberFormat.class);

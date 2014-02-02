@@ -10,10 +10,10 @@ import org.jconverter.converter.catalog.iterator.IteratorToIteratorConverter;
 
 import com.google.common.collect.Iterators;
 
-public class EnumerationToIteratorConverter implements Converter<Enumeration, Iterator> {
+public class EnumerationToIteratorConverter implements Converter<Enumeration<?>, Iterator<?>> {
 
 	@Override
-	public Iterator apply(Enumeration source, Type targetType, JConverter context) {
+	public Iterator<?> apply(Enumeration<?> source, Type targetType, JConverter context) {
 		return new IteratorToIteratorConverter().apply(Iterators.forEnumeration(source), targetType, context);
 	}
 

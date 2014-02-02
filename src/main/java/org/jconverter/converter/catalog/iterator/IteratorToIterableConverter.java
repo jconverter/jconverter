@@ -9,10 +9,10 @@ import org.jconverter.converter.Converter;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class IteratorToIterableConverter implements Converter<Iterator, Iterable> {
+public class IteratorToIterableConverter implements Converter<Iterator<?>, Iterable<?>> {
 
 	@Override
-	public Iterable apply(Iterator source, Type targetType, JConverter context) {
+	public Iterable<?> apply(Iterator<?> source, Type targetType, JConverter context) {
 		TypeWrapper wrappedTargetType = TypeWrapper.wrap(targetType);
 		Type componentType = null;
 		TypeWrapper iterableTypeWrapper = wrappedTargetType.as(Iterable.class);

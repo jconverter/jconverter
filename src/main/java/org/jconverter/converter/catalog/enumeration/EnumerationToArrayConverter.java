@@ -9,10 +9,10 @@ import org.jconverter.converter.catalog.iterator.IteratorToArrayConverter;
 
 import com.google.common.collect.Iterators;
 
-public class EnumerationToArrayConverter<T> implements Converter<Enumeration, T[]> {
+public class EnumerationToArrayConverter<T> implements Converter<Enumeration<?>, T[]> {
 
 	@Override
-	public T[] apply(Enumeration source, Type targetType, JConverter context) {
+	public T[] apply(Enumeration<?> source, Type targetType, JConverter context) {
 		return new IteratorToArrayConverter<T>().apply(Iterators.forEnumeration(source), targetType, context);
 	}
 

@@ -12,7 +12,7 @@ public class CalendarToNumberConverter implements Converter<Calendar, Number> {
 	@Override
 	public Number apply(Calendar source, Type targetType, JConverter context) {
 		Long timeInMillis = source.getTimeInMillis();
-		return NumberToNumberConverter.numberToNumber(timeInMillis, (Class) targetType);
+		return NumberToNumberConverter.numberToNumber(timeInMillis, (Class<?>) targetType);
 	}
 
 }

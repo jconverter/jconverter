@@ -8,12 +8,11 @@ import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class IteratorToCollectionConverter<T extends Collection> implements Converter<Iterator, T> {
+public class IteratorToCollectionConverter<T extends Collection<?>> implements Converter<Iterator<?>, T> {
 
 	@Override
-	public T apply(Iterator source, Type targetType, JConverter context) {
+	public T apply(Iterator<?> source, Type targetType, JConverter context) {
 		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
-		Class targetClass = targetTypeWrapper.getRawClass();
 		TypeWrapper itTypeWrapper = targetTypeWrapper.as(Collection.class);
 		Type componentType = null;
 		if(itTypeWrapper.hasActualTypeArguments()) {
@@ -26,7 +25,7 @@ public class IteratorToCollectionConverter<T extends Collection> implements Conv
 		while(source.hasNext()) {
 			Object next = source.next();
 			Object converted = context.convert(next, componentType);
-			collection.add(converted);
+			((Collection)collection).add(converted);
 		}
 		return collection;
 	}

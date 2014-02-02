@@ -11,10 +11,10 @@ import org.jconverter.converter.Converter;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class IteratorToEnumerationConverter implements Converter<Iterator, Enumeration> {
+public class IteratorToEnumerationConverter implements Converter<Iterator<?>, Enumeration<?>> {
 
 	@Override
-	public Enumeration apply(Iterator source, Type targetType, JConverter context) {
+	public Enumeration<?> apply(Iterator<?> source, Type targetType, JConverter context) {
 		TypeWrapper wrappedTargetType = TypeWrapper.wrap(targetType);
 		Type componentType = null;
 		TypeWrapper enumerationTypeWrapper = wrappedTargetType.as(Enumeration.class);

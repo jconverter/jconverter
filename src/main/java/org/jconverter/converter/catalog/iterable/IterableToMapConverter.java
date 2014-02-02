@@ -8,10 +8,10 @@ import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.catalog.iterator.IteratorToMapConverter;
 
-public class IterableToMapConverter<T extends Map> implements Converter<Iterable<Entry>, T> {
+public class IterableToMapConverter<T extends Map<?,?>> implements Converter<Iterable<Entry<?,?>>, T> {
 
 	@Override
-	public T apply(Iterable<Entry> source, Type targetType, JConverter context) {
+	public T apply(Iterable<Entry<?,?>> source, Type targetType, JConverter context) {
 		return new IteratorToMapConverter<T>().apply(source.iterator(), targetType, context);
 	}
 

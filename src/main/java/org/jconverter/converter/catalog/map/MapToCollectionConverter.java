@@ -8,10 +8,10 @@ import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.catalog.iterator.IteratorToCollectionConverter;
 
-public class MapToCollectionConverter<T extends Collection> implements Converter<Map, T> {
+public class MapToCollectionConverter<T extends Collection<?>> implements Converter<Map<?,?>, T> {
 
 	@Override
-	public T apply(Map source, Type targetType, JConverter context) {
+	public T apply(Map<?,?> source, Type targetType, JConverter context) {
 		return new IteratorToCollectionConverter<T>().apply(source.entrySet().iterator(), targetType, context);
 	}
 
