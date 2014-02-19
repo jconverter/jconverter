@@ -30,7 +30,7 @@ public class JGumConverterManager extends ConverterManager {
 	
 	/**
 	 * @param jgum a JGum categorization context.
-	 * @return an instance of JGumConverterManager converter manager configured with default converters.
+	 * @return an instance of JGumConverterManager configured with default converters.
 	 */
 	public static JGumConverterManager createDefault(JGum jgum) {
 		JGumConverterManager converterManager = new JGumConverterManager(jgum);

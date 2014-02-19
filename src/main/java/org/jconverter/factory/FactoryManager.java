@@ -20,10 +20,11 @@ public abstract class FactoryManager {
 	public static final Object DEFAULT_KEY = new Object();
 	
 	/**
-	 * Registers default instance creators in the given instantiation manager.
+	 * Registers default factories in the given factory manager.
 	 * @param factoryManager an instantiation manager.
+	 * @return the factory manager.
 	 */
-	public static void registerDefaults(FactoryManager factoryManager) {
+	public static FactoryManager registerDefaults(FactoryManager factoryManager) {
 		factoryManager.register(ArrayDeque.class);
 		factoryManager.register(HashMap.class);
 		factoryManager.register(HashSet.class);
@@ -56,6 +57,8 @@ public abstract class FactoryManager {
 				return NumberFormat.getInstance(); //"a general-purpose number format for the current default locale."
 			}
 		});
+		
+		return factoryManager;
 	}
 	
 	

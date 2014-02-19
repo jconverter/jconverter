@@ -68,8 +68,9 @@ public abstract class ConverterManager {
 	/**
 	 * Registers default converters in the given converter manager.
 	 * @param converterManager a converter manager.
+	 * @return the converter manager.
 	 */
-	public static void registerDefaults(ConverterManager converterManager) {
+	public static ConverterManager registerDefaults(ConverterManager converterManager) {
 		converterManager.register(new CalendarToNumberConverter());
 		
 		converterManager.register(new NumberToNumberConverter());
@@ -122,6 +123,8 @@ public abstract class ConverterManager {
 		converterManager.register(new MapToMapConverter());
 		
 		converterManager.register(new ObjectToStringConverter());
+		
+		return converterManager;
 	}
 	
 	public void register(Converter<?,?> converter) {
