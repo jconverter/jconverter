@@ -63,20 +63,20 @@ public class JConverterBuilder {
 	}
 
 	/**
-	 * Registers an instance creator.
-	 * @param instanceCreator the instance creator to register.
+	 * Registers a factory.
+	 * @param factory the factory to register.
 	 */
-	public void register(Factory<?> instanceCreator) {
-		factoryManager.register(instanceCreator);
+	public void register(Factory<?> factory) {
+		factoryManager.register(factory);
 	}
 	
 	/**
-	 * Registers an instance creator under a given key.
+	 * Registers a factory under a given key.
 	 * @param key the key under which the instance creator is registered.
-	 * @param instanceCreator the instance creator to register.
+	 * @param factory the factory to register.
 	 */
-	public void register(Object key, Factory<?> instanceCreator) {
-		factoryManager.register(key, instanceCreator);
+	public void register(Object key, Factory<?> factory) {
+		factoryManager.register(key, factory);
 	}
 
 	
