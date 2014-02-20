@@ -3,12 +3,11 @@ package org.jconverter.factory;
 import java.lang.reflect.Type;
 
 /**
- * Interface implemented by all the JConverter instance creators.
+ * Interface implemented by the JConverter factories.
  * @author sergioc
  *
- * @param <T> the type this converter instantiates.
+ * @param <T> the type this factory instantiates.
  */
-//Disclaimer: This class receives its name (instead of just "Factory") to follow the same naming used in Google's Gson library.
 public interface Factory<T> {
 
 	/**
