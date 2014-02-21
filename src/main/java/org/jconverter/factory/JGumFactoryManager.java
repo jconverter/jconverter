@@ -53,20 +53,20 @@ public class JGumFactoryManager extends FactoryManager {
 	}
 
 	@Override
-	public void register(Object key, List<Class<?>> classes, Factory<?> instanceCreator) {
+	public void register(Object key, List<Class<?>> classes, Factory<?> factory) {
 		for(Class<?> clazz : classes) {
 			TypeCategory<?> typeCategory = jgum.forClass(clazz);
-			typeCategory.setProperty(key, instanceCreator);
+			typeCategory.setProperty(key, factory);
 		}
 	}
 	
 	@Override
-	public void register(final Object key, final Factory<?> instanceCreator) {
-		Type instanceCreatorType = TypeWrapper.wrap(instanceCreator.getClass()).asType(Factory.class);
-		TypeWrapper instanceCreatorTypeWrapper = TypeWrapper.wrap(instanceCreatorType);
+	public void register(final Object key, final Factory<?> factory) {
+		Type factoryType = TypeWrapper.wrap(factory.getClass()).asType(Factory.class);
+		TypeWrapper factoryTypeWrapper = TypeWrapper.wrap(factoryType);
 		Type sourceType = null;
-		if(instanceCreatorTypeWrapper.hasActualTypeArguments()) {
-			sourceType = instanceCreatorTypeWrapper.getActualTypeArguments()[0];
+		if(factoryTypeWrapper.hasActualTypeArguments()) {
+			sourceType = factoryTypeWrapper.getActualTypeArguments()[0];
 		} else {
 			throw new RuntimeException("Instance creator does not specify a source type.");
 		}
@@ -74,20 +74,20 @@ public class JGumFactoryManager extends FactoryManager {
 		TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
 		if(!(sourceTypeWrapper instanceof VariableTypeWrapper)) {
 			TypeCategory<?> sourceTypeCategory = jgum.forClass(sourceTypeWrapper.getRawClass());
-			sourceTypeCategory.setProperty(key, instanceCreator);
+			sourceTypeCategory.setProperty(key, factory);
 		} else { //the type argument is a TypeVariable with non-empty bounds.
 			VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) sourceTypeWrapper;
 			List<Type> upperBoundariesTypes = asList(variableTypeWrapper.getUpperBounds());
 			final List<Class<?>> upperBoundariesClasses = TypeUtil.asRawClasses(upperBoundariesTypes);
 			List<TypeCategory<?>> boundTypeCategories = jgum.getTypeCategorization().findBoundedTypes(upperBoundariesClasses);
 			for(TypeCategory<?> boundTypeCategory : boundTypeCategories) {
-				boundTypeCategory.setProperty(key, instanceCreator); //set the instance creator for all the known types that are in the boundaries.
+				boundTypeCategory.setProperty(key, factory); //set the instance creator for all the known types that are in the boundaries.
 			}
 			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
 				@Override
 				public void onCategorization(TypeCategory<?> category) {
 					if(category.isInBoundaries(upperBoundariesClasses))
-						category.setProperty(key, instanceCreator);
+						category.setProperty(key, factory);
 				}
 			});
 		}
@@ -97,9 +97,9 @@ public class JGumFactoryManager extends FactoryManager {
 	public <T> T instantiate(Object key, Type targetType) {
 		T instantiation = null;
 		Category sourceTypeCategory = jgum.forClass(TypeWrapper.wrap(targetType).getRawClass());
-		Optional<Factory<T>> instanceCreatorOpt = sourceTypeCategory.<Factory<T>>getLocalProperty(key);
-		if(instanceCreatorOpt.isPresent())
-			instantiation = instanceCreatorOpt.get().instantiate(targetType);
+		Optional<Factory<T>> factoryOpt = sourceTypeCategory.<Factory<T>>getLocalProperty(key);
+		if(factoryOpt.isPresent())
+			instantiation = factoryOpt.get().instantiate(targetType);
 		else
 			throw new RuntimeException("Impossible to instantiate type: " + targetType);
 		return instantiation;

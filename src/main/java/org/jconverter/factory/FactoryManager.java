@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -68,18 +69,18 @@ public abstract class FactoryManager {
 	
 	public abstract void register(Object key, Class<?> clazz);
 	
-	public void register(List<Class<?>> classes, Factory<?> instanceCreator) {
-		register(DEFAULT_KEY, classes, instanceCreator);
+	public void register(List<Class<?>> classes, Factory<?> factory) {
+		register(DEFAULT_KEY, classes, factory);
 	}
 	
-	public abstract void register(Object key, List<Class<?>> classes, Factory<?> instanceCreator);
+	public abstract void register(Object key, List<Class<?>> classes, Factory<?> factory);
 	
 	
-	public void register(Factory<?> instanceCreator) {
-		register(DEFAULT_KEY, instanceCreator);
+	public void register(Factory<?> factory) {
+		register(DEFAULT_KEY, factory);
 	}
 	
-	public abstract void register(Object key, Factory<?> instanceCreator);
+	public abstract void register(Object key, Factory<?> factory);
 
 	public <T> T instantiate(Type targetType) {
 		return instantiate(DEFAULT_KEY, targetType);

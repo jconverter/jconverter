@@ -22,21 +22,21 @@ import org.junit.Test;
 
 public class FactoryTest {
 
-	class NonGenericInstanceCreator implements Factory {
+	class NonGenericFactory implements Factory {
 		@Override
 		public Object instantiate(Type type) {
 			return new ArrayList();
 		}
 	}
 	
-	class GenericCollectionInstanceCreator implements Factory<Collection> {
+	class GenericCollectionFactory implements Factory<Collection> {
 		@Override
 		public Collection instantiate(Type type) {
 			return new ArrayList();
 		}
 	}
 	
-	class BoundedCollectionInstanceCreator<T extends Collection> implements Factory<T> {
+	class BoundedCollectionFactory<T extends Collection> implements Factory<T> {
 		@Override
 		public T instantiate(Type type) {
 			return (T) new ArrayList(); //this is not really correct (the type is not considered), but just for the sake of testing ...
@@ -44,7 +44,7 @@ public class FactoryTest {
 	}
 	
 	@Test
-	public void testNoInstanceCreator() {
+	public void testNoFactory() {
 		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
 		try {
@@ -54,20 +54,20 @@ public class FactoryTest {
 	}
 	
 	@Test
-	public void testNoGenericInstanceCreator() {
+	public void testNoGenericFactory() {
 		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
 		try {
-			factoryManager.register(key, new NonGenericInstanceCreator());
+			factoryManager.register(key, new NonGenericFactory());
 			fail();
 		} catch(Exception e) {}
 	}
 	
 	@Test
-	public void testGenericCollectionInstanceCreator() {
+	public void testGenericCollectionFactory() {
 		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
-		factoryManager.register(key, new GenericCollectionInstanceCreator());
+		factoryManager.register(key, new GenericCollectionFactory());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());
 		try {
 			factoryManager.instantiate(key, List.class);
@@ -80,10 +80,10 @@ public class FactoryTest {
 	}
 	
 	@Test
-	public void testBoundedCollectionInstanceCreator() {
+	public void testBoundedCollectionFactory() {
 		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
 		Object key = new Object();
-		factoryManager.register(key, new BoundedCollectionInstanceCreator());
+		factoryManager.register(key, new BoundedCollectionFactory());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, List.class).getClass());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, ArrayList.class).getClass());
