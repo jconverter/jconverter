@@ -20,8 +20,7 @@ public class ConverterRegisterEvaluator<T,U> implements Function<Object, U> {
 	@Override
 	public U apply(Object processingObject) {
 		if(processingObject instanceof Converter) {
-			U value = converterEvaluator.apply((Converter)processingObject);
-			return value;
+			return converterEvaluator.apply((Converter)processingObject);
 		} else if(processingObject instanceof ConverterRegister) {
 			return applyChain((ConverterRegister)processingObject);
 		} else

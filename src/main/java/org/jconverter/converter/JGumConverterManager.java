@@ -7,12 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.ConverterRegisterEvaluator.NonRedundantConverterEvaluator;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
-import org.jgum.category.Category;
 import org.jgum.category.type.TypeCategory;
-import org.jgum.strategy.ChainOfResponsibility;
 import org.minitoolbox.collections.ArrayIterator;
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
@@ -42,31 +39,6 @@ public class JGumConverterManager extends ConverterManager {
 	
 	public JGumConverterManager(JGum jgum) {
 		this.jgum = jgum;
-	}
-	
-	@Override
-	public void register(final Object key, final Converter<?,?> converter) {
-		final TypedConverter<?,?> typedConverter = TypedConverter.forConverter(converter);
-
-		Type sourceType = typedConverter.getSourceType();
-		final TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
-		if(!sourceTypeWrapper.isVariable()) {
-			TypeCategory<?> sourceTypeCategory = jgum.forClass(sourceTypeWrapper.getRawClass());
-			getOrCreateConverterRegister(key, sourceTypeCategory).addFirst(typedConverter);
-		} else { //the type argument is a variable type.
-			List<TypeCategory<?>> matchedCategories = getMatchingCategories(sourceTypeWrapper);
-			for(TypeCategory<?> matchedCategory : matchedCategories) {
-				getOrCreateConverterRegister(key, matchedCategory).addFirst(typedConverter); //set the type solver for all the known types that are in the boundaries.
-			}
-			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
-				@Override
-				public void onCategorization(TypeCategory<?> category) {
-					//if(category.isInBoundaries(upperBoundariesClasses))
-					if(sourceTypeWrapper.isWeakAssignableFrom(category.getLabel()))
-						getOrCreateConverterRegister(key, category).addFirst(typedConverter);
-				}
-			});
-		}
 	}
 	
 	private List<TypeCategory<?>> getMatchingCategories(TypeWrapper wrappedType) {
@@ -101,6 +73,32 @@ public class JGumConverterManager extends ConverterManager {
 	}
 	
 	@Override
+	public void register(final Object key, final Converter<?,?> converter) {
+		final TypedConverter<?,?> typedConverter = TypedConverter.forConverter(converter);
+
+		Type sourceType = typedConverter.getSourceType();
+		final TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
+		if(!sourceTypeWrapper.isVariable()) {
+			TypeCategory<?> sourceTypeCategory = jgum.forClass(sourceTypeWrapper.getRawClass());
+			getOrCreateConverterRegister(key, sourceTypeCategory).addFirst(typedConverter);
+		} else { //the type argument is a variable type.
+			List<TypeCategory<?>> matchedCategories = getMatchingCategories(sourceTypeWrapper);
+			for(TypeCategory<?> matchedCategory : matchedCategories) {
+				getOrCreateConverterRegister(key, matchedCategory).addFirst(typedConverter); //set the type solver for all the known types that are in the boundaries.
+			}
+			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
+				@Override
+				public void onCategorization(TypeCategory<?> category) {
+					//if(category.isInBoundaries(upperBoundariesClasses))
+					if(sourceTypeWrapper.isWeakAssignableFrom(category.getLabel()))
+						getOrCreateConverterRegister(key, category).addFirst(typedConverter);
+				}
+			});
+		}
+	}
+
+	
+	@Override
 	public <T> T convert(Object key, Object source, Type targetType, JConverter context) {
 		JGumConverter jGumConverter = new JGumConverter(jgum, key);
 		return convert(jGumConverter, source, targetType, context);
@@ -124,9 +122,5 @@ public class JGumConverterManager extends ConverterManager {
 			throw e;
 		}
 	}
-	
-
-	
-
 	
 }
