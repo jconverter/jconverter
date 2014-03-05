@@ -42,7 +42,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<apidocsDirectory>docs/apidocs</apidocsDirectory>
+		<javadocsDirectory>docs/javadocs</javadocsDirectory>
 	</properties>
 
 
@@ -128,7 +128,7 @@
 	            <configuration>
 	                <filesets>
 	                    <fileset>
-	                        <directory>${apidocsDirectory}</directory>
+	                        <directory>${javadocsDirectory}</directory>
 	                        <includes>
 	                            <include>**/*</include>
 	                        </includes>
@@ -146,12 +146,12 @@
 				
 				<configuration>
 				    <!-- 
-				    	The following properties are set to generate the documentation in 'docs/apidocs'.
+				    	The following properties are set to generate the documentation in 'docs/javadocs'.
 				    	In this way, the same folder is used for documentation generated with either 'mvn javadoc:jar' or 'mvn javadoc:javadoc'.
 				    	see: http://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html#outputDirectory 
 				    -->
-					<outputDirectory>${apidocsDirectory}</outputDirectory> <!-- output for 'mvn javadoc:jar' -->
-					<reportOutputDirectory>${apidocsDirectory}</reportOutputDirectory> <!-- output for 'mvn javadoc:javadoc' -->
+					<outputDirectory>${javadocsDirectory}</outputDirectory> <!-- output for 'mvn javadoc:jar' -->
+					<reportOutputDirectory>${javadocsDirectory}</reportOutputDirectory> <!-- output for 'mvn javadoc:javadoc' -->
 				</configuration>
 				
 				<executions>
