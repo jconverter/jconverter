@@ -4,7 +4,7 @@ JConverter
 A Java library to encapsulate, categorize and apply conversions between arbitrary objects.
 
 In case you would like to know more about JConverter, you may find interesting this short [tutorial](http://jconverter.github.com/ "JConverter Tutorial") 
-and the [API](http://jconverter.github.com/apidocs/ "API documentation ") documentation.
+and the [API](http://jconverter.github.com/javadocs/ "API documentation ") documentation.
 
 
 Contact
