@@ -142,9 +142,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>2.9.1</version>
 				
 				<configuration>
+				    <links>
+				        <link>http://minitoolbox.github.io/javadocs/</link>
+            			<link>http://jgum.github.io/javadocs/</link>
+            			<link>http://docs.guava-libraries.googlecode.com/git/javadoc/</link>
+          			</links>
+          			
 				    <!-- 
 				    	The following properties are set to generate the documentation in 'docs/javadocs'.
 				    	In this way, the same folder is used for documentation generated with either 'mvn javadoc:jar' or 'mvn javadoc:javadoc'.
