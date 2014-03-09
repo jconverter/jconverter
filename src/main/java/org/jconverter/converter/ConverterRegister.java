@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
 import org.jgum.JGum;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConverterRegister {
 
-	private final static Logger logger = Logger.getLogger(ConverterRegister.class);
+	private final static Logger logger = LoggerFactory.getLogger(ConverterRegister.class);
 	
 	private final List<TypedConverter<?,?>> typedConverters;
 	private final JGum jgum;

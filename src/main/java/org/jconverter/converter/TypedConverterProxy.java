@@ -2,13 +2,14 @@ package org.jconverter.converter;
 
 import java.lang.reflect.Type;
 
-import org.apache.log4j.Logger;
 import org.jconverter.JConverter;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TypedConverterProxy<T,U> extends TypedConverter<T,U> {
 	
-	private final static Logger logger = Logger.getLogger(TypedConverterProxy.class);
+	private final static Logger logger = LoggerFactory.getLogger(TypedConverterProxy.class);
 	
 	public static <T,U> TypedConverterProxy<T,U> forConverter(Converter<T,U> converter) {
 		Type sourceType;

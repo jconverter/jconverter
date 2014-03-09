@@ -6,13 +6,14 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.type.TypeCategory;
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -23,7 +24,7 @@ import com.google.common.base.Optional;
  */
 public class JGumFactoryManager extends FactoryManager {
 	
-	private final static Logger logger = Logger.getLogger(JGumFactoryManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(JGumFactoryManager.class);
 	
 	/**
 	 * @param jgum a JGum categorization context.
