@@ -23,7 +23,7 @@ import com.google.common.primitives.Primitives;
 
 public class JGumConverterManager extends ConverterManager {
 
-	private static Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(JGumConverterManager.class);
 	
 	/**
 	 * @param jgum a JGum categorization context.
