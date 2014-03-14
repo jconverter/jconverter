@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 
 /**
- * This exception is thrown when a problem occurs when converting an arbitrary object.
+ * This exception is thrown when a problem occurs when converting between objects.
  * @author sergioc
  *
  */
@@ -19,16 +19,20 @@ public class ConversionException extends RuntimeException {
 		this(from.toString(), to.toString());
 	}
 	
+	public ConversionException(Type from, Type to, Exception cause) {
+		this(from.toString(), to.toString(), cause);
+	}
+	
 	public ConversionException(String from, String to) {
 		super(formatMessage(from, to));
 	}
 	
-	public ConversionException(String from, String to, String reason) {
-		super(formatMessage(from, to, reason));
+	public ConversionException(String from, String to, String cause) {
+		super(formatMessage(from, to, cause));
 	}
 	
-	public ConversionException(String from, String to, Exception ex) {
-		super(formatMessage(from, to), ex);
+	public ConversionException(String from, String to, Exception cause) {
+		super(formatMessage(from, to), cause);
 	}
 	
 	
@@ -36,10 +40,10 @@ public class ConversionException extends RuntimeException {
 		return formatMessage(from, to, null);
 	}
 	
-	private static String formatMessage(String from, String to, String reason) {
+	private static String formatMessage(String from, String to, String cause) {
 		StringBuilder sb = new StringBuilder("Impossible to convert from " + from + " to " + to + ". ");
-		if(reason != null)
-			sb.append("Cause: " + reason);
+		if(cause != null)
+			sb.append("Cause: " + cause);
 		return sb.toString();
 	}
 
