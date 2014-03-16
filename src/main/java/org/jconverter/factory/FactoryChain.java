@@ -7,11 +7,11 @@ import org.jgum.strategy.ChainOfResponsibility;
 public class FactoryChain<T> extends ChainOfResponsibility<Factory<T>, T> {
 
 	public FactoryChain() {
-		super(CreationException.class);
+		super(FactoryException.class);
 	}
 	
 	public FactoryChain(List<Factory<T>> responsibilityChain) {
-		super(responsibilityChain, CreationException.class);
+		super(responsibilityChain, FactoryException.class);
 	}
 	
 }
