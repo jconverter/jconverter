@@ -99,9 +99,9 @@ public class JConverter {
 			return factoryManager.instantiate(key, targetType);
 		} catch(RuntimeException e) {
 			TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
-			Class targetClass = targetTypeWrapper.getRawClass();
+			Class<T> targetClass = targetTypeWrapper.getRawClass();
 			try {
-				return (T) targetClass.newInstance();
+				return targetClass.newInstance();
 			} catch (InstantiationException | IllegalAccessException e1) {
 				throw new RuntimeException(e1);
 			}
