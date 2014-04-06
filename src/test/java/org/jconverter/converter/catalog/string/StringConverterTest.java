@@ -29,9 +29,9 @@ public class StringConverterTest {
 	@Test
 	public void testToCharacter() {
 		JConverter jconverter = new JConverter();
-		assertEquals('h', jconverter.convert("h", Character.class));
+		assertEquals(new Character('h'), jconverter.convert("h", Character.class));
 		try {
-			assertEquals('h', jconverter.convert("hello", Character.class));
+			assertEquals(new Character('h'), jconverter.convert("hello", Character.class));
 			fail();
 		} catch(ConversionException e) {}
 		
@@ -47,37 +47,37 @@ public class StringConverterTest {
 	@Test
 	public void testToByte() {
 		JConverter jconverter = new JConverter();
-		assertEquals((byte)123, jconverter.convert("123", Byte.class));
+		assertEquals(new Byte((byte) 123), jconverter.convert("123", Byte.class));
 	}
 	
 	@Test
 	public void testToShort() {
 		JConverter jconverter = new JConverter();
-		assertEquals((short)123, jconverter.convert("123", Short.class));
+		assertEquals(new Short((short) 123), jconverter.convert("123", Short.class));
 	}
 	
 	@Test
 	public void testToInteger() {
 		JConverter jconverter = new JConverter();
-		assertEquals(123, jconverter.convert("123", Integer.class));
+		assertEquals(new Integer(123), jconverter.convert("123", Integer.class));
 	}
 	
 	@Test
 	public void testToLong() {
 		JConverter jconverter = new JConverter();
-		assertEquals(123L, jconverter.convert("123", Long.class));
+		assertEquals(new Long(123L), jconverter.convert("123", Long.class));
 	}
 	
 	@Test
 	public void testToFloat() {
 		JConverter jconverter = new JConverter();
-		assertEquals(123F, jconverter.convert("123", Float.class));
+		assertEquals(new Float(123F), jconverter.convert("123", Float.class));
 	}
 	
 	@Test
 	public void testToDouble() {
 		JConverter jconverter = new JConverter();
-		assertEquals(123D, jconverter.convert("123", Double.class));
+		assertEquals(new Double(123D), jconverter.convert("123", Double.class));
 	}
 	
 	@Test
