@@ -111,7 +111,7 @@ public class JGumFactoryManager extends FactoryManager {
 		FactoryChain<T> chain = getOrCreateChain(key, sourceTypeCategory);
 		FactoryEvaluator<T> factoryEvaluator = new FactoryEvaluator<>(targetType);
 		FactoryChainEvaluator<T> evaluator = new FactoryChainEvaluator<>(factoryEvaluator);
-		return chain.apply((FactoryChainEvaluator)evaluator);
+		return (T)chain.apply((FactoryChainEvaluator)evaluator);
 	}
 
 }

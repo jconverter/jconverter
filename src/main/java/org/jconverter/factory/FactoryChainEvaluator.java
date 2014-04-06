@@ -22,7 +22,7 @@ public class FactoryChainEvaluator<T> implements Function<Object, T> {
 	}
 	
 	public T applyChain(FactoryChain<T> factoryChain) {
-		return factoryChain.apply((Function)this);
+		return (T)factoryChain.apply((Function)this);
 	}
 
 }

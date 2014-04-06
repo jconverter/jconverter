@@ -12,7 +12,7 @@ public class MapToMapConverter<T extends Map<?,?>> implements Converter<Map<?,?>
 
 	@Override
 	public T apply(Map<?,?> source, Type targetType, JConverter context) {
-		return new IteratorToMapConverter<T>().apply((Iterator)source.entrySet().iterator(), targetType, context);
+		return (T)new IteratorToMapConverter<T>().apply((Iterator)source.entrySet().iterator(), targetType, context);
 	}
 
 }

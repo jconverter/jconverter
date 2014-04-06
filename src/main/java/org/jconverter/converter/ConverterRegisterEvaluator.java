@@ -20,7 +20,7 @@ public class ConverterRegisterEvaluator<T,U> implements Function<Object, U> {
 	@Override
 	public U apply(Object processingObject) {
 		if(processingObject instanceof Converter) {
-			return converterEvaluator.apply((Converter)processingObject);
+			return (U)converterEvaluator.apply((Converter)processingObject);
 		} else if(processingObject instanceof ConverterRegister) {
 			return applyChain((ConverterRegister)processingObject);
 		} else
@@ -31,7 +31,7 @@ public class ConverterRegisterEvaluator<T,U> implements Function<Object, U> {
 	public U applyChain(ConverterRegister processingObject) {
 		List<Converter<T,U>> converters = (List)processingObject.orderedConverters(targetType);
 		ChainOfResponsibility<Converter<T,U>,U> chain = new ChainOfResponsibility<>(converters, ConversionException.class);
-		return chain.apply((Function)this);
+		return (U)chain.apply((Function)this);
 	}
 
 	
