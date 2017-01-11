@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
 
 public class NumberToNumberConverter<T extends Number> implements Converter<Number, T> {
 

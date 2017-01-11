@@ -2,19 +2,21 @@ package org.jconverter.converter;
 
 import static java.util.Arrays.asList;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.jconverter.JConverter;
+import org.jconverter.internal.reflection.TypeUtil;
+import org.jconverter.internal.reflection.typewrapper.ArrayTypeWrapper;
+import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.internal.reflection.typewrapper.VariableTypeWrapper;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.type.TypeCategory;
-import org.minitoolbox.collections.ArrayIterator;
-import org.minitoolbox.reflection.TypeUtil;
-import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
-import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,14 +115,47 @@ public class JGumConverterManager extends ConverterManager {
 			if(targetWrappedType.isPrimitive()) {
 				return convert(jGumConverter, source, Primitives.wrap(targetWrappedType.getRawClass()), context); //inboxing of the target type
 			}
-				
 			TypeWrapper sourceWrappedType = TypeWrapper.wrap(source.getClass());
 			//if the source object is an array of primitives
 			if(sourceWrappedType instanceof ArrayTypeWrapper && sourceWrappedType.getBaseType() instanceof Class && ((Class)sourceWrappedType.getBaseType()).isPrimitive()) {
+				//return convert(jGumConverter, Iterators.forArray(source), targetType, context);
 				return convert(jGumConverter, new ArrayIterator(source), targetType, context);
 			}
 			throw e;
 		}
 	}
-	
+
+
+	private static class ArrayIterator<T> implements Iterator<T> {
+		private final Object array;
+		private int index;
+		private final int length;
+
+		public ArrayIterator(Object array) {
+			if(!array.getClass().isArray())
+				throw new RuntimeException("Not an array: " + array + ".");
+			this.array = array;
+			length = Array.getLength(array);
+		}
+
+		@Override
+		public synchronized boolean hasNext() {
+			return index < length;
+		}
+
+		@Override
+		public synchronized T next() {
+			if(index == length)
+				throw new NoSuchElementException();
+			return (T) Array.get(array, index++);
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+
+
+	}
+
 }

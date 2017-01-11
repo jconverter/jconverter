@@ -2,8 +2,8 @@ package org.jconverter.converter;
 
 import java.lang.reflect.Type;
 
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
-import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
+import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.internal.reflection.typewrapper.VariableTypeWrapper;
 
 /**
  * A converter that explicitly specifies its source and target types.

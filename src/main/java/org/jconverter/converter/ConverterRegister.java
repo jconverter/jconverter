@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.jgum.JGum;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

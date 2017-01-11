@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
-import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+import org.jconverter.internal.reflection.reification.ParameterizedTypeImpl;
+import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
 
 public class IteratorToEnumerationConverter implements Converter<Iterator<?>, Enumeration<?>> {
 

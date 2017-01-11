@@ -6,12 +6,12 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.jconverter.internal.reflection.TypeUtil;
+import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.internal.reflection.typewrapper.VariableTypeWrapper;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.type.TypeCategory;
-import org.minitoolbox.reflection.TypeUtil;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
-import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
