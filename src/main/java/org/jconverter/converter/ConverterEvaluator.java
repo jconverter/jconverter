@@ -3,9 +3,9 @@ package org.jconverter.converter;
 import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
-import org.jconverter.internal.reflection.IncompatibleTypesException;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.VariableTypeWrapper;
+import org.jconverter.util.IncompatibleTypesException;
+import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.VariableTypeWrapper;
 
 import com.google.common.base.Function;
 

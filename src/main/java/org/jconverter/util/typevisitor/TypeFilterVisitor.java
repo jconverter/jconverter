@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.typevisitor;
+package org.jconverter.util.typevisitor;
 
 import java.util.ArrayList;
 import java.util.List;

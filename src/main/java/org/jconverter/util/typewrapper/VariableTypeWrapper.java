@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.typewrapper;
+package org.jconverter.util.typewrapper;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jconverter.internal.reflection.IncompatibleTypesException;
+import org.jconverter.util.IncompatibleTypesException;
 
 
 public class VariableTypeWrapper extends TypeWrapper {

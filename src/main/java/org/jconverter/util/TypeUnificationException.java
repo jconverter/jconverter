@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection;
+package org.jconverter.util;
 
 public class TypeUnificationException extends RuntimeException {
 

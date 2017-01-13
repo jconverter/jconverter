@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection;
+package org.jconverter.util;
 
 import java.util.Iterator;
 import java.util.List;

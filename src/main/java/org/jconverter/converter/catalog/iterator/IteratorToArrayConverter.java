@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
-import org.jconverter.internal.reflection.reification.ParameterizedTypeImpl;
-import org.jconverter.internal.reflection.typewrapper.ArrayTypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.internal.reification.ParameterizedTypeImpl;
+import org.jconverter.util.typewrapper.ArrayTypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 
 public class IteratorToArrayConverter<T> implements Converter<Iterator<?>, T[]> {
 

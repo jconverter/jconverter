@@ -1,10 +1,11 @@
-package org.jconverter.internal.reflection.typewrapper;
+package org.jconverter.util.typewrapper;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -13,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jconverter.internal.reflection.ReflectionUtil;
-import org.jconverter.internal.reflection.IncompatibleTypesException;
+import org.jconverter.util.IncompatibleTypesException;
 
 import com.google.common.reflect.TypeToken;
 
@@ -188,7 +188,7 @@ public abstract class TypeWrapper implements Serializable {
 	}
 
 	public boolean isAbstract() {
-		return ReflectionUtil.isAbstract(getRawClass());
+		return Modifier.isAbstract(getRawClass().getModifiers()); //primitive type classes answer yes to this
 	}
 	
 	public boolean isPrimitive() {return getRawClass().isPrimitive();}

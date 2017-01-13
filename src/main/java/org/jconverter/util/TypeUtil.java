@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection;
+package org.jconverter.util;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -7,16 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jconverter.internal.reflection.typewrapper.ArrayTypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.SingleTypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.VariableTypeWrapper;
+import org.jconverter.util.typewrapper.ArrayTypeWrapper;
+import org.jconverter.util.typewrapper.SingleTypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.VariableTypeWrapper;
 
 
 public abstract class TypeUtil {
-	
+
 	/**
-	 * 
+	 *
 	 * @param types a list of types.
 	 * @return a list of raw classes from the given types.
 	 */
@@ -30,8 +30,8 @@ public abstract class TypeUtil {
 		}
 		return rawClasses;
 	}
-	
-	
+
+
 	/**
 	 * Answers a parameterized type with its actual type arguments depending on the descendant
 	 * @param ancestor is the type to parameterize
@@ -214,11 +214,40 @@ public abstract class TypeUtil {
 	 */
 	private static boolean descendantReachedAncestor(Class descendant, Class ancestor) {
 		if(!descendant.isInterface()) //descendant is a class, not an interface
-			return ( descendant.equals(ancestor) || (ancestor.isInterface() && ReflectionUtil.includesInterfaceInHierarchy(descendant, ancestor)) );
+			return ( descendant.equals(ancestor) || (ancestor.isInterface() && includesInterfaceInHierarchy(descendant, ancestor)) );
 		else
 			return descendant.equals(ancestor);
 	}
-	
+
+
+
+	/**
+	 *
+	 * @param clazz a class
+	 * @param interfaze an interface
+	 * @return a boolean indicating if a class adds an interface to its class hierarchy
+	 */
+	private static boolean includesInterfaceInHierarchy(Class<?> clazz, Class<?> interfaze) {
+		//Object.class will never answer true to the first condition, so the call to getSuperclass() in the second is safe
+		return (interfaze.isAssignableFrom(clazz) && !interfaze.isAssignableFrom(clazz.getSuperclass()));
+	}
+
+	/**
+	 *
+	 * @param clazz a class
+	 * @return an array with all the interfaces included by {@code clazz}
+	 */
+	private static Class<?>[] includedInterfaces(Class<?> clazz) {
+		List<Class<?>> includedInterfaces = new ArrayList<>();
+		for(Class<?> interfaze : clazz.getInterfaces()) {
+			if(includesInterfaceInHierarchy(clazz, interfaze))
+				includedInterfaces.add(interfaze);
+		}
+		return includedInterfaces.toArray(new Class[] {});
+	}
+
+
+
 
 	/**
 	 * 
@@ -359,7 +388,7 @@ public abstract class TypeUtil {
 		if(ancestor.equals(descendant)) {
 			return bindVariableTypes(ancestor, descendantParameterizedTypes, keepVariableNamesAncestor);
 		} else if(descendantReachedAncestor(descendant, ancestor)) {  //if we are here then descendant is a class and ancestor an interface
-			for(Class includedInterface : ReflectionUtil.includedInterfaces(descendant)) {
+			for(Class includedInterface : includedInterfaces(descendant)) {
 				if(ancestor.isAssignableFrom(includedInterface)) {
 					TypeWrapper[] bindingsInterface = getActualTypeArgumentsInterface(descendant, includedInterface);
 					
@@ -396,7 +425,7 @@ public abstract class TypeUtil {
 			Class[] includedInterfaces = null;
 			
 			if(!descendant.isInterface())
-				includedInterfaces = ReflectionUtil.includedInterfaces(descendant);
+				includedInterfaces = includedInterfaces(descendant);
 			else
 				includedInterfaces = descendant.getInterfaces();
 			

@@ -3,7 +3,7 @@ package org.jconverter.converter;
 import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

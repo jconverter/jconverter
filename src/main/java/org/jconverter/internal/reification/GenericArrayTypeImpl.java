@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.reification;
+package org.jconverter.internal.reification;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;

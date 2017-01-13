@@ -7,7 +7,7 @@ import java.text.ParseException;
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.catalog.number.NumberToNumberConverter;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 
 public class StringToNumberConverter<T extends Number> implements Converter<String, T> {
 

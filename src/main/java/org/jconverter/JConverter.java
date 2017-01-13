@@ -7,7 +7,7 @@ import org.jconverter.converter.JGumConverterManager;
 import org.jconverter.factory.FactoryManager;
 import org.jconverter.factory.JGumFactoryManager;
 import org.jconverter.factory.SingletonFactory;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jgum.JGum;
 
 //This class is inspired by the Gson class from Google's Gson library (http://code.google.com/p/google-gson/)

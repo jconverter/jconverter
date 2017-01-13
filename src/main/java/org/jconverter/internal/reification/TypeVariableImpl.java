@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.reification;
+package org.jconverter.internal.reification;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

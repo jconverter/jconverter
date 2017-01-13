@@ -1,9 +1,9 @@
-package org.jconverter.internal.reflection;
+package org.jconverter.util;
 
 import java.lang.reflect.TypeVariable;
 import java.util.List;
 
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 
 public class FixtureReflectionTests {
 

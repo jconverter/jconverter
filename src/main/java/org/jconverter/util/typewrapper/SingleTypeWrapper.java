@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.typewrapper;
+package org.jconverter.util.typewrapper;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -15,8 +15,8 @@ import java.security.ProtectionDomain;
 import java.util.List;
 import java.util.Map;
 
-import org.jconverter.internal.reflection.TypeUtil;
-import org.jconverter.internal.reflection.reification.ParameterizedTypeImpl;
+import org.jconverter.util.TypeUtil;
+import org.jconverter.internal.reification.ParameterizedTypeImpl;
 
 
 public class SingleTypeWrapper extends TypeWrapper implements GenericDeclaration, AnnotatedElement {
@@ -292,7 +292,7 @@ public class SingleTypeWrapper extends TypeWrapper implements GenericDeclaration
 	@Override
 	public void collectTypeVariables(List<Type> typeVariables) {
 		for(Type typeArgument : getActualTypeArguments()) {
-			TypeWrapper.wrap(typeArgument).collectTypeVariables(typeVariables);
+			wrap(typeArgument).collectTypeVariables(typeVariables);
 		}
 	}
 	

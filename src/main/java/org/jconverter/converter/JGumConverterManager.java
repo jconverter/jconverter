@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.jconverter.JConverter;
-import org.jconverter.internal.reflection.TypeUtil;
-import org.jconverter.internal.reflection.typewrapper.ArrayTypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.VariableTypeWrapper;
+import org.jconverter.util.TypeUtil;
+import org.jconverter.util.typewrapper.ArrayTypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.VariableTypeWrapper;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.type.TypeCategory;
@@ -61,7 +61,8 @@ public class JGumConverterManager extends ConverterManager {
 		} else
 			throw new RuntimeException(); //this should not happen
 	}
-	
+
+
 	private ConverterRegister getOrCreateConverterRegister(Object key, TypeCategory<?> typeCategory) {
 		Optional<ConverterRegister> chainOpt = typeCategory.getLocalProperty(key);
 		ConverterRegister chain;

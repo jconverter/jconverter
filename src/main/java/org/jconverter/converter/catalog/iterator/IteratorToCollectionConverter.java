@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 
 public class IteratorToCollectionConverter<T extends Collection<?>> implements Converter<Iterator<?>, T> {
 

@@ -6,9 +6,9 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.jconverter.internal.reflection.TypeUtil;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
-import org.jconverter.internal.reflection.typewrapper.VariableTypeWrapper;
+import org.jconverter.util.TypeUtil;
+import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.VariableTypeWrapper;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.type.TypeCategory;

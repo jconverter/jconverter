@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import org.jconverter.JConverter;
 import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.Converter;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 
 public class ObjectToStringConverter implements Converter<Object, String> {
 

@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.typevisitor;
+package org.jconverter.util.typevisitor;
 
 
 public abstract class FindFirstTypeVisitor extends TypeFilterVisitor {

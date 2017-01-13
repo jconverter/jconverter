@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection;
+package org.jconverter.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -15,14 +15,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Test;
-import org.jconverter.internal.reflection.FixtureTypeUtil.Class6;
-import org.jconverter.internal.reflection.FixtureTypeUtil.Class7;
-import org.jconverter.internal.reflection.FixtureTypeUtil.MyMap;
-import org.jconverter.internal.reflection.FixtureTypeUtil.MyMap3;
-import org.jconverter.internal.reflection.FixtureTypeUtil.MyMap4;
-import org.jconverter.internal.reflection.FixtureTypeUtil.MyMap5;
-import org.jconverter.internal.reflection.FixtureTypeUtil.MyMap6;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.FixtureTypeUtil.Class6;
+import org.jconverter.util.FixtureTypeUtil.Class7;
+import org.jconverter.util.FixtureTypeUtil.MyMap;
+import org.jconverter.util.FixtureTypeUtil.MyMap3;
+import org.jconverter.util.FixtureTypeUtil.MyMap4;
+import org.jconverter.util.FixtureTypeUtil.MyMap5;
+import org.jconverter.util.FixtureTypeUtil.MyMap6;
+import org.jconverter.util.typewrapper.TypeWrapper;
 
 import com.google.common.reflect.TypeToken;
 

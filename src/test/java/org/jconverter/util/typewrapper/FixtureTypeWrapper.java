@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.typewrapper;
+package org.jconverter.util.typewrapper;
 
 import java.util.Map;
 

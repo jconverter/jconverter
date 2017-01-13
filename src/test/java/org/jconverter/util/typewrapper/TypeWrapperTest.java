@@ -1,6 +1,6 @@
-package org.jconverter.internal.reflection.typewrapper;
+package org.jconverter.util.typewrapper;
 
-import static org.jconverter.internal.reflection.typewrapper.TypeWrapper.wrap;
+import static org.jconverter.util.typewrapper.TypeWrapper.wrap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jconverter.internal.reflection.FixtureReflectionTests;
-import org.jconverter.internal.reflection.typewrapper.FixtureTypeWrapper.B;
+import org.jconverter.util.FixtureReflectionTests;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.base.Supplier;
@@ -24,10 +24,10 @@ public class TypeWrapperTest {
 
 	@Test
 	public void testFindTypeVariables() {
-		Type type = B.class.getGenericSuperclass(); //A<java.util.Map<Z, Y>, java.lang.String, Y>
+		Type type = FixtureTypeWrapper.B.class.getGenericSuperclass(); //A<java.util.Map<Z, Y>, java.lang.String, Y>
 		//System.out.println(type);
 		
-		TypeWrapper typeWrapper = wrap(type);
+		TypeWrapper typeWrapper = TypeWrapper.wrap(type);
 		List<TypeVariable> namedTypeVariables = typeWrapper.getNamedTypeVariables(); //two type variables: Z,Y
 		//System.out.println("Named type variables: " + namedTypeVariables);
 		assertEquals(namedTypeVariables.size(), 2);
@@ -42,7 +42,7 @@ public class TypeWrapperTest {
 		
 		type = typeWrapper.bindVariables(map); //new bound type
 		//System.out.println(type);
-		typeWrapper = wrap(type);
+		typeWrapper = TypeWrapper.wrap(type);
 		namedTypeVariables = typeWrapper.getNamedTypeVariables(); //only Y remains, Z was replaced by String
 		assertEquals(namedTypeVariables.size(), 1);
 		variableY = namedTypeVariables.get(0);
@@ -54,7 +54,7 @@ public class TypeWrapperTest {
 		
 		type = typeWrapper.bindVariables(map);
 		//System.out.println(type);
-		typeWrapper = wrap(type);
+		typeWrapper = TypeWrapper.wrap(type);
 		namedTypeVariables = typeWrapper.getNamedTypeVariables();
 		assertEquals(namedTypeVariables.size(), 0); //no type variables left
 	}
@@ -127,90 +127,90 @@ public class TypeWrapperTest {
 		Type unboundArrayListType = ArrayList.class;
 		Type boundArrayListType = new TypeToken<ArrayList<String>>(){}.getType();
 		
-		Type boundCollectionToBoundArrayListType = wrap(boundCollectionType).asType(boundArrayListType);
+		Type boundCollectionToBoundArrayListType = TypeWrapper.wrap(boundCollectionType).asType(boundArrayListType);
 		assertEquals(boundArrayListType, boundCollectionToBoundArrayListType);
 		
-		Type boundArrayListToBoundCollectionType = wrap(boundArrayListType).asType(boundCollectionType);
+		Type boundArrayListToBoundCollectionType = TypeWrapper.wrap(boundArrayListType).asType(boundCollectionType);
 		assertEquals(boundCollectionType, boundArrayListToBoundCollectionType);
 		
-		Type unboundCollectionToUnboundArrayListType = wrap(unboundCollectionType).asType(unboundArrayListType);
+		Type unboundCollectionToUnboundArrayListType = TypeWrapper.wrap(unboundCollectionType).asType(unboundArrayListType);
 		assertEquals(unboundArrayListType, unboundCollectionToUnboundArrayListType);
 		
-		Type unboundArrayListToUnboundCollectionType = wrap(unboundArrayListType).asType(unboundCollectionType);
+		Type unboundArrayListToUnboundCollectionType = TypeWrapper.wrap(unboundArrayListType).asType(unboundCollectionType);
 		assertEquals(unboundCollectionType, unboundArrayListToUnboundCollectionType);
 		
 		
 		
-		Type boundCollectionToUnboundArrayListType = wrap(boundCollectionType).asType(unboundArrayListType);
+		Type boundCollectionToUnboundArrayListType = TypeWrapper.wrap(boundCollectionType).asType(unboundArrayListType);
 		assertEquals(boundArrayListType, boundCollectionToUnboundArrayListType);
 		
-		Type unboundArrayListToBoundCollectionType = wrap(unboundArrayListType).asType(boundCollectionType);
+		Type unboundArrayListToBoundCollectionType = TypeWrapper.wrap(unboundArrayListType).asType(boundCollectionType);
 		assertEquals(boundCollectionType, unboundArrayListToBoundCollectionType);
 		
-		Type unboundCollectionToBoundArrayListType = wrap(unboundCollectionType).asType(boundArrayListType);
+		Type unboundCollectionToBoundArrayListType = TypeWrapper.wrap(unboundCollectionType).asType(boundArrayListType);
 		assertEquals(boundArrayListType, unboundCollectionToBoundArrayListType);
 		
-		Type boundArrayListToUnboundCollectionType = wrap(boundArrayListType).asType(unboundCollectionType);
+		Type boundArrayListToUnboundCollectionType = TypeWrapper.wrap(boundArrayListType).asType(unboundCollectionType);
 		assertEquals(boundCollectionType, boundArrayListToUnboundCollectionType);
 		
 		
 		
-		Type boundCollectionToUnboundCollectionType = wrap(boundCollectionType).asType(unboundCollectionType);
+		Type boundCollectionToUnboundCollectionType = TypeWrapper.wrap(boundCollectionType).asType(unboundCollectionType);
 		assertEquals(boundCollectionType, boundCollectionToUnboundCollectionType);
 		
-		Type unboundCollectionToBoundCollectionType = wrap(unboundCollectionType).asType(boundCollectionType);
+		Type unboundCollectionToBoundCollectionType = TypeWrapper.wrap(unboundCollectionType).asType(boundCollectionType);
 		assertEquals(boundCollectionType, unboundCollectionToBoundCollectionType);
 		
-		Type boundCollectionToBoundCollectionType = wrap(boundCollectionType).asType(boundCollectionType);
+		Type boundCollectionToBoundCollectionType = TypeWrapper.wrap(boundCollectionType).asType(boundCollectionType);
 		assertEquals(boundCollectionType, boundCollectionToBoundCollectionType);
 		
-		Type unboundCollectionToUnboundCollectionType = wrap(unboundCollectionType).asType(unboundCollectionType);
+		Type unboundCollectionToUnboundCollectionType = TypeWrapper.wrap(unboundCollectionType).asType(unboundCollectionType);
 		assertEquals(unboundCollectionType, unboundCollectionToUnboundCollectionType);
 		
 		
 		
-		Type boundArrayListToUnboundArrayListType = wrap(boundArrayListType).asType(unboundArrayListType);
+		Type boundArrayListToUnboundArrayListType = TypeWrapper.wrap(boundArrayListType).asType(unboundArrayListType);
 		assertEquals(boundArrayListType, boundArrayListToUnboundArrayListType);
 		
-		Type unboundArrayListToBoundArrayListType = wrap(unboundArrayListType).asType(boundArrayListType);
+		Type unboundArrayListToBoundArrayListType = TypeWrapper.wrap(unboundArrayListType).asType(boundArrayListType);
 		assertEquals(boundArrayListType, unboundArrayListToBoundArrayListType);
 		
-		Type boundArrayListToBoundArrayListType = wrap(boundArrayListType).asType(boundArrayListType);
+		Type boundArrayListToBoundArrayListType = TypeWrapper.wrap(boundArrayListType).asType(boundArrayListType);
 		assertEquals(boundArrayListType, boundArrayListToBoundArrayListType);
 		
-		Type unboundArrayListToUnboundArrayListType = wrap(unboundArrayListType).asType(unboundArrayListType);
+		Type unboundArrayListToUnboundArrayListType = TypeWrapper.wrap(unboundArrayListType).asType(unboundArrayListType);
 		assertEquals(unboundArrayListType, unboundArrayListToUnboundArrayListType);
 		
 	
 		
-		Type boundCollectionToObjectType = wrap(boundCollectionType).asType(Object.class);
+		Type boundCollectionToObjectType = TypeWrapper.wrap(boundCollectionType).asType(Object.class);
 		assertEquals(Object.class, boundCollectionToObjectType);
 		
-		Type objectToBoundCollectionType = wrap(Object.class).asType(boundCollectionType);
+		Type objectToBoundCollectionType = TypeWrapper.wrap(Object.class).asType(boundCollectionType);
 		assertEquals(boundCollectionType, objectToBoundCollectionType);
 		
-		Type unboundCollectionToObjectType = wrap(unboundCollectionType).asType(Object.class);
+		Type unboundCollectionToObjectType = TypeWrapper.wrap(unboundCollectionType).asType(Object.class);
 		assertEquals(Object.class, unboundCollectionToObjectType);
 		
-		Type objectToUnboundCollectionType = wrap(Object.class).asType(unboundCollectionType);
+		Type objectToUnboundCollectionType = TypeWrapper.wrap(Object.class).asType(unboundCollectionType);
 		assertEquals(unboundCollectionType, objectToUnboundCollectionType);
 		
 		
 		
-		Type boundArrayListToObjectType = wrap(boundArrayListType).asType(Object.class);
+		Type boundArrayListToObjectType = TypeWrapper.wrap(boundArrayListType).asType(Object.class);
 		assertEquals(Object.class, boundArrayListToObjectType);
 		
-		Type objectToBoundArrayListType = wrap(Object.class).asType(boundArrayListType);
+		Type objectToBoundArrayListType = TypeWrapper.wrap(Object.class).asType(boundArrayListType);
 		assertEquals(boundArrayListType, objectToBoundArrayListType);
 		
-		Type unboundArrayListToObjectType = wrap(unboundArrayListType).asType(Object.class);
+		Type unboundArrayListToObjectType = TypeWrapper.wrap(unboundArrayListType).asType(Object.class);
 		assertEquals(Object.class, unboundArrayListToObjectType);
 		
-		Type objectToUnboundArrayListType = wrap(Object.class).asType(unboundArrayListType);
+		Type objectToUnboundArrayListType = TypeWrapper.wrap(Object.class).asType(unboundArrayListType);
 		assertEquals(unboundArrayListType, objectToUnboundArrayListType);
 		
 		
-		assertEquals(Object.class, wrap(Object.class).asType(Object.class));
+		Assert.assertEquals(Object.class, TypeWrapper.wrap(Object.class).asType(Object.class));
 	}
 
 	@Test
@@ -220,16 +220,16 @@ public class TypeWrapperTest {
 		Type boundArrayListArrayType = new TypeToken<ArrayList<String>[]>(){}.getType();
 		Type unboundArrayListArrayType = new TypeToken<ArrayList[]>(){}.getType();
 		
-		Type boundCollectionArrayToBoundCollectionArrayType = wrap(boundCollectionArrayType).asType(boundCollectionArrayType);
+		Type boundCollectionArrayToBoundCollectionArrayType = TypeWrapper.wrap(boundCollectionArrayType).asType(boundCollectionArrayType);
 		assertEquals(boundCollectionArrayType, boundCollectionArrayToBoundCollectionArrayType);
 		
-		Type boundCollectionArrayToUnboundCollectionArrayType = wrap(boundCollectionArrayType).asType(unboundCollectionArrayType);
+		Type boundCollectionArrayToUnboundCollectionArrayType = TypeWrapper.wrap(boundCollectionArrayType).asType(unboundCollectionArrayType);
 		assertEquals(boundCollectionArrayType, boundCollectionArrayToUnboundCollectionArrayType);
 		
-		Type boundCollectionArrayToBoundArrayListArrayType = wrap(boundCollectionArrayType).asType(boundArrayListArrayType);
+		Type boundCollectionArrayToBoundArrayListArrayType = TypeWrapper.wrap(boundCollectionArrayType).asType(boundArrayListArrayType);
 		assertEquals(boundArrayListArrayType, boundCollectionArrayToBoundArrayListArrayType);
 		
-		Type boundCollectionArrayToUnboundArrayListArrayType = wrap(boundCollectionArrayType).asType(unboundArrayListArrayType);
+		Type boundCollectionArrayToUnboundArrayListArrayType = TypeWrapper.wrap(boundCollectionArrayType).asType(unboundArrayListArrayType);
 		assertEquals(boundArrayListArrayType, boundCollectionArrayToUnboundArrayListArrayType);
 	}
 	
@@ -240,8 +240,8 @@ public class TypeWrapperTest {
 		Type boundCollectionArrayType = new TypeToken<Collection<String>[]>(){}.getType();
 		Type unboundCollectionArrayType = new TypeToken<Collection[]>(){}.getType();
 		
-		assertEquals(wrap(boundCollectionType).getRawClass(), wrap(unboundCollectionType).getRawClass());
-		assertEquals(wrap(boundCollectionArrayType).getRawClass(), wrap(unboundCollectionArrayType).getRawClass());
+		Assert.assertEquals(TypeWrapper.wrap(boundCollectionType).getRawClass(), TypeWrapper.wrap(unboundCollectionType).getRawClass());
+		Assert.assertEquals(TypeWrapper.wrap(boundCollectionArrayType).getRawClass(), TypeWrapper.wrap(unboundCollectionArrayType).getRawClass());
 	}
 	
 	@Test
@@ -249,8 +249,8 @@ public class TypeWrapperTest {
 		Type parameterizedCollectionType1 = new TypeToken<Collection<String>>(){}.getType();
 		Type parameterizedCollectionType2 = new TypeToken<Collection<Number>>(){}.getType();
 		
-		assertFalse(wrap(parameterizedCollectionType1).isAssignableFrom(parameterizedCollectionType2));
-		assertFalse(wrap(parameterizedCollectionType1).isWeakAssignableFrom(parameterizedCollectionType2));
+		assertFalse(TypeWrapper.wrap(parameterizedCollectionType1).isAssignableFrom(parameterizedCollectionType2));
+		assertFalse(TypeWrapper.wrap(parameterizedCollectionType1).isWeakAssignableFrom(parameterizedCollectionType2));
 	}
 	
 	@Test
@@ -263,44 +263,44 @@ public class TypeWrapperTest {
 		Type rawCollectionArray2Type = new TypeToken<Collection[][]>(){}.getType();
 		Class<?> objectArrayClass = new Object[]{}.getClass();
 		
-		assertFalse(wrap(parameterizedCollectionType).isAssignableFrom(rawCollectionType));
-		assertTrue(wrap(parameterizedCollectionType).isWeakAssignableFrom(rawCollectionType));
+		assertFalse(TypeWrapper.wrap(parameterizedCollectionType).isAssignableFrom(rawCollectionType));
+		assertTrue(TypeWrapper.wrap(parameterizedCollectionType).isWeakAssignableFrom(rawCollectionType));
 		
-		assertTrue(wrap(rawCollectionType).isAssignableFrom(parameterizedCollectionType));
-		assertTrue(wrap(rawCollectionType).isWeakAssignableFrom(parameterizedCollectionType));
-		
-		
-		assertFalse(wrap(parameterizedCollectionArrayType).isAssignableFrom(rawCollectionArrayType));
-		assertTrue(wrap(parameterizedCollectionArrayType).isWeakAssignableFrom(rawCollectionArrayType));
-		
-		assertTrue(wrap(rawCollectionArrayType).isAssignableFrom(parameterizedCollectionArrayType));
-		assertTrue(wrap(rawCollectionArrayType).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(rawCollectionType).isAssignableFrom(parameterizedCollectionType));
+		assertTrue(TypeWrapper.wrap(rawCollectionType).isWeakAssignableFrom(parameterizedCollectionType));
 		
 		
-		assertTrue(wrap(Object.class).isAssignableFrom(rawCollectionType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(rawCollectionType));
+		assertFalse(TypeWrapper.wrap(parameterizedCollectionArrayType).isAssignableFrom(rawCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(parameterizedCollectionArrayType).isWeakAssignableFrom(rawCollectionArrayType));
 		
-		assertTrue(wrap(Object.class).isAssignableFrom(parameterizedCollectionType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionType));
-		
-		assertTrue(wrap(Object.class).isAssignableFrom(rawCollectionArrayType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(rawCollectionArrayType));
-		
-		assertTrue(wrap(Object.class).isAssignableFrom(parameterizedCollectionArrayType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(rawCollectionArrayType).isAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(rawCollectionArrayType).isWeakAssignableFrom(parameterizedCollectionArrayType));
 		
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(rawCollectionArrayType));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(rawCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(rawCollectionType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(rawCollectionType));
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArrayType));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(parameterizedCollectionType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionType));
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(rawCollectionArray2Type));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(rawCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(rawCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(rawCollectionArrayType));
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArray2Type));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(rawCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(rawCollectionArrayType));
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(rawCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(rawCollectionArray2Type));
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArray2Type));
 	}
 	
 	@Test
@@ -313,44 +313,44 @@ public class TypeWrapperTest {
 		Type wildCardCollectionArray2Type = new TypeToken<Collection<?>[][]>(){}.getType();
 		Class<?> objectArrayClass = new Object[]{}.getClass();
 		
-		assertFalse(wrap(parameterizedCollectionType).isAssignableFrom(wildCardCollectionType));
-		assertTrue(wrap(parameterizedCollectionType).isWeakAssignableFrom(wildCardCollectionType));
+		assertFalse(TypeWrapper.wrap(parameterizedCollectionType).isAssignableFrom(wildCardCollectionType));
+		assertTrue(TypeWrapper.wrap(parameterizedCollectionType).isWeakAssignableFrom(wildCardCollectionType));
 		
-		assertTrue(wrap(wildCardCollectionType).isAssignableFrom(parameterizedCollectionType));
-		assertTrue(wrap(wildCardCollectionType).isWeakAssignableFrom(parameterizedCollectionType));
-		
-		
-		assertFalse(wrap(parameterizedCollectionArrayType).isAssignableFrom(wildCardCollectionArrayType));
-		assertTrue(wrap(parameterizedCollectionArrayType).isWeakAssignableFrom(wildCardCollectionArrayType));
-		
-		assertTrue(wrap(wildCardCollectionArrayType).isAssignableFrom(parameterizedCollectionArrayType));
-		assertTrue(wrap(wildCardCollectionArrayType).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(wildCardCollectionType).isAssignableFrom(parameterizedCollectionType));
+		assertTrue(TypeWrapper.wrap(wildCardCollectionType).isWeakAssignableFrom(parameterizedCollectionType));
 		
 		
-		assertTrue(wrap(Object.class).isAssignableFrom(wildCardCollectionType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(wildCardCollectionType));
+		assertFalse(TypeWrapper.wrap(parameterizedCollectionArrayType).isAssignableFrom(wildCardCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(parameterizedCollectionArrayType).isWeakAssignableFrom(wildCardCollectionArrayType));
 		
-		assertTrue(wrap(Object.class).isAssignableFrom(parameterizedCollectionType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionType));
-		
-		assertTrue(wrap(Object.class).isAssignableFrom(wildCardCollectionArrayType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(wildCardCollectionArrayType));
-		
-		assertTrue(wrap(Object.class).isAssignableFrom(parameterizedCollectionArrayType));
-		assertTrue(wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(wildCardCollectionArrayType).isAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(wildCardCollectionArrayType).isWeakAssignableFrom(parameterizedCollectionArrayType));
 		
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(wildCardCollectionArrayType));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(wildCardCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(wildCardCollectionType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(wildCardCollectionType));
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArrayType));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(parameterizedCollectionType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionType));
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(wildCardCollectionArray2Type));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(wildCardCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(wildCardCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(wildCardCollectionArrayType));
 		
-		assertTrue(wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArray2Type));
-		assertTrue(wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(Object.class).isAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(Object.class).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(wildCardCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(wildCardCollectionArrayType));
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArrayType));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArrayType));
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(wildCardCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(wildCardCollectionArray2Type));
+		
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isAssignableFrom(parameterizedCollectionArray2Type));
+		assertTrue(TypeWrapper.wrap(objectArrayClass).isWeakAssignableFrom(parameterizedCollectionArray2Type));
 	}
 	
 	@Test
@@ -358,8 +358,8 @@ public class TypeWrapperTest {
 		Type wildCardCollectionType1 = new TypeToken<Collection<?>>(){}.getType();
 		Type wildCardCollectionType2 = new TypeToken<Collection<?>>(){}.getType();
 		
-		assertTrue(wrap(wildCardCollectionType1).isAssignableFrom(wildCardCollectionType2));
-		assertTrue(wrap(wildCardCollectionType1).isWeakAssignableFrom(wildCardCollectionType2));
+		assertTrue(TypeWrapper.wrap(wildCardCollectionType1).isAssignableFrom(wildCardCollectionType2));
+		assertTrue(TypeWrapper.wrap(wildCardCollectionType1).isWeakAssignableFrom(wildCardCollectionType2));
 	}
 	
 	@Test

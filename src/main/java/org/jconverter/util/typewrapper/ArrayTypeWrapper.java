@@ -1,4 +1,4 @@
-package org.jconverter.internal.reflection.typewrapper;
+package org.jconverter.util.typewrapper;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
@@ -7,8 +7,8 @@ import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.Map;
 
-import org.jconverter.internal.reflection.IncompatibleTypesException;
-import org.jconverter.internal.reflection.reification.GenericArrayTypeImpl;
+import org.jconverter.util.IncompatibleTypesException;
+import org.jconverter.internal.reification.GenericArrayTypeImpl;
 
 
 public class ArrayTypeWrapper extends TypeWrapper {
@@ -28,7 +28,7 @@ public class ArrayTypeWrapper extends TypeWrapper {
 			throw new RuntimeException("Invalid dimension");
 		if(dimension == 0)
 			return baseType;
-		TypeWrapper baseTypeWrapper = TypeWrapper.wrap(baseType);
+		TypeWrapper baseTypeWrapper = wrap(baseType);
 		if(baseTypeWrapper.isRawType()) {
 			Type componentType = createArrayType(baseType, dimension-1);
 			return Array.newInstance((Class)componentType, 0).getClass();
@@ -39,22 +39,22 @@ public class ArrayTypeWrapper extends TypeWrapper {
 
 	@Override
 	public boolean hasTypeParameters() {
-		return TypeWrapper.wrap(getBaseType()).hasTypeParameters();
+		return wrap(getBaseType()).hasTypeParameters();
 	}
 
 	@Override
 	public TypeVariable[] getTypeParameters() {
-		return TypeWrapper.wrap(getBaseType()).getTypeParameters();
+		return wrap(getBaseType()).getTypeParameters();
 	}
 	
 	@Override
 	public Type[] getActualTypeArguments() {
-		return TypeWrapper.wrap(getBaseType()).getActualTypeArguments();
+		return wrap(getBaseType()).getActualTypeArguments();
 	}
 	
 	@Override
 	public boolean hasActualTypeArguments() {
-		return TypeWrapper.wrap(getBaseType()).hasActualTypeArguments();
+		return wrap(getBaseType()).hasActualTypeArguments();
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class ArrayTypeWrapper extends TypeWrapper {
 	public Type asType(Type targetType) {
 		if(wrappedType.equals(targetType))
 			return wrappedType;
-		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(targetType);
+		TypeWrapper targetTypeWrapper = wrap(targetType);
 		
 		if(targetTypeWrapper instanceof VariableTypeWrapper && ((VariableTypeWrapper)targetTypeWrapper).hasDefaultUpperBounds())
 			return wrappedType;
@@ -206,7 +206,7 @@ public class ArrayTypeWrapper extends TypeWrapper {
 
 	@Override
 	public Class<?> getRawClass() {
-		Class<?> componentClass = TypeWrapper.wrap(getComponentType()).getRawClass();
+		Class<?> componentClass = wrap(getComponentType()).getRawClass();
 		return Array.newInstance(componentClass, 0).getClass();
 	}
 
@@ -222,14 +222,14 @@ public class ArrayTypeWrapper extends TypeWrapper {
 
 	@Override
 	public void collectTypeVariables(List<Type> typeVariables) {
-		TypeWrapper.wrap(getBaseType()).collectTypeVariables(typeVariables);
+		wrap(getBaseType()).collectTypeVariables(typeVariables);
 	}
 
 	@Override
 	public Type bindVariables(Map<TypeVariable, Type> typeVariableMap) {
 		Type boundType;
 		Type unboundComponentType = getComponentType();
-		TypeWrapper wrappedComponentType = TypeWrapper.wrap(unboundComponentType);
+		TypeWrapper wrappedComponentType = wrap(unboundComponentType);
 		Type boundComponentType = wrappedComponentType.bindVariables(typeVariableMap);
 		if(unboundComponentType.equals(boundComponentType))
 			boundType = wrappedType;

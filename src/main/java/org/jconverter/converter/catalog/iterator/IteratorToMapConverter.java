@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
-import org.jconverter.internal.reflection.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 
 public class IteratorToMapConverter<T extends Map<?,?>> implements Converter<Iterator<Entry<?,?>>, T> {
 
