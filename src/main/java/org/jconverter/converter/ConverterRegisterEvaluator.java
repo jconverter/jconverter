@@ -1,50 +1,34 @@
 package org.jconverter.converter;
 
-import java.lang.reflect.Type;
 import java.util.List;
-
-import org.jgum.strategy.ChainOfResponsibility;
-
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 public class ConverterRegisterEvaluator<T,U> implements Function<Object, U> {
 	
-	private final Function<Converter<T,U>, U> converterEvaluator;
-	private final Type targetType;
+	private final ConverterEvaluator<T,U> converterEvaluator;
 	
-	public ConverterRegisterEvaluator(Function<Converter<T,U>, U> converterEvaluator, Type targetType) {
+	public ConverterRegisterEvaluator(ConverterEvaluator<T,U> converterEvaluator) {
 		this.converterEvaluator = converterEvaluator;
-		this.targetType = targetType;
 	}
 	
 	@Override
 	public U apply(Object processingObject) {
-		if(processingObject instanceof Converter) {
-			return (U)converterEvaluator.apply((Converter)processingObject);
-		} else if(processingObject instanceof ConverterRegister) {
-			return applyChain((ConverterRegister)processingObject);
-		} else
+		if (processingObject instanceof Converter) {
+			return (U) converterEvaluator.apply((Converter) processingObject);
+		} else if (processingObject instanceof ConverterRegister) {
+			return applyChain((ConverterRegister) processingObject);
+		} else {
 			throw new RuntimeException("Wrong processing object.");
+		}
 	}
 
 
 	public U applyChain(ConverterRegister processingObject) {
-		List<Converter<T,U>> converters = (List)processingObject.orderedConverters(targetType);
-		ChainOfResponsibility<Converter<T,U>,U> chain = new ChainOfResponsibility<>(converters, ConversionException.class);
-		return (U)chain.apply((Function)this);
-	}
-
-	
-	static class NonRedundantConverterEvaluator<T,V> extends NonRedundantEvaluator<Converter<T,V>,V> {
-		
-		public NonRedundantConverterEvaluator(Function<Converter<T,V>,V> evaluator) {
-			super(evaluator);
-		}
-		
-		@Override
-		protected V onAlreadyVisited(Converter<T,V> alreadyVisited) {
-			throw new ConversionException();
-		}
+		List<Converter<T,U>> converters = (List) processingObject.orderedConverters(
+				converterEvaluator.getConversionGoal().getTarget().getType());
+		ConverterChain<Converter<T,U>,U> chain =
+				new ConverterChain<>(converterEvaluator.getConversionGoal(), converters);
+		return (U) chain.apply((Function) this);
 	}
 	
 }

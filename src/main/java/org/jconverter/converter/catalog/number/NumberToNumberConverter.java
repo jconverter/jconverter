@@ -1,6 +1,5 @@
 package org.jconverter.converter.catalog.number;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,14 +7,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.converter.TypeDomain;
 
 public class NumberToNumberConverter<T extends Number> implements Converter<Number, T> {
 
 	@Override
-	public T apply(Number source, Type targetType, JConverter context) {
-		Class targetClass = TypeWrapper.wrap(targetType).getRawClass();
-		return (T) numberToNumber(source, (Class)targetType);
+	public T apply(Number source, TypeDomain target, JConverter context) {
+		return (T) numberToNumber(source, target.getRawClass());
 	}
 	
 	public static Number numberToNumber(Number number, Class numberClass) {

@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.NotSuitableConverterException;
 import org.junit.Test;
 
 public class StringConverterTest {
@@ -33,7 +33,7 @@ public class StringConverterTest {
 		try {
 			assertEquals(new Character('h'), jconverter.convert("hello", Character.class));
 			fail();
-		} catch(ConversionException e) {}
+		} catch(NotSuitableConverterException e) {}
 		
 	}
 	

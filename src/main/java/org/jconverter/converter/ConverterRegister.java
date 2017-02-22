@@ -1,12 +1,14 @@
 package org.jconverter.converter;
 
+import static org.jconverter.converter.TypeDomain.typeDomain;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
 import org.jgum.JGum;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.typetools.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +29,16 @@ public class ConverterRegister {
 	}
 	
 	public List<Converter<?,?>> orderedConverters(Type targetType) {
-		TreeSet<ContextedConverter> contextedConverters = new TreeSet<>(); //TreeSet will keep the natural ordering of its members.
-		for(int i = 0; i<typedConverters.size(); i++) {
+		TreeSet<ComparableConverter> comparableConverters = new TreeSet<>(); //TreeSet will keep the natural ordering of its members.
+		for (int i = 0; i<typedConverters.size(); i++) {
 			TypedConverter<?,?> typedConverter = typedConverters.get(i);
-			if(typedConverter.isReturnTypeCompatible(targetType)) {
-				ContextedConverter contextedConverter = new ContextedConverter(typedConverter, i, targetType);
-				contextedConverters.add(contextedConverter);
+			if (typedConverter.getConversionDomains().getTarget().isSubsetOf(typeDomain(targetType))) {
+				ComparableConverter comparableConverter = new ComparableConverter(typedConverter, i, targetType);
+				comparableConverters.add(comparableConverter);
 			}
 		}
 		List<Converter<?,?>> converters = new ArrayList<>();
-		for(ContextedConverter contextedConverter : contextedConverters) {
+		for(ComparableConverter contextedConverter : comparableConverters) {
 			converters.add(contextedConverter.typedConverter);
 		}
 		return converters;
@@ -44,11 +46,10 @@ public class ConverterRegister {
 	
 
 	
-	private class ContextedConverter implements Comparable<ContextedConverter> {
+	private class ComparableConverter implements Comparable<ComparableConverter> {
 
 		private final TypedConverter<?,?> typedConverter;
 		private final int index;
-		private final Type targetType;
 		private final int distanceToTarget;
 		
 		
@@ -59,24 +60,25 @@ public class ConverterRegister {
 		 * @param targetType the target conversion type.
 
 		 */
-		public ContextedConverter(TypedConverter<?,?> typedConverter, int index, Type targetType) {
+		public ComparableConverter(TypedConverter<?,?> typedConverter, int index, Type targetType) {
 			this.typedConverter = typedConverter;
 			this.index = index;
-			this.targetType = targetType;
-			if(typedConverter.hasVariableReturnType()) //the converter has different target types (quantified with upper bounds).
+			if (typedConverter.getConversionDomains().getTarget().isVariableType()) {//the converter has different target types (quantified with upper bounds).
 				distanceToTarget = 0; //assuming the target type is compatible with the typedConverter, the converter return type can be the current target type.
-			else {
+			} else {
 				Class<?> targetClass = TypeWrapper.wrap(targetType).getRawClass();
-				distanceToTarget = jgum.forClass(typedConverter.getReturnClass()).distance(targetClass);
+				distanceToTarget = jgum.forClass(typedConverter.getConversionDomains().getTarget().getRawClass()).distance(targetClass);
 			}
 		}
 		
 		@Override
-		public int compareTo(ContextedConverter contextedConverter) {
-			if(distanceToTarget != contextedConverter.distanceToTarget)
+		public int compareTo(ComparableConverter contextedConverter) {
+			if (distanceToTarget != contextedConverter.distanceToTarget) {
 				return distanceToTarget - contextedConverter.distanceToTarget;
-			else
+			} else {
 				return index - contextedConverter.index;
+			}
+
 		}
 		
 	}

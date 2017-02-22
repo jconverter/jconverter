@@ -1,6 +1,5 @@
 package org.jconverter.converter;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,10 +132,10 @@ public abstract class ConverterManager {
 	
 	public abstract void register(Object converterKey, Converter<?,?> converter);
 
-	public <T> T convert(Object object, Type targetType, JConverter context) {
-		return convert(DEFAULT_KEY, object, targetType, context);
+	public <T> T convert(Object object, TypeDomain target, JConverter context) {
+		return convert(DEFAULT_KEY, object, target, context);
 	}
 	
-	public abstract <T> T convert(Object converterKey, Object object, Type targetType, JConverter context);
+	public abstract <T> T convert(Object converterKey, Object object, TypeDomain target, JConverter context);
 
 }

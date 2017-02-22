@@ -1,10 +1,5 @@
 package org.jconverter.converter;
 
-import java.lang.reflect.Type;
-
-import org.jconverter.util.typewrapper.TypeWrapper;
-import org.jconverter.util.typewrapper.VariableTypeWrapper;
-
 /**
  * A converter that explicitly specifies its source and target types.
  * @author sergioc
@@ -15,53 +10,26 @@ import org.jconverter.util.typewrapper.VariableTypeWrapper;
 public abstract class TypedConverter<T,U> implements Converter<T,U> {
 
 	public static <T,U> TypedConverter<T,U> forConverter(Converter<T,U> converter) {
-		if(converter instanceof TypedConverter)
+		if (converter instanceof TypedConverter) {
 			return (TypedConverter<T, U>) converter;
-		else
-			return TypedConverterProxy.forConverter(converter);
-	}
-	
-	private final Type sourceType;
-	private final Type returnType;
-	private final Class<?> returnClass;
-	
-	public TypedConverter(Type sourceType, Type returnType) {
-		this.sourceType = sourceType;
-		this.returnType = returnType;
-		
-		TypeWrapper targetTypeWrapper = TypeWrapper.wrap(returnType);
-		if(!(targetTypeWrapper instanceof VariableTypeWrapper)) {
-			returnClass = targetTypeWrapper.getRawClass();
 		} else {
-			returnClass = null;
+			return TypedConverterProxy.forConverter(converter);
 		}
-			
-	}
-	
-	
-	public Type getSourceType() {
-		return sourceType;
-	}
-	
-	public Type getReturnType() {
-		return returnType;
-	}
-	
-	public boolean hasVariableReturnType() {
-		return returnClass == null;
 	}
 
-	public Class<?> getReturnClass() {
-		return returnClass;
+	public static <T,U> TypedConverter<T,U> forConverter(Converter<T,U> converter,
+														 ConversionDomains<TypeDomain, TypeDomain> conversionTypes) {
+		return new TypedConverterProxy<>(converter, conversionTypes);
 	}
+
+	private final ConversionDomains<TypeDomain, TypeDomain> conversionTypes;
 	
-	public boolean isSourceTypeCompatible(Type type) {
-		//TODO this may be a bit inaccurate in certain cases, to improve.
-		return TypeWrapper.wrap(sourceType).isWeakAssignableFrom(type); 
+	protected TypedConverter(ConversionDomains<TypeDomain, TypeDomain> conversionTypes) {
+		this.conversionTypes = conversionTypes;
 	}
-	
-	public boolean isReturnTypeCompatible(Type type) {
-		return TypeWrapper.wrap(type).isWeakAssignableFrom(returnType);
+
+	public ConversionDomains<TypeDomain, TypeDomain> getConversionDomains() {
+		return conversionTypes;
 	}
-	
+
 }

@@ -1,20 +1,20 @@
 package org.jconverter.converter.catalog.iterator;
 
-import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.converter.TypeDomain;
+import org.typetools.typewrapper.TypeWrapper;
 
 public class IteratorToMapConverter<T extends Map<?,?>> implements Converter<Iterator<Entry<?,?>>, T> {
 
 	@Override
-	public T apply(Iterator<Entry<?,?>> source, Type targetType, JConverter context) {
-		T map = context.instantiate(targetType);
-		TypeWrapper wrappedType = TypeWrapper.wrap(targetType);
+	public T apply(Iterator<Entry<?,?>> source, TypeDomain target, JConverter context) {
+		T map = context.instantiate(target.getType());
+		TypeWrapper wrappedType = TypeWrapper.wrap(target.getType());
 		while(source.hasNext()) {
 			Entry<?,?> entry = source.next();
 			Object key = entry.getKey();

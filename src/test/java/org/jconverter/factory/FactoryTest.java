@@ -14,9 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jconverter.JConverter;
-import org.jconverter.factory.Factory;
-import org.jconverter.factory.FactoryManager;
-import org.jconverter.factory.JGumFactoryManager;
 import org.jgum.JGum;
 import org.junit.Test;
 
@@ -45,7 +42,7 @@ public class FactoryTest {
 	
 	@Test
 	public void testNoFactory() {
-		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
+		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
 		Object key = new Object();
 		try {
 			factoryManager.instantiate(key, Collection.class);
@@ -55,7 +52,7 @@ public class FactoryTest {
 	
 	@Test
 	public void testNoGenericFactory() {
-		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
+		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
 		Object key = new Object();
 		try {
 			factoryManager.register(key, new NonGenericFactory());
@@ -65,7 +62,7 @@ public class FactoryTest {
 	
 	@Test
 	public void testGenericCollectionFactory() {
-		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
+		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
 		Object key = new Object();
 		factoryManager.register(key, new GenericCollectionFactory());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());
@@ -81,7 +78,7 @@ public class FactoryTest {
 	
 	@Test
 	public void testBoundedCollectionFactory() {
-		FactoryManager factoryManager = new JGumFactoryManager(new JGum());
+		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
 		Object key = new Object();
 		factoryManager.register(key, new BoundedCollectionFactory());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());

@@ -2,10 +2,10 @@ package org.jconverter;
 
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.ConverterManager;
-import org.jconverter.converter.JGumConverterManager;
+import org.jconverter.converter.InterTypeConverterManager;
 import org.jconverter.factory.Factory;
 import org.jconverter.factory.FactoryManager;
-import org.jconverter.factory.JGumFactoryManager;
+import org.jconverter.factory.FactoryManagerImpl;
 import org.jgum.JGum;
 
 
@@ -29,7 +29,7 @@ public class JConverterBuilder {
 	}
 	
 	protected JConverterBuilder(JGum jgum) {
-		this(JGumConverterManager.createDefault(jgum), JGumFactoryManager.createDefault(jgum));
+		this(InterTypeConverterManager.createDefault(jgum), FactoryManagerImpl.createDefault(jgum));
 	}
 	
 	protected JConverterBuilder(ConverterManager converterManager, FactoryManager factoryManager) {
@@ -49,8 +49,9 @@ public class JConverterBuilder {
 	 * Registers a converter.
 	 * @param converter a converter to register.
 	 */
-	public void register(Converter<?,?> converter) {
+	public JConverterBuilder register(Converter<?,?> converter) {
 		converterManager.register(converter);
+		return this;
 	}
 	
 	/**
@@ -58,16 +59,18 @@ public class JConverterBuilder {
 	 * @param key the key under which the converter is registered.
 	 * @param converter the converter to register.
 	 */
-	public void register(Object key, Converter<?,?> converter) {
+	public JConverterBuilder register(Object key, Converter<?,?> converter) {
 		converterManager.register(key, converter);
+		return this;
 	}
 
 	/**
 	 * Registers a factory.
 	 * @param factory the factory to register.
 	 */
-	public void register(Factory<?> factory) {
+	public JConverterBuilder register(Factory<?> factory) {
 		factoryManager.register(factory);
+		return this;
 	}
 	
 	/**
@@ -75,9 +78,9 @@ public class JConverterBuilder {
 	 * @param key the key under which the instance creator is registered.
 	 * @param factory the factory to register.
 	 */
-	public void register(Object key, Factory<?> factory) {
+	public JConverterBuilder register(Object key, Factory<?> factory) {
 		factoryManager.register(key, factory);
+		return this;
 	}
 
-	
 }

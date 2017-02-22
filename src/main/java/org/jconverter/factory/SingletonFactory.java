@@ -2,7 +2,7 @@ package org.jconverter.factory;
 
 import java.lang.reflect.Type;
 
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.typetools.typewrapper.TypeWrapper;
 
 public class SingletonFactory<T> implements Factory<T> {
 

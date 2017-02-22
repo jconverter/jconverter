@@ -2,7 +2,7 @@ package org.jconverter.factory;
 
 import java.lang.reflect.Type;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 public class FactoryEvaluator<T> implements Function<Factory<T>, T> {
 

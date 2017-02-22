@@ -1,21 +1,21 @@
 package org.jconverter.converter.catalog.object;
 
-import java.lang.reflect.Type;
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 
 import org.jconverter.JConverter;
-import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.Converter;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 
 public class ObjectToStringConverter implements Converter<Object, String> {
 
 	@Override
-	public String apply(Object source, Type targetType, JConverter context) {
-		Class<?> targetClass = TypeWrapper.wrap(targetType).getRawClass();
-		if(targetClass.equals(String.class)) {
+	public String apply(Object source, TypeDomain target, JConverter context) {
+		if (target.getRawClass().equals(String.class)) {
 			return source.toString();
+		} else {
+			throw new DelegateConversionException(conversionGoal(source, target));
 		}
-		throw new ConversionException();
 	}
 	
 }

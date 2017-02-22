@@ -1,14 +1,17 @@
 package org.jconverter;
 
+import static org.jconverter.converter.TypeDomain.typeDomain;
+
 import java.lang.reflect.Type;
 
 import org.jconverter.converter.ConverterManager;
-import org.jconverter.converter.JGumConverterManager;
+import org.jconverter.converter.InterTypeConverterManager;
+import org.jconverter.converter.TypeDomain;
 import org.jconverter.factory.FactoryManager;
-import org.jconverter.factory.JGumFactoryManager;
+import org.jconverter.factory.FactoryManagerImpl;
 import org.jconverter.factory.SingletonFactory;
-import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jgum.JGum;
+import org.typetools.typewrapper.TypeWrapper;
 
 //This class is inspired by the Gson class from Google's Gson library (http://code.google.com/p/google-gson/)
 /**
@@ -33,8 +36,8 @@ public class JConverter {
 	 * @param jgum a categorization context.
 	 */
 	protected JConverter(JGum jgum) {
-		this.converterManager = JGumConverterManager.createDefault(jgum);
-		this.factoryManager = JGumFactoryManager.createDefault(jgum);
+		this.converterManager = InterTypeConverterManager.createDefault(jgum);
+		this.factoryManager = FactoryManagerImpl.createDefault(jgum);
 	}
 	
 	/**
@@ -54,28 +57,36 @@ public class JConverter {
 		return factoryManager;
 	}
 
+	public <T> T convert(Object source, Type targetType) {
+		return convert(source, typeDomain(targetType));
+	}
+
 	/**
 	 * 
 	 * @param source the object to convert.
-	 * @param targetType the desired type.
+	 * @param target the desired type.
 	 * @return the conversion of the source object to the desired target type.
 	 */
-	public <T> T convert(Object source, Type targetType) {
-		return convert(ConverterManager.DEFAULT_KEY, source, targetType);
+	public <T> T convert(Object source, TypeDomain target) {
+		return convert(ConverterManager.DEFAULT_KEY, source, target);
 	}
-	
+
+	public <T> T convert(Object key, Object source, Type targetType) {
+		return convert(key, source, typeDomain(targetType));
+	}
+
 	/**
 	 * 
 	 * @param key constrains the registered converters and factories that will be looked up in this operation.
 	 * @param source the object to convert.
-	 * @param targetType the desired type.
+	 * @param target the desired conversion domain.
 	 * @return the conversion of the source object to the desired target type.
 	 */
-	public <T> T convert(Object key, Object source, Type targetType) {
+	public <T> T convert(Object key, Object source, TypeDomain target) {
 		try {
-			return new SingletonFactory<T>((T) source).instantiate(targetType); //will launch an exception if the object source is not compatible with the target type.
+			return new SingletonFactory<T>((T) source).instantiate(target.getType()); //will launch an exception if the object source is not compatible with the target type.
 		} catch(RuntimeException e) {
-			return converterManager.convert(key, source, targetType, this);
+			return converterManager.convert(key, source, target, this);
 		}
 	}
 	

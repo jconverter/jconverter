@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.jconverter.converter.Converter;
+import org.jconverter.converter.TypeDomain;
 import org.junit.Test;
 
 import com.google.common.reflect.TypeToken;
@@ -56,7 +57,7 @@ public class JConverterTutorialTest {
 		JConverterBuilder builder = JConverterBuilder.create();
 		builder.register(new Converter<String, Person>() {
 			@Override
-			public Person apply(String name, Type targetType, JConverter context) {
+			public Person apply(String name, TypeDomain target, JConverter context) {
 				return new Person(name);
 			}
 		});
@@ -77,7 +78,5 @@ public class JConverterTutorialTest {
 		assertEquals("Abraham", convertedMap.get(2).name);
 		assertEquals("Isaac", convertedMap.get(3).name);
 	}
-	
-
 
 }

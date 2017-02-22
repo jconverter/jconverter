@@ -10,7 +10,7 @@
     
 	<groupId>com.github.jconverter</groupId>
 	<artifactId>jconverter</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 	<name>jconverter</name>
 	<description>A Java framework to categorize and apply conversions between arbitrary objects</description>
@@ -43,11 +43,25 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<javadocsDirectory>docs/javadocs</javadocsDirectory>
+		<skipTests>false</skipTests>
 	</properties>
 
 
 
 	<dependencies>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.7</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-core</artifactId>
+			<version>1.0-groovy-2.4</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -78,16 +92,79 @@
  		<dependency>
 			<groupId>com.github.jgum</groupId>
 			<artifactId>jgum</artifactId>
-			<version>0.0.1-alpha-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>net.jodah</groupId>
+			<artifactId>typetools</artifactId>
+			<version>0.4.8</version>
+		</dependency>
 	</dependencies>
 
 
 
 
 	<build>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<skipTests>${skipTests}</skipTests>
+						<includes>
+							<!-- By default only files ending in 'Test' will be included. Including support for Spock style naming convention -->
+							<include>**/*Test.java</include>
+							<include>**/*Spec.java</include>
+							<include>**/*Specification.java</include>
+						</includes>
+					</configuration>
+
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.surefire</groupId>
+							<artifactId>surefire-junit47</artifactId>
+							<version>2.19.1</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+
 		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<configuration>
+					<testSources>
+						<testSource>
+							<directory>${project.basedir}/src/test/groovy</directory>
+						</testSource>
+						<testSource>
+							<directory>${project.basedir}/src/integration-test/groovy</directory>
+						</testSource>
+					</testSources>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>addSources</goal>
+							<goal>addTestSources</goal>
+							<goal>generateStubs</goal>
+							<goal>compile</goal>
+							<goal>testGenerateStubs</goal>
+							<goal>testCompile</goal>
+							<goal>removeStubs</goal>
+							<goal>removeTestStubs</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
