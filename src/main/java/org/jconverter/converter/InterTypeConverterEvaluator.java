@@ -23,11 +23,11 @@ public class InterTypeConverterEvaluator<T,U> extends ConverterEvaluator<T,U> {
 	 */
 	@Override
 	public U apply(Converter<T, U> converter) {
-		TypedConverter<T,U> typedConverter = TypedConverter.forConverter(converter);
+		ConversionFunction<T,U> conversionFunction = ConversionFunction.forConverter(converter);
 		Type bestTypeForConverter; //the inferred best target type for the conversion.
 		try {
 			bestTypeForConverter = TypeWrapper.wrap(getConversionGoal().getTarget().getType()).mostSpecificType(
-					typedConverter.getConversionDomains().getTarget().getType()); //will throw an exception if the types are not compatible
+					conversionFunction.getRange().getType()); //will throw an exception if the types are not compatible
 		} catch(IncompatibleTypesException e) {
 			throw new DelegateConversionException(getConversionGoal());
 		}
@@ -42,7 +42,7 @@ public class InterTypeConverterEvaluator<T,U> extends ConverterEvaluator<T,U> {
 				throw new DelegateConversionException(getConversionGoal()); //impossible to infer best type for converter (the best type is a variable type with multiple upper bounds).
 			}
 		}
-		return typedConverter.apply((T) getConversionGoal().getSource(), typeDomain(bestTypeForConverter), context);
+		return conversionFunction.apply((T) getConversionGoal().getSource(), typeDomain(bestTypeForConverter), context);
 	}
 
 }

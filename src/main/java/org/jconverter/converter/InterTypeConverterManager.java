@@ -1,7 +1,6 @@
 package org.jconverter.converter;
 
 import static java.util.Arrays.asList;
-import static org.jconverter.converter.TypeDomain.typeDomain;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
@@ -12,17 +11,15 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.jconverter.JConverter;
-import org.typetools.TypeUtil;
-import org.typetools.typewrapper.ArrayTypeWrapper;
-import org.typetools.typewrapper.TypeWrapper;
-import org.typetools.typewrapper.VariableTypeWrapper;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.type.TypeCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.primitives.Primitives;
+import org.typetools.TypeUtil;
+import org.typetools.typewrapper.ArrayTypeWrapper;
+import org.typetools.typewrapper.TypeWrapper;
+import org.typetools.typewrapper.VariableTypeWrapper;
 
 public class InterTypeConverterManager extends ConverterManager {
 
@@ -80,24 +77,24 @@ public class InterTypeConverterManager extends ConverterManager {
 	
 	@Override
 	public void register(Object key, Converter<?,?> converter) {
-		TypedConverter<?,?> typedConverter = TypedConverter.forConverter(converter);
+		ConversionFunction<?,?> conversionFunction = ConversionFunction.forConverter(converter);
 
-		Type sourceType = typedConverter.getConversionDomains().getSource().getType();
+		Type sourceType = conversionFunction.getDomain().getType();
 		TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
 		if (!sourceTypeWrapper.isVariable()) {
 			TypeCategory<?> sourceTypeCategory = categorization.forClass(sourceTypeWrapper.getRawClass());
-			getOrCreateConverterRegister(key, sourceTypeCategory).addFirst(typedConverter);
+			getOrCreateConverterRegister(key, sourceTypeCategory).addFirst(conversionFunction);
 		} else { //the type argument is a variable type.
 			List<TypeCategory<?>> matchedCategories = getMatchingCategories(sourceTypeWrapper);
 			for (TypeCategory<?> matchedCategory : matchedCategories) {
-				getOrCreateConverterRegister(key, matchedCategory).addFirst(typedConverter); //set the type solver for all the known types that are in the boundaries.
+				getOrCreateConverterRegister(key, matchedCategory).addFirst(conversionFunction); //set the converter for all the known types that are in the boundaries.
 			}
-			categorization.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
+			categorization.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the converter for future known types that are in the boundaries.
 				@Override
 				public void onCategorization(TypeCategory<?> category) {
 					//if (category.isInBoundaries(upperBoundariesClasses))
 					if (sourceTypeWrapper.isWeakAssignableFrom(category.getLabel())) {
-						getOrCreateConverterRegister(key, category).addFirst(typedConverter);
+						getOrCreateConverterRegister(key, category).addFirst(conversionFunction);
 					}
 				}
 			});
@@ -114,9 +111,6 @@ public class InterTypeConverterManager extends ConverterManager {
 		try {
 			return (T) converter.apply(source, target, context);
 		} catch(NotSuitableConverterException e) {
-			if (TypeWrapper.wrap(target.getType()).isPrimitive()) {
-				return convert(converter, source, typeDomain(Primitives.wrap(target.getRawClass())), context); //inboxing of the target type
-			}
 			TypeWrapper sourceWrappedType = TypeWrapper.wrap(source.getClass());
 			//if the source object is an array of primitives
 			if (sourceWrappedType instanceof ArrayTypeWrapper &&

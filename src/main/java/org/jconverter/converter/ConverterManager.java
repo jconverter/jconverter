@@ -51,16 +51,17 @@ import org.jconverter.converter.catalog.string.StringToXMLGregorianCalendarConve
 import org.jgum.strategy.ChainOfResponsibility;
 
 
+
 public abstract class ConverterManager {
 	
 	public static final Object DEFAULT_KEY = new Object();
 	
 	//TODO move to the Converter interface when Java8 is out
 	public static <T,V> ChainOfResponsibility<Converter<T,V>, V> chainConverters(List<Converter<T,V>> converters) {
-		List<Converter<T,V>> typedConverters = new ArrayList<>();
-		for(Converter<T,V> converter : converters)
-			typedConverters.add(TypedConverter.forConverter(converter));
-		ChainOfResponsibility<Converter<T,V>,V> chain = new ChainOfResponsibility<>(typedConverters);
+		List<Converter<T,V>> conversionFunctions = new ArrayList<>();
+		for (Converter<T,V> converter : converters)
+			conversionFunctions.add(ConversionFunction.forConverter(converter));
+		ChainOfResponsibility<Converter<T,V>,V> chain = new ChainOfResponsibility<>(conversionFunctions);
 		return chain;
 	}
 	

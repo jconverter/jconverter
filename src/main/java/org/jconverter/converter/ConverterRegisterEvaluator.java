@@ -25,7 +25,7 @@ public class ConverterRegisterEvaluator<T,U> implements Function<Object, U> {
 
 	public U applyChain(ConverterRegister processingObject) {
 		List<Converter<T,U>> converters = (List) processingObject.orderedConverters(
-				converterEvaluator.getConversionGoal().getTarget().getType());
+				converterEvaluator.getConversionGoal().getTarget());
 		ConverterChain<Converter<T,U>,U> chain =
 				new ConverterChain<>(converterEvaluator.getConversionGoal(), converters);
 		return (U) chain.apply((Function) this);

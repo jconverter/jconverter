@@ -95,7 +95,7 @@ public class FactoryManagerImpl extends FactoryManager {
 			for(TypeCategory<?> boundTypeCategory : boundTypeCategories) {
 				getOrCreateChain(key, boundTypeCategory).addFirst(factory); //set the factory for all the known types that are in the boundaries.
 			}
-			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the type solver for future known types that are in the boundaries.
+			jgum.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the factory for future known types that are in the boundaries.
 				@Override
 				public void onCategorization(TypeCategory<?> category) {
 					if(category.isInBoundaries(upperBoundariesClasses))
