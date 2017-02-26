@@ -1,6 +1,7 @@
 package org.jconverter.converter.catalog.iterator;
 
 import static java.util.Arrays.asList;
+import static org.jconverter.JConverter.jConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -24,7 +25,7 @@ public class IteratorConverterTest {
 	
 	@Test
 	public void testIteratorToCollection() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type;
 		Collection collection;
 		
@@ -46,7 +47,7 @@ public class IteratorConverterTest {
 	
 	@Test
 	public void testIteratorToIterator() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type = new TypeToken<Iterator<String>>(){}.getType();
 		
 		Iterator it = jconverter.convert(getIterator(), type);
@@ -55,7 +56,7 @@ public class IteratorConverterTest {
 	
 	@Test
 	public void testIteratorToSequence() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type = new TypeToken<Enumeration<String>>(){}.getType();
 		
 		Enumeration en = jconverter.convert(getIterator(), type);
@@ -64,7 +65,7 @@ public class IteratorConverterTest {
 	
 	@Test
 	public void testIteratorToArray() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type = new String[]{}.getClass();
 		
 		String[] array = jconverter.convert(getIterator(), type);

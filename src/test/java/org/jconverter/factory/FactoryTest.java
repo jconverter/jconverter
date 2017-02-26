@@ -1,7 +1,9 @@
 package org.jconverter.factory;
 
-import static org.junit.Assert.assertNotNull;
+import static org.jcategory.category.Key.key;
+import static org.jconverter.JConverter.jConverter;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Type;
@@ -14,7 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jconverter.JConverter;
-import org.jgum.JGum;
+import org.jcategory.JCategory;
+import org.jcategory.category.Key;
 import org.junit.Test;
 
 public class FactoryTest {
@@ -42,8 +45,8 @@ public class FactoryTest {
 	
 	@Test
 	public void testNoFactory() {
-		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
-		Object key = new Object();
+		FactoryManager factoryManager = new FactoryManagerImpl(new JCategory());
+		Key key = key();
 		try {
 			factoryManager.instantiate(key, Collection.class);
 			fail();
@@ -52,8 +55,8 @@ public class FactoryTest {
 	
 	@Test
 	public void testNoGenericFactory() {
-		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
-		Object key = new Object();
+		FactoryManager factoryManager = new FactoryManagerImpl(new JCategory());
+		Key key = key();
 		try {
 			factoryManager.register(key, new NonGenericFactory());
 			fail();
@@ -62,8 +65,8 @@ public class FactoryTest {
 	
 	@Test
 	public void testGenericCollectionFactory() {
-		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
-		Object key = new Object();
+		FactoryManager factoryManager = new FactoryManagerImpl(new JCategory());
+		Key key = key();
 		factoryManager.register(key, new GenericCollectionFactory());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());
 		try {
@@ -78,8 +81,8 @@ public class FactoryTest {
 	
 	@Test
 	public void testBoundedCollectionFactory() {
-		FactoryManager factoryManager = new FactoryManagerImpl(new JGum());
-		Object key = new Object();
+		FactoryManager factoryManager = new FactoryManagerImpl(new JCategory());
+		Key key = key();
 		factoryManager.register(key, new BoundedCollectionFactory());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, Collection.class).getClass());
 		assertEquals(ArrayList.class, factoryManager.instantiate(key, List.class).getClass());
@@ -92,7 +95,7 @@ public class FactoryTest {
 	
 	@Test
 	public void testDefaultInstantiations() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		assertNotNull(jconverter.instantiate(List.class));
 		assertNotNull(jconverter.instantiate(Iterable.class));
 		assertNotNull(jconverter.instantiate(ArrayList.class));

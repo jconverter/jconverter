@@ -2,7 +2,7 @@ package org.jconverter.factory;
 
 import java.lang.reflect.Type;
 
-import org.typetools.typewrapper.TypeWrapper;
+import org.typeutils.typewrapper.TypeWrapper;
 
 
 public class InstantiationClassFactory<T> implements Factory<T> {

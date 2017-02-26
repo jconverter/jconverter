@@ -9,8 +9,8 @@ import java.util.List;
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.TypeDomain;
-import org.typetools.reification.ParameterizedTypeImpl;
-import org.typetools.typewrapper.TypeWrapper;
+import org.typeutils.reification.ParameterizedTypeImpl;
+import org.typeutils.typewrapper.TypeWrapper;
 
 public class IteratorToIteratorConverter implements Converter<Iterator<?>, Iterator<?>> {
 

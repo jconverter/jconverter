@@ -8,36 +8,36 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
+import org.jcategory.JCategory;
+import org.jcategory.category.CategorizationListener;
+import org.jcategory.category.Key;
+import org.jcategory.category.type.TypeCategory;
 import org.jconverter.JConverter;
-import org.jgum.JGum;
-import org.jgum.category.CategorizationListener;
-import org.jgum.category.type.TypeCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.typetools.TypeUtil;
-import org.typetools.typewrapper.ArrayTypeWrapper;
-import org.typetools.typewrapper.TypeWrapper;
-import org.typetools.typewrapper.VariableTypeWrapper;
+import org.typeutils.TypeUtils;
+import org.typeutils.typewrapper.ArrayTypeWrapper;
+import org.typeutils.typewrapper.TypeWrapper;
+import org.typeutils.typewrapper.VariableTypeWrapper;
 
 public class InterTypeConverterManager extends ConverterManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(InterTypeConverterManager.class);
 	
 	/**
-	 * @param categorization a JGum categorization context.
-	 * @return an instance of JGumConverterManager configured with default converters.
+	 * @param categorization a JCategory categorization context.
+	 * @return an instance of ConverterManager configured with default converters.
 	 */
-	public static InterTypeConverterManager createDefault(JGum categorization) {
+	public static InterTypeConverterManager createDefault(JCategory categorization) {
 		InterTypeConverterManager converterManager = new InterTypeConverterManager(categorization);
 		registerDefaults(converterManager);
 		return converterManager;
 	}
 	
-	protected final JGum categorization;
+	protected final JCategory categorization;
 	
-	public InterTypeConverterManager(JGum categorization) {
+	public InterTypeConverterManager(JCategory categorization) {
 		this.categorization = categorization;
 	}
 	
@@ -45,7 +45,7 @@ public class InterTypeConverterManager extends ConverterManager {
 		if (wrappedType instanceof VariableTypeWrapper) {
 			VariableTypeWrapper variableTypeWrapper = (VariableTypeWrapper) wrappedType;
 			List<Type> upperBoundariesTypes = asList(variableTypeWrapper.getUpperBounds());
-			List<Class<?>> upperBoundariesClasses = TypeUtil.asRawClasses(upperBoundariesTypes);
+			List<Class<?>> upperBoundariesClasses = TypeUtils.asRawClasses(upperBoundariesTypes);
 			List<TypeCategory<?>> boundTypeCategories = categorization.getTypeCategorization().findBoundedTypes(upperBoundariesClasses);
 			return boundTypeCategories;
 		} else if (wrappedType instanceof ArrayTypeWrapper) {
@@ -63,38 +63,39 @@ public class InterTypeConverterManager extends ConverterManager {
 	}
 
 
-	private ConverterRegister getOrCreateConverterRegister(Object key, TypeCategory<?> typeCategory) {
-		Optional<ConverterRegister> chainOpt = typeCategory.getLocalProperty(key);
+	private ConverterRegister addToConverterRegister(Key key, TypeCategory<?> typeCategory, ConversionFunction<?,?> conversionFunction) {
 		ConverterRegister chain;
-		if (chainOpt.isPresent()) {
-			chain =  chainOpt.get();
-		} else {
+		List<ConverterRegister> chains = typeCategory.getLocalProperty(key);
+		if (chains.isEmpty()) {
 			chain = new ConverterRegister(categorization);
 			typeCategory.setProperty(key, chain);
+		} else {
+			chain = chains.get(0);
 		}
+		chain.addFirst(conversionFunction);
 		return chain;
 	}
 	
 	@Override
-	public void register(Object key, Converter<?,?> converter) {
+	public void register(Key key, Converter<?,?> converter) {
 		ConversionFunction<?,?> conversionFunction = ConversionFunction.forConverter(converter);
 
 		Type sourceType = conversionFunction.getDomain().getType();
 		TypeWrapper sourceTypeWrapper = TypeWrapper.wrap(sourceType);
 		if (!sourceTypeWrapper.isVariable()) {
 			TypeCategory<?> sourceTypeCategory = categorization.forClass(sourceTypeWrapper.getRawClass());
-			getOrCreateConverterRegister(key, sourceTypeCategory).addFirst(conversionFunction);
+			addToConverterRegister(key, sourceTypeCategory, conversionFunction);
 		} else { //the type argument is a variable type.
 			List<TypeCategory<?>> matchedCategories = getMatchingCategories(sourceTypeWrapper);
 			for (TypeCategory<?> matchedCategory : matchedCategories) {
-				getOrCreateConverterRegister(key, matchedCategory).addFirst(conversionFunction); //set the converter for all the known types that are in the boundaries.
+				addToConverterRegister(key, matchedCategory, conversionFunction); //set the converter for all the known types that are in the boundaries.
 			}
 			categorization.getTypeCategorization().addCategorizationListener(new CategorizationListener<TypeCategory<?>>() { //set the converter for future known types that are in the boundaries.
 				@Override
 				public void onCategorization(TypeCategory<?> category) {
 					//if (category.isInBoundaries(upperBoundariesClasses))
 					if (sourceTypeWrapper.isWeakAssignableFrom(category.getLabel())) {
-						getOrCreateConverterRegister(key, category).addFirst(conversionFunction);
+						addToConverterRegister(key, category, conversionFunction);
 					}
 				}
 			});
@@ -102,9 +103,8 @@ public class InterTypeConverterManager extends ConverterManager {
 	}
 	
 	@Override
-	public <T> T convert(Object key, Object source, TypeDomain target, JConverter context) {
-		Converter jGumConverter = new ConverterImpl(categorization, key);
-		return convert(jGumConverter, source, target, context);
+	public <T> T convert(Key key, Object source, TypeDomain target, JConverter context) {
+		return convert(new ConverterImpl<>(categorization, key), source, target, context);
 	}		
 	
 	protected <T> T convert(Converter converter, Object source, TypeDomain target, JConverter context) {
@@ -115,7 +115,7 @@ public class InterTypeConverterManager extends ConverterManager {
 			//if the source object is an array of primitives
 			if (sourceWrappedType instanceof ArrayTypeWrapper &&
 					sourceWrappedType.getBaseType() instanceof Class && ((Class) sourceWrappedType.getBaseType()).isPrimitive()) {
-				//return convert(jGumConverter, Iterators.forArray(source), targetType, context);
+				//return convert(converter, Iterators.forArray(source), targetType, context);
 				return convert(converter, new ArrayIterator(source), target, context);
 			}
 			throw e;

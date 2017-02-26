@@ -86,13 +86,19 @@
  		<dependency>
     		<groupId>com.google.guava</groupId>
     		<artifactId>guava</artifactId>
-    		<version>20.0</version>
+    		<version>21.0</version>
 		</dependency>
 
  		<dependency>
-			<groupId>com.github.jgum</groupId>
-			<artifactId>jgum</artifactId>
-			<version>0.0.2</version>
+			<groupId>com.github.jcategory</groupId>
+			<artifactId>jcategory</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.typeutils</groupId>
+			<artifactId>typeutils</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -217,7 +223,7 @@
 				
 				<configuration>
 				    <links>
-            			<link>http://jgum.github.io/javadocs/</link>
+            			<link>http://jcategory.github.io/javadocs/</link>
             			<link>http://docs.guava-libraries.googlecode.com/git/javadoc/</link>
           			</links>
           			

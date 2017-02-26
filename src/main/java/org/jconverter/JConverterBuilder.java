@@ -1,12 +1,15 @@
 package org.jconverter;
 
+import static java.util.Collections.emptyList;
+
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.InterTypeConverterManager;
 import org.jconverter.factory.Factory;
 import org.jconverter.factory.FactoryManager;
 import org.jconverter.factory.FactoryManagerImpl;
-import org.jgum.JGum;
+import org.jcategory.JCategory;
+import org.jcategory.category.Key;
 
 
 /**
@@ -25,11 +28,11 @@ public class JConverterBuilder {
 	}
 	
 	protected JConverterBuilder() {
-		this(new JGum());
+		this(new JCategory());
 	}
 	
-	protected JConverterBuilder(JGum jgum) {
-		this(InterTypeConverterManager.createDefault(jgum), FactoryManagerImpl.createDefault(jgum));
+	protected JConverterBuilder(JCategory categorization) {
+		this(InterTypeConverterManager.createDefault(categorization), FactoryManagerImpl.createDefault(categorization));
 	}
 	
 	protected JConverterBuilder(ConverterManager converterManager, FactoryManager factoryManager) {
@@ -42,7 +45,7 @@ public class JConverterBuilder {
 	 * @return a new JConverter context according to the configured builder.
 	 */
 	public JConverter build() {
-		return new JConverter(converterManager, factoryManager);
+		return new JConverterImpl(converterManager, factoryManager, emptyList());
 	}
 	
 	/**
@@ -59,7 +62,7 @@ public class JConverterBuilder {
 	 * @param key the key under which the converter is registered.
 	 * @param converter the converter to register.
 	 */
-	public JConverterBuilder register(Object key, Converter<?,?> converter) {
+	public JConverterBuilder register(Key key, Converter<?,?> converter) {
 		converterManager.register(key, converter);
 		return this;
 	}
@@ -78,7 +81,7 @@ public class JConverterBuilder {
 	 * @param key the key under which the instance creator is registered.
 	 * @param factory the factory to register.
 	 */
-	public JConverterBuilder register(Object key, Factory<?> factory) {
+	public JConverterBuilder register(Key key, Factory<?> factory) {
 		factoryManager.register(key, factory);
 		return this;
 	}

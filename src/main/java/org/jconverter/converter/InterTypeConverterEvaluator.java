@@ -5,9 +5,9 @@ import static org.jconverter.converter.TypeDomain.typeDomain;
 import java.lang.reflect.Type;
 
 import org.jconverter.JConverter;
-import org.typetools.IncompatibleTypesException;
-import org.typetools.typewrapper.TypeWrapper;
-import org.typetools.typewrapper.VariableTypeWrapper;
+import org.typeutils.IncompatibleTypesException;
+import org.typeutils.typewrapper.TypeWrapper;
+import org.typeutils.typewrapper.VariableTypeWrapper;
 
 public class InterTypeConverterEvaluator<T,U> extends ConverterEvaluator<T,U> {
 

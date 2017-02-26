@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.jgum.JGum;
+import org.jcategory.JCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,11 +13,11 @@ public class ConverterRegister {
 	private final static Logger logger = LoggerFactory.getLogger(ConverterRegister.class);
 	
 	private final List<ConversionFunction<?,?>> conversionFunctions;
-	private final JGum jgum;
+	private final JCategory categorization;
 	
-	public ConverterRegister(JGum jgum) {
+	public ConverterRegister(JCategory categorization) {
 		conversionFunctions = new ArrayList<>();
-		this.jgum = jgum;
+		this.categorization = categorization;
 	}
 	
 	public void addFirst(ConversionFunction<?,?> conversionFunction) {
@@ -53,7 +53,6 @@ public class ConverterRegister {
 		 * @param typedConverter a processed converter.
 		 * @param index the index of the converter in the converter register.
 		 * @param target the target conversion type.
-
 		 */
 		public ComparableConversionFunction(ConversionFunction<?,?> typedConverter, int index, TypeDomain target) {
 			this.conversionFunction = typedConverter;
@@ -61,7 +60,7 @@ public class ConverterRegister {
 			if (typedConverter.getRange().hasVariableType()) {//the converter has different target types (quantified with upper bounds).
 				distanceToTarget = 0; //assuming the target type is compatible with the conversionFunction, the converter return type can be the current target type.
 			} else {
-				distanceToTarget = jgum.forClass(typedConverter.getRange().getRawClass()).distance(target.getRawClass());
+				distanceToTarget = categorization.forClass(typedConverter.getRange().getRawClass()).distance(target.getRawClass());
 			}
 		}
 		

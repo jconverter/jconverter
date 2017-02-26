@@ -1,5 +1,6 @@
 package org.jconverter.converter.catalog.array;
 
+import static org.jconverter.JConverter.jConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -20,7 +21,7 @@ public class ObjectArrayConverterTest {
 	
 	@Test
 	public void testArrayToCollection() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type;
 		Collection collection;
 		
@@ -32,7 +33,7 @@ public class ObjectArrayConverterTest {
 	
 	@Test
 	public void testArrayToArray() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type;
 		Double[] newArray;
 		
@@ -44,7 +45,7 @@ public class ObjectArrayConverterTest {
 	
 	@Test
 	public void testArraysToArrays() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type;
 		Double[][] newArray;
 		
@@ -57,7 +58,7 @@ public class ObjectArrayConverterTest {
 	
 	@Test
 	public void testArraysToCollectionArray() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type;
 		Collection<Double>[] newArray;
 		
@@ -69,7 +70,7 @@ public class ObjectArrayConverterTest {
 	
 	@Test
 	public void testArraysToCollectionOfArrays() {
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type type;
 		List<Double[]> collection = new ArrayList<>();
 		

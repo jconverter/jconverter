@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 import org.jconverter.JConverter;
-import org.typetools.typewrapper.TypeWrapper;
+import org.typeutils.typewrapper.TypeWrapper;
 
 /**
  * A conversion function that defines and domain, range and operation.

@@ -15,9 +15,10 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.jcategory.category.Key;
+
 public abstract class FactoryManager {
-	
-	public static final Object DEFAULT_KEY = new Object();
+
 	
 	/**
 	 * Registers default factories in the given factory manager.
@@ -63,28 +64,28 @@ public abstract class FactoryManager {
 	
 	
 	public void register(Class<?> clazz) {
-		register(DEFAULT_KEY, clazz);
+		register(FactoryKey.DEFAULT_KEY, clazz);
 	}
 	
-	public abstract void register(Object key, Class<?> clazz);
+	public abstract void register(Key key, Class<?> clazz);
 	
 	public void register(List<Class<?>> classes, Factory<?> factory) {
-		register(DEFAULT_KEY, classes, factory);
+		register(FactoryKey.DEFAULT_KEY, classes, factory);
 	}
 	
-	public abstract void register(Object key, List<Class<?>> classes, Factory<?> factory);
+	public abstract void register(Key key, List<Class<?>> classes, Factory<?> factory);
 	
 	
 	public void register(Factory<?> factory) {
-		register(DEFAULT_KEY, factory);
+		register(FactoryKey.DEFAULT_KEY, factory);
 	}
 	
-	public abstract void register(Object key, Factory<?> factory);
+	public abstract void register(Key key, Factory<?> factory);
 
 	public <T> T instantiate(Type targetType) {
-		return instantiate(DEFAULT_KEY, targetType);
+		return instantiate(FactoryKey.DEFAULT_KEY, targetType);
 	}
 	
-	public abstract <T> T instantiate(Object key, Type targetType);
+	public abstract <T> T instantiate(Key key, Type targetType);
 
 }

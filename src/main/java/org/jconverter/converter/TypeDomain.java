@@ -4,8 +4,8 @@ package org.jconverter.converter;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-import org.typetools.typewrapper.TypeWrapper;
-import org.typetools.typewrapper.VariableTypeWrapper;
+import org.typeutils.typewrapper.TypeWrapper;
+import org.typeutils.typewrapper.VariableTypeWrapper;
 
 import com.google.common.primitives.Primitives;
 

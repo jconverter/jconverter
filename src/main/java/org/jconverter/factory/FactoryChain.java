@@ -3,8 +3,8 @@ package org.jconverter.factory;
 import java.util.List;
 import java.util.function.Function;
 
-import org.jgum.ChainOfResponsibilityExhaustedException;
-import org.jgum.strategy.ChainOfResponsibility;
+import org.jcategory.ChainOfResponsibilityExhaustedException;
+import org.jcategory.strategy.ChainOfResponsibility;
 
 public class FactoryChain<T> extends ChainOfResponsibility<Factory<T>, T> {
 

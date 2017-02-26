@@ -1,5 +1,6 @@
 package org.jconverter.converter.catalog.map;
 
+import static org.jconverter.JConverter.jConverter;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Type;
@@ -24,7 +25,7 @@ public class MapConverterTest {
 	@Test
 	public void testMapToMap() {
 		Map map = getMap();
-		JConverter jconverter = new JConverter();
+		JConverter jconverter = jConverter();
 		Type targetType = new TypeToken<Map<String, Integer>>(){}.getType();
 		Map newMap = jconverter.convert(map, targetType);
 		assertEquals(3, newMap.entrySet().size());

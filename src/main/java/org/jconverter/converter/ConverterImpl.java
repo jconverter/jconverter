@@ -5,20 +5,21 @@ import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import java.util.List;
 
 import org.jconverter.JConverter;
-import org.jgum.JGum;
-import org.jgum.category.Category;
+import org.jcategory.JCategory;
+import org.jcategory.category.Category;
+import org.jcategory.category.Key;
 
 public class ConverterImpl<T,U> implements Converter<T,U> {
 
-	protected final JGum jgum;
-	protected final Object key;
+	protected final JCategory categorization;
+	protected final Key key;
 	
-	public ConverterImpl(JGum jgum) {
-		this(jgum, ConverterManager.DEFAULT_KEY);
+/*	public ConverterImpl(JCategory categorization) {
+		this(categorization, ConverterKey.DEFAULT_KEY);
 	}
-	
-	public ConverterImpl(JGum jgum, Object key) {
-		this.jgum = jgum;
+	*/
+	public ConverterImpl(JCategory categorization, Key key) {
+		this.categorization = categorization;
 		this.key = key;
 	}
 	
@@ -54,7 +55,7 @@ public class ConverterImpl<T,U> implements Converter<T,U> {
 	}
 	
 	protected List<ConverterRegister> getConverters(Class<?> clazz) {
-		Category sourceTypeCategory = jgum.forClass(clazz);
+		Category sourceTypeCategory = categorization.forClass(clazz);
 		List<ConverterRegister> converterRegisters = sourceTypeCategory.<ConverterRegister>bottomUpProperties(key);
 		return converterRegisters;
 	}

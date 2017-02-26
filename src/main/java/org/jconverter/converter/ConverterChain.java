@@ -4,8 +4,8 @@ package org.jconverter.converter;
 import java.util.List;
 import java.util.function.Function;
 
-import org.jgum.ChainOfResponsibilityExhaustedException;
-import org.jgum.strategy.ChainOfResponsibility;
+import org.jcategory.ChainOfResponsibilityExhaustedException;
+import org.jcategory.strategy.ChainOfResponsibility;
 
 public class ConverterChain<T,U> extends ChainOfResponsibility<T,U> {
 

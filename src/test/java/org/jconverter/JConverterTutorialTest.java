@@ -1,6 +1,7 @@
 package org.jconverter;
 
 import static java.util.Arrays.asList;
+import static org.jconverter.JConverter.jConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -27,7 +28,7 @@ public class JConverterTutorialTest {
 
 	@Test
 	public void testDefaultConverts() {
-		JConverter context = new JConverter(); //a default JConverter context
+		JConverter context = jConverter(); //a default JConverter context
 		List<Integer> source = asList(2,1,3); //a list of integers
 		Type targetType = new TypeToken<TreeSet<String>>(){}.getType(); //target type is TreeSet<String> (set ordered according to the natural ordering of its members)
 		

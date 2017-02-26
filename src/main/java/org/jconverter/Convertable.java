@@ -1,5 +1,7 @@
 package org.jconverter;
 
+import static org.jconverter.JConverter.jConverter;
+
 import java.lang.reflect.Type;
 
 /**
@@ -17,7 +19,7 @@ public class Convertable {
 	 * @param source the object to convert.
 	 */
 	public Convertable(Object source) {
-		this(source, new JConverter());
+		this(source, jConverter());
 	}
 	
 	/**

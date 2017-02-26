@@ -1,8 +1,6 @@
 package org.jconverter.converter;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.jcategory.category.Key;
 import org.jconverter.JConverter;
 import org.jconverter.converter.catalog.array.ArrayToArrayConverter;
 import org.jconverter.converter.catalog.array.ArrayToCollectionConverter;
@@ -48,23 +46,10 @@ import org.jconverter.converter.catalog.string.StringToDateConverter;
 import org.jconverter.converter.catalog.string.StringToGregorianCalendarConverter;
 import org.jconverter.converter.catalog.string.StringToNumberConverter;
 import org.jconverter.converter.catalog.string.StringToXMLGregorianCalendarConverter;
-import org.jgum.strategy.ChainOfResponsibility;
-
 
 
 public abstract class ConverterManager {
-	
-	public static final Object DEFAULT_KEY = new Object();
-	
-	//TODO move to the Converter interface when Java8 is out
-	public static <T,V> ChainOfResponsibility<Converter<T,V>, V> chainConverters(List<Converter<T,V>> converters) {
-		List<Converter<T,V>> conversionFunctions = new ArrayList<>();
-		for (Converter<T,V> converter : converters)
-			conversionFunctions.add(ConversionFunction.forConverter(converter));
-		ChainOfResponsibility<Converter<T,V>,V> chain = new ChainOfResponsibility<>(conversionFunctions);
-		return chain;
-	}
-	
+
 	/**
 	 * Registers default converters in the given converter manager.
 	 * @param converterManager a converter manager.
@@ -126,17 +111,13 @@ public abstract class ConverterManager {
 		
 		return converterManager;
 	}
-	
-	public void register(Converter<?,?> converter) {
-		register(DEFAULT_KEY, converter);
-	}
-	
-	public abstract void register(Object converterKey, Converter<?,?> converter);
 
-	public <T> T convert(Object object, TypeDomain target, JConverter context) {
-		return convert(DEFAULT_KEY, object, target, context);
+	public void register(Converter<?,?> converter) {
+		register(ConverterKey.DEFAULT_KEY, converter);
 	}
+
+	public abstract void register(Key converterKey, Converter<?,?> converter);
 	
-	public abstract <T> T convert(Object converterKey, Object object, TypeDomain target, JConverter context);
+	public abstract <T> T convert(Key converterKey, Object object, TypeDomain target, JConverter context);
 
 }
