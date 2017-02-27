@@ -83,7 +83,7 @@ public class TypeDomain {
 
     @Override
     public String toString() {
-        return "Type-Domain(" + getType() + ")";
+        return getType().toString();
     }
 
 }
