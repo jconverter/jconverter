@@ -3,11 +3,11 @@ package org.jconverter.converter;
 
 public class ConversionGoal {
 
-    private final Object sourceObject;
+    private final Object source;
     private final TypeDomain target;
 
-    private ConversionGoal(Object sourceObject, TypeDomain target) {
-        this.sourceObject = sourceObject;
+    private ConversionGoal(Object source, TypeDomain target) {
+        this.source = source;
         this.target = target;
     }
 
@@ -16,10 +16,15 @@ public class ConversionGoal {
     }
 
     public Object getSource() {
-        return sourceObject;
+        return source;
     }
 
     public TypeDomain getTarget() {
         return target;
+    }
+
+    @Override
+    public String toString() {
+        return "Source: " + source + ". Target: " + target + ".";
     }
 }

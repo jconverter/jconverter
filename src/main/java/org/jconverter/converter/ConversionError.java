@@ -15,7 +15,7 @@ public class ConversionError extends AbstractConversionException {
 
     @Override
     public String getMessage() {
-        return "Cannot convert from " + getConversionGoal().getSource() + " to " + getConversionGoal() + ".";
+        return "Cannot convert from " + getConversionGoal().getSource() + " to " + getConversionGoal().getTarget() + ".";
     }
 
 }
