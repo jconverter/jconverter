@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PROJECT=jconverter
-VERSION=0.0.2
+VERSION=0.0.3
 
 JAR_DIR=../../target
 cp $JAR_DIR/$PROJECT-$VERSION.jar $PROJECT-$VERSION.jar
